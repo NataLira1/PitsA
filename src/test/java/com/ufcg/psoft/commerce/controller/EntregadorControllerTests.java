@@ -44,18 +44,14 @@ public class EntregadorControllerTests {
         objectMapper.registerModule(new JavaTimeModule());
         entregador = entregadorRepository.save(Entregador.builder()
                 .nome("Lana Del Rey")
-                .placaVeiculo("ABC-1234")
-                .corVeiculo("Azul")
-                .tipoVeiculo("moto")
+                .veiculo()
                 .codigoAcesso("123456")
                 .build()
         );
         entregadorPostPutRequestDTO = EntregadorPostPutRequestDTO.builder()
                 .nome(entregador.getNome())
                 .codigoAcesso(entregador.getCodigoAcesso())
-                .placaVeiculo(entregador.getPlacaVeiculo())
-                .corVeiculo(entregador.getCorVeiculo())
-                .tipoVeiculo(entregador.getTipoVeiculo())
+                .veiculo(entregador.getVeiculo)
                 .build();
 
         entregadorDTO = new EntregadorGetRequestDTO(entregador);
