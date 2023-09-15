@@ -3,10 +3,13 @@ package com.ufcg.psoft.commerce.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
+<<<<<<< HEAD
 import com.ufcg.psoft.commerce.dto.SaborPostPutRequestDTO;
 import com.ufcg.psoft.commerce.models.Sabor;
 import com.ufcg.psoft.commerce.repositories.SaborRepository;
+=======
+import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
+>>>>>>> feat/ estabelecimento
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
