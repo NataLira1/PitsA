@@ -1,10 +1,7 @@
 package com.ufcg.psoft.commerce.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
+@Table(name = "entregador")
 public class Entregador {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,14 +24,14 @@ public class Entregador {
 
     @Column(name = "codigoAcesso")
     private String codigoAcesso;
-    
-    @Column(name = "veiculo")
+
+    @OneToOne(cascade = CascadeType.ALL)
     private Veiculo veiculo;
 
     @Column(name = "nome")
     private String nome;
 
-    @Column(name = "estabelecimento")
+    @OneToOne(cascade = CascadeType.ALL)
     private Estabelecimento estabelecimento;
 
     @Column(name = "disponivel")
