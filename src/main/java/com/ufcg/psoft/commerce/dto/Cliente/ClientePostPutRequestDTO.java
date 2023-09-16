@@ -16,19 +16,19 @@ import java.util.List;
 public class ClientePostPutRequestDTO {
 
     @JsonProperty("nome")
-    @NotBlank(message = "NOME COMPLETO OBRIGATORIO")
+    @NotBlank(message = "Nome obrigatorio")
     private String nomeCompleto;
 
     @JsonProperty("usuario")
-    @NotBlank(message = "USUARIO OBRIGATORIO")
+    @NotBlank(message = "usuario obrigatorio")
     private String usuario;
 
     @JsonProperty("codigoAcesso")
-    @NotBlank(message = "CODIGO DE ACESSO OBRIGATORIO")
+    @NotBlank(message = "Codigo de acesso obrigatorio")
     private String codigoAcesso;
 
     @JsonProperty("endereco")
-    @NotBlank(message = "ENDERECO PRINCIPAL OBRIGATORIO")
+    @NotBlank(message = "Endereco obrigatorio")
     private String endereco;
 
 }

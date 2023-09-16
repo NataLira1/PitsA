@@ -67,7 +67,7 @@ public class ClienteControllerTests {
     void tearDown() {
         clienteRepository.deleteAll();
     }
-/*
+
     @Nested
     @DisplayName("Conjunto de casos de verificação de nome")
     class ClienteVerificacaoNome {
@@ -76,7 +76,7 @@ public class ClienteControllerTests {
         @DisplayName("Quando alteramos o nome do cliente com dados válidos")
         void quandoAlteramosNomeDoClienteValido() throws Exception {
             // Arrange
-            clientePostPutRequestDTO.setNome("Cliente Um Alterado");
+            clientePostPutRequestDTO.setNomeCompleto("Cliente Um Alterado");
 
             // Act
             String responseJsonString = driver.perform(put(URI_CLIENTES + "/" + cliente.getId())
@@ -90,14 +90,14 @@ public class ClienteControllerTests {
             Cliente resultado = objectMapper.readValue(responseJsonString, Cliente.ClienteBuilder.class).build();
 
             // Assert
-            assertEquals("Cliente Um Alterado", resultado.getNome());
+            assertEquals("Cliente Um Alterado", resultado.getNomeCompleto());
         }
 
         @Test
         @DisplayName("Quando alteramos o nome do cliente nulo")
         void quandoAlteramosNomeDoClienteNulo() throws Exception {
             // Arrange
-            clientePostPutRequestDTO.setNome(null);
+            clientePostPutRequestDTO.setNomeCompleto(null);
 
             // Act
             String responseJsonString = driver.perform(put(URI_CLIENTES + "/" + cliente.getId())
@@ -121,7 +121,7 @@ public class ClienteControllerTests {
         @DisplayName("Quando alteramos o nome do cliente vazio")
         void quandoAlteramosNomeDoClienteVazio() throws Exception {
             // Arrange
-            clientePostPutRequestDTO.setNome("");
+            clientePostPutRequestDTO.setNomeCompleto("");
 
             // Act
             String responseJsonString = driver.perform(put(URI_CLIENTES + "/" + cliente.getId())
@@ -140,6 +140,7 @@ public class ClienteControllerTests {
                     () -> assertEquals("Nome obrigatorio", resultado.getErrors().get(0))
             );
         }
+
     }
 
     @Nested
@@ -161,7 +162,7 @@ public class ClienteControllerTests {
                     .andDo(print())
                     .andReturn().getResponse().getContentAsString();
 
-            ClienteResponseDTO resultado = objectMapper.readValue(responseJsonString, ClienteResponseDTO.ClienteResponseDTOBuilder.class).build();
+            Cliente resultado = objectMapper.readValue(responseJsonString, Cliente.ClienteBuilder.class).build();
 
             // Assert
             assertEquals("Endereco Alterado", resultado.getEndereco());
@@ -214,6 +215,7 @@ public class ClienteControllerTests {
                     () -> assertEquals("Endereco obrigatorio", resultado.getErrors().get(0))
             );
         }
+
     }
 
     @Nested
@@ -316,7 +318,7 @@ public class ClienteControllerTests {
             );
         }
     }
-*/
+
     @Nested
     @DisplayName("Conjunto de casos de verificação dos fluxos básicos API Rest")
     class ClienteVerificacaoFluxosBasicosApiRest {
@@ -712,7 +714,7 @@ public class ClienteControllerTests {
 
 
     }
+*/
 
 
- */
 }

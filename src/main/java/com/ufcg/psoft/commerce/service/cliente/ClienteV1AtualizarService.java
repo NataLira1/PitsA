@@ -3,6 +3,7 @@ package com.ufcg.psoft.commerce.service.cliente;
 import com.ufcg.psoft.commerce.dto.Cliente.ClientePostPutRequestDTO;
 import com.ufcg.psoft.commerce.exception.ClienteNaoExisteException;
 import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
+import com.ufcg.psoft.commerce.exception.CodigoDeAcessoNumericoException;
 import com.ufcg.psoft.commerce.models.Cliente;
 import com.ufcg.psoft.commerce.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,31 @@ public class ClienteV1AtualizarService implements ClienteAtualizarService{
 
         if(codigoAcesso.equals(cliente.getCodigoAcesso())){
 
-            cliente.setCodigoAcesso(clientePostPutRequestDTO.getCodigoAcesso());
-            cliente.setEndereco(clientePostPutRequestDTO.getEndereco());
-            cliente.setNomeCompleto(clientePostPutRequestDTO.getNomeCompleto());
-            cliente.setUsuario(clientePostPutRequestDTO.getUsuario());
-            return clienteRepository.save(cliente);
+            if(clientePostPutRequestDTO.getCodigoAcesso().length() == 6 && saoNumericos(clientePostPutRequestDTO.getCodigoAcesso())){
+
+                cliente.setCodigoAcesso(clientePostPutRequestDTO.getCodigoAcesso());
+                cliente.setEndereco(clientePostPutRequestDTO.getEndereco());
+                cliente.setNomeCompleto(clientePostPutRequestDTO.getNomeCompleto());
+                cliente.setUsuario(clientePostPutRequestDTO.getUsuario());
+
+                return clienteRepository.save(cliente);
+            }else {
+                throw new CodigoDeAcessoNumericoException();
+            }
+
         } else {
             throw new CodigoAcessoInvalidException();
         }
 
     }
+
+    public boolean saoNumericos(String chaveAcesso){
+        for (char c : chaveAcesso.toCharArray()){
+            if(!Character.isDigit(c)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
