@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 )
 public class EstabelecimentoController {
 
-
+/*
     @Autowired
     private EstabelecimentoController estabelecimentoCriarService;
 
@@ -31,6 +31,6 @@ public class EstabelecimentoController {
                 .status(HttpStatus.CREATED)
                 .body(estabelecimentoCriarService.criar(estabelecimentoPostPutRequestDTO));
     }
-
+*/
 
 }

@@ -1,5 +1,6 @@
 package com.ufcg.psoft.commerce.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 @Entity(name = "clientes")
 public class Cliente {
 
-    @JsonProperty
+    @JsonProperty("id")
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "pk_id_cliente")
@@ -28,21 +29,16 @@ public class Cliente {
 
     @JsonProperty("usuario")
     @Column(nullable = false, name = "desc_usuario")
-    private String usurio;
+    private String usuario;
 
-    @JsonProperty("chaveAcesso")
-    @Column(nullable = false, name = "desc_chaveAcesso")
-    private String chaveAcesso;
+    @JsonProperty("codigoAcesso")
+    @JsonIgnore
+    @Column(nullable = false, name = "desc_codigoAcesso")
+    private String codigoAcesso;
 
-    @JsonProperty
+    @JsonProperty("endereco")
     @Column(nullable = false, name = "desc_endereco")
     private String endereco;
-
-    @JsonProperty
-    @Column(nullable = false, name = "desc_pedidos")
-    @OneToMany(mappedBy = "cliente")
-    private List<Pedido> pedidos;
-
 
 
 }

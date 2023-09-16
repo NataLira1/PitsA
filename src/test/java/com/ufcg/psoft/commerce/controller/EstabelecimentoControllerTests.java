@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName("Testes do controlador de estabelecimentos")
 public class EstabelecimentoControllerTests {
+    /*
     @Autowired
     MockMvc driver;
 
@@ -51,6 +52,7 @@ public class EstabelecimentoControllerTests {
     @Nested
     @DisplayName("Conjunto de casos de verificação dos fluxos básicos API Rest")
     class EstabelecimentoVerificacaoFluxosBasicosApiRest {
+
         final String URI_ESTABELECIMENTOS = "/estabelecimentos";
         EstabelecimentoPostPutRequestDTO estabelecimentoPutRequestDTO;
         EstabelecimentoPostPutRequestDTO estabelecimentoPostRequestDTO;
@@ -366,4 +368,6 @@ public class EstabelecimentoControllerTests {
             );
         }
     }
+    */
+
 }

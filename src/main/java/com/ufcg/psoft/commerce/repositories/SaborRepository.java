@@ -3,5 +3,5 @@ package com.ufcg.psoft.commerce.repositories;
 import com.ufcg.psoft.commerce.models.Sabor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SaborRepository extends JpaRepository<Sabor, Long> {
+public interface SaborRepository  {
 }

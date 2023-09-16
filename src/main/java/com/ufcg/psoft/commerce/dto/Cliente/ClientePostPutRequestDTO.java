@@ -1,9 +1,6 @@
 package com.ufcg.psoft.commerce.dto.Cliente;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ufcg.psoft.commerce.models.Pedido;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,11 +27,8 @@ public class ClientePostPutRequestDTO {
     @NotBlank(message = "CODIGO DE ACESSO OBRIGATORIO")
     private String codigoAcesso;
 
-    @JsonProperty("enderecoPrincipal")
+    @JsonProperty("endereco")
     @NotBlank(message = "ENDERECO PRINCIPAL OBRIGATORIO")
-    private String enderecoPrincipal;
-
-    @JsonProperty("pedidos")
-    private List<Pedido> pedidos;
+    private String endereco;
 
 }
