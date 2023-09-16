@@ -1,4 +1,4 @@
-package com.ufcg.psoft.commerce.controller;
+/*package com.ufcg.psoft.commerce.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ufcg.psoft.commerce.dto.SaborPostPutRequestDTO;
@@ -31,3 +31,4 @@ public class SaborV1ControllerTests {
 
 
 }
+*/

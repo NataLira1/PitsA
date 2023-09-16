@@ -41,4 +41,18 @@ public class EstabelecimentoV1BuscarCardapioService implements EstabelecimentoBu
 
         return cardapioFiltrado.collect(Collectors.toSet());
     }
+
+    @Override
+    public Set<Sabor> getCardapioPorDisponibilidade(Long id, String codigo, Boolean disponivel) {
+        Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
+
+        if(codigo != es.getCodigoAcesso()) throw new EstabelecimentoCodigoAcessoInvalidoException();
+
+
+        Stream<Sabor> cardapioFiltrado = es.getCardapio().stream().filter(
+                item -> item.isDisponivel() == disponivel
+        );
+
+        return cardapioFiltrado.collect(Collectors.toSet());
+    }
 }

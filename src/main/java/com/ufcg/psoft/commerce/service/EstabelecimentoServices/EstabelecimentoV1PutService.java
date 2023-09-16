@@ -28,6 +28,7 @@ public class EstabelecimentoV1PutService implements EstabelecimentoPutService{
         es.setCardapio(estabelecimentoPostPutRequestDTO.getCardapio());
         es.setCodigoAcesso(estabelecimentoPostPutRequestDTO.getCodigoAcesso());
         es.setEntregadores(estabelecimentoPostPutRequestDTO.getEntregadores());
+        es.setUsuario(estabelecimentoPostPutRequestDTO.getUsuario());
 
         return estabelecimentoRepository.save(es);
     }

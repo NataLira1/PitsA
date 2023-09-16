@@ -25,6 +25,10 @@ public class Estabelecimento {
     @Column(name = "pk_id_endereco", unique = true, nullable = false)
     private Long id;
 
+    @JsonProperty("usuario")
+    @Column(name = "estabelecimento_usuario", nullable = true)
+    private String usuario;
+
     @JsonProperty("codigoDeAcesso")
     @Column(name = "estabelecimento_codigoAcesso", nullable = false)
     private String codigoAcesso;
@@ -38,7 +42,7 @@ public class Estabelecimento {
     private Set<Sabor> cardapio;
 
 
-    /*@JsonProperty("pedidos")
+    /*
     @Column(name = "estabelecimento_pedidos", nullable = true)
     private Map<Long, List<Pedido>> pedidos;*/
 

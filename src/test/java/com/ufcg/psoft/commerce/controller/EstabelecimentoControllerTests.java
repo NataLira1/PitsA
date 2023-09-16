@@ -146,6 +146,7 @@ public class EstabelecimentoControllerTests {
 
             estabelecimentoPostRequestDTO.setCardapio(sabores);
             estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+            estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
 
             // Act
             String responseJsonString = driver.perform(post(URI_ESTABELECIMENTOS)
@@ -163,7 +164,8 @@ public class EstabelecimentoControllerTests {
                     () -> assertNotNull(resultado.getId()),
                     () -> assertEquals(estabelecimentoPostRequestDTO.getCodigoAcesso(), resultado.getCodigoAcesso()),
                     () -> assertEquals(estabelecimentoPostRequestDTO.getCardapio().size(), resultado.getCardapio().size()),
-                    () -> assertEquals(estabelecimentoPostRequestDTO.getEntregadores().size(), resultado.getEntregadores().size())
+                    () -> assertEquals(estabelecimentoPostRequestDTO.getEntregadores().size(), resultado.getEntregadores().size()),
+                    () -> assertEquals(estabelecimentoPostRequestDTO.getUsuario(), resultado.getUsuario())
             );
         }
 
@@ -212,6 +214,7 @@ public class EstabelecimentoControllerTests {
 
             estabelecimentoPostRequestDTO.setCardapio(sabores);
             estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+            estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
 
             estabelecimentoPostRequestDTO.setCodigoAcesso("");
 
@@ -285,6 +288,7 @@ public class EstabelecimentoControllerTests {
 
             estabelecimentoPostRequestDTO.setCardapio(sabores);
             estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+            estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
 
             Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
 
@@ -424,6 +428,7 @@ public class EstabelecimentoControllerTests {
 
             estabelecimentoPostRequestDTO.setCardapio(sabores);
             estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+            estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
 
             Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
 
@@ -493,6 +498,7 @@ public class EstabelecimentoControllerTests {
 
             estabelecimentoPostRequestDTO.setCardapio(sabores);
             estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+            estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
 
             Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
             estabelecimentoRepository.save(modelMapper.map(estabelecimentoPutRequestDTO, Estabelecimento.class));
@@ -559,6 +565,7 @@ public class EstabelecimentoControllerTests {
 
             estabelecimentoPostRequestDTO.setCardapio(sabores);
             estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+            estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
 
             Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
             estabelecimentoRepository.save(modelMapper.map(estabelecimentoPutRequestDTO, Estabelecimento.class));
@@ -627,6 +634,7 @@ public class EstabelecimentoControllerTests {
 
             estabelecimentoPostRequestDTO.setCardapio(sabores);
             estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+            estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
 
             estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
             estabelecimentoRepository.save(modelMapper.map(estabelecimentoPutRequestDTO, Estabelecimento.class));
@@ -695,6 +703,7 @@ public class EstabelecimentoControllerTests {
 
             estabelecimentoPostRequestDTO.setCardapio(sabores);
             estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+            estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
 
             Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
             estabelecimentoRepository.save(modelMapper.map(estabelecimentoPutRequestDTO, Estabelecimento.class));
@@ -780,7 +789,6 @@ public class EstabelecimentoControllerTests {
                     .andReturn().getResponse().getContentAsString();
 
 
-
             CustomErrorType customErrorType = objectMapper.readValue(responseJsonString, CustomErrorType.class);
 
             // ASSERT
@@ -847,7 +855,6 @@ public class EstabelecimentoControllerTests {
                     .andExpect(status().isBadRequest())
                     .andDo(print())
                     .andReturn().getResponse().getContentAsString();
-
 
 
             CustomErrorType customErrorType = objectMapper.readValue(responseJsonString, CustomErrorType.class);
@@ -1190,5 +1197,237 @@ public class EstabelecimentoControllerTests {
                     () -> assertEquals(2, resultado.size())
             );
         }
+
+        @Test
+        @DisplayName("Quando buscamos o cardapio de um estabelecimento por tipo Disponibilidade")
+        void quandoBuscarCardapioEstabelecimentoPorDisponibilidade() throws Exception {
+            // Arrange
+            Sabor sabor1 = Sabor.builder()
+                    .nome("Calabresa")
+                    .valorMedia(25.0)
+                    .valorGrande(35.0)
+                    .tipo("salgado")
+                    .disponivel(true)
+                    .build();
+
+            Sabor sabor2 = Sabor.builder()
+                    .nome("Mussarela")
+                    .valorMedia(20.0)
+                    .valorGrande(30.0)
+                    .tipo("salgado")
+                    .disponivel(true)
+                    .build();
+            Sabor sabor3 = Sabor.builder()
+                    .nome("Chocolate")
+                    .valorMedia(25.0)
+                    .valorGrande(35.0)
+                    .tipo("doce")
+                    .disponivel(false)
+                    .build();
+
+            Sabor sabor4 = Sabor.builder()
+                    .nome("Morango")
+                    .valorMedia(20.0)
+                    .valorGrande(30.0)
+                    .tipo("doce")
+                    .disponivel(false)
+                    .build();
+            Estabelecimento estabelecimento1 = Estabelecimento.builder()
+                    .codigoAcesso("123456")
+                    .cardapio(Set.of(sabor1, sabor2, sabor3, sabor4))
+                    .build();
+            estabelecimentoRepository.save(estabelecimento1);
+
+            // Act
+            String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento1.getId() + "/sabores" + "/disponibilidade")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("disponivel", "true")
+                            .param("codigo", estabelecimento1.getCodigoAcesso()))
+                    .andExpect(status().isOk()) // Codigo 200
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            List<Sabor> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
+            });
+
+            // Assert
+            assertAll(
+                    () -> assertEquals(2, resultado.size())
+            );
+        }
+
+        @Test
+        @DisplayName("Quando buscamos o cardapio de um estabelecimento por Disponibilidade com id invalido")
+        void quandoBuscarCardapioEstabelecimentoPorDisponibilidadeComIdInvalido() throws Exception {
+            // Arrange
+            Sabor sabor1 = Sabor.builder()
+                    .nome("Calabresa")
+                    .valorMedia(25.0)
+                    .valorGrande(35.0)
+                    .tipo("salgado")
+                    .disponivel(true)
+                    .build();
+
+            Sabor sabor2 = Sabor.builder()
+                    .nome("Mussarela")
+                    .valorMedia(20.0)
+                    .valorGrande(30.0)
+                    .tipo("salgado")
+                    .disponivel(true)
+                    .build();
+            Sabor sabor3 = Sabor.builder()
+                    .nome("Chocolate")
+                    .valorMedia(25.0)
+                    .valorGrande(35.0)
+                    .tipo("doce")
+                    .disponivel(false)
+                    .build();
+
+            Sabor sabor4 = Sabor.builder()
+                    .nome("Morango")
+                    .valorMedia(20.0)
+                    .valorGrande(30.0)
+                    .tipo("doce")
+                    .disponivel(false)
+                    .build();
+            Estabelecimento estabelecimento1 = Estabelecimento.builder()
+                    .codigoAcesso("123456")
+                    .cardapio(Set.of(sabor1, sabor2, sabor3, sabor4))
+                    .build();
+            estabelecimentoRepository.save(estabelecimento1);
+
+            // Act
+            String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + 100 + "/sabores" + "/disponibilidade")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("disponivel", "true")
+                            .param("codigo", estabelecimento1.getCodigoAcesso()))
+                    .andExpect(status().isBadRequest()) // Codigo 200
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType resultado = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+            // Assert
+            assertAll(
+                    () -> assertEquals("Estabelecimento nao encontrado", resultado.getMessage())
+            );
+        }
+
+        @Test
+        @DisplayName("Quando buscamos o cardapio de um estabelecimento por Disponibilidade com codigo de acesso invalido")
+        void quandoBuscarCardapioEstabelecimentoPorDisponibilidadeComCodigoDeAcessoInvalido() throws Exception {
+            // Arrange
+            Sabor sabor1 = Sabor.builder()
+                    .nome("Calabresa")
+                    .valorMedia(25.0)
+                    .valorGrande(35.0)
+                    .tipo("salgado")
+                    .disponivel(true)
+                    .build();
+
+            Sabor sabor2 = Sabor.builder()
+                    .nome("Mussarela")
+                    .valorMedia(20.0)
+                    .valorGrande(30.0)
+                    .tipo("salgado")
+                    .disponivel(true)
+                    .build();
+            Sabor sabor3 = Sabor.builder()
+                    .nome("Chocolate")
+                    .valorMedia(25.0)
+                    .valorGrande(35.0)
+                    .tipo("doce")
+                    .disponivel(false)
+                    .build();
+
+            Sabor sabor4 = Sabor.builder()
+                    .nome("Morango")
+                    .valorMedia(20.0)
+                    .valorGrande(30.0)
+                    .tipo("doce")
+                    .disponivel(false)
+                    .build();
+            Estabelecimento estabelecimento1 = Estabelecimento.builder()
+                    .codigoAcesso("123456")
+                    .cardapio(Set.of(sabor1, sabor2, sabor3, sabor4))
+                    .build();
+            estabelecimentoRepository.save(estabelecimento1);
+
+            // Act
+            String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento1.getId() + "/sabores" + "/disponibilidade")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("disponivel", "true")
+                            .param("codigo", "1231"))
+                    .andExpect(status().isBadRequest()) // Codigo 200
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType resultado = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+            // Assert
+            assertAll(
+                    () -> assertEquals("Codigo de acesso invalido", resultado.getMessage())
+            );
+        }
+
+
+        @Test
+        @DisplayName("Quando buscamos o cardapio de um estabelecimento por tipo indisponibilidade")
+        void quandoBuscarCardapioEstabelecimentoPorIndisponibilidade() throws Exception {
+            // Arrange
+            Sabor sabor1 = Sabor.builder()
+                    .nome("Calabresa")
+                    .valorMedia(25.0)
+                    .valorGrande(35.0)
+                    .tipo("salgado")
+                    .disponivel(true)
+                    .build();
+
+            Sabor sabor2 = Sabor.builder()
+                    .nome("Mussarela")
+                    .valorMedia(20.0)
+                    .valorGrande(30.0)
+                    .tipo("salgado")
+                    .disponivel(true)
+                    .build();
+            Sabor sabor3 = Sabor.builder()
+                    .nome("Chocolate")
+                    .valorMedia(25.0)
+                    .valorGrande(35.0)
+                    .tipo("doce")
+                    .disponivel(false)
+                    .build();
+
+            Sabor sabor4 = Sabor.builder()
+                    .nome("Morango")
+                    .valorMedia(20.0)
+                    .valorGrande(30.0)
+                    .tipo("doce")
+                    .disponivel(false)
+                    .build();
+            Estabelecimento estabelecimento1 = Estabelecimento.builder()
+                    .codigoAcesso("123456")
+                    .cardapio(Set.of(sabor1, sabor2, sabor3, sabor4))
+                    .build();
+            estabelecimentoRepository.save(estabelecimento1);
+
+            // Act
+            String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento1.getId() + "/sabores" + "/disponibilidade")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("disponivel", "false")
+                            .param("codigo", estabelecimento1.getCodigoAcesso()))
+                    .andExpect(status().isOk()) // Codigo 200
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            List<Sabor> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
+            });
+
+            // Assert
+            assertAll(
+                    () -> assertEquals(2, resultado.size())
+            );
+        }
     }
 }
+

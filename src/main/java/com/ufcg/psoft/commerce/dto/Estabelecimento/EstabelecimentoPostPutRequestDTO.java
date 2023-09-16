@@ -21,8 +21,9 @@ public class EstabelecimentoPostPutRequestDTO {
     private String codigoAcesso;
 
 
-    private Set<Entregador> entregadores;
+    private String usuario;
 
+    private Set<Entregador> entregadores;
 
     private Set<Sabor> cardapio;
 

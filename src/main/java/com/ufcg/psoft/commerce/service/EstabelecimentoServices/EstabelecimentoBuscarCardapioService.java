@@ -11,4 +11,6 @@ public interface EstabelecimentoBuscarCardapioService {
     Set<Sabor> getCardapio(Long id, String codigo);
 
     Set<Sabor> getCardapioPorTipo(Long id, String codigo, String tipo);
+
+    Set<Sabor> getCardapioPorDisponibilidade(Long id, String codigo, Boolean disponivel);
 }

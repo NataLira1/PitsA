@@ -72,6 +72,17 @@ public class EstabelecimentoV1Controller {
                 .body(estabelecimentoBuscarCardapioService.getCardapioPorTipo(id, codigo, tipo));
     }
 
+    @GetMapping("{id}/sabores/disponibilidade")
+    ResponseEntity getCardapioPorDisponibilidade(
+            @Param("codigo") String codigo,
+            @PathVariable("id") Long id,
+            @Param("disponivel") Boolean disponivel
+    ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(estabelecimentoBuscarCardapioService.getCardapioPorDisponibilidade(id, codigo, disponivel));
+    }
+
     @PostMapping
     ResponseEntity criar(
             @RequestBody @Valid EstabelecimentoPostPutRequestDTO estabelecimentoPostPutRequestDTO
