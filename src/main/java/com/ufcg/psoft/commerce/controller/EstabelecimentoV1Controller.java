@@ -1,6 +1,7 @@
 package com.ufcg.psoft.commerce.controller;
 
 
+import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPatchCodigoDTO;
 import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.service.EstabelecimentoServices.*;
 import jakarta.validation.Valid;
@@ -33,6 +34,9 @@ public class EstabelecimentoV1Controller {
 
     @Autowired
     EstabelecimentoBuscarCardapioService estabelecimentoBuscarCardapioService;
+
+    @Autowired
+    EstabelecimentoPatchCodigoService estabelecimentoPatchCodigoService;
 
     @GetMapping
     ResponseEntity getAll(){
@@ -101,6 +105,17 @@ public class EstabelecimentoV1Controller {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(estabelecimentoPutService.update(id, codigo, estabelecimentoPostPutRequestDTO));
+    }
+
+    @PatchMapping("{id}")
+    ResponseEntity atualizarCodigoDeAcesso(
+            @Param("codigo") String codigo,
+            @PathVariable("id") Long id,
+            @RequestBody @Valid EstabelecimentoPatchCodigoDTO estabelecimentoPatchCodigoDTO
+            ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(estabelecimentoPatchCodigoService.atualizarEmail(id, codigo, estabelecimentoPatchCodigoDTO));
     }
 
 

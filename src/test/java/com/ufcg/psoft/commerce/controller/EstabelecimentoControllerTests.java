@@ -3,6 +3,7 @@ package com.ufcg.psoft.commerce.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPatchCodigoDTO;
 import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.SaborPostPutRequestDTO;
 import com.ufcg.psoft.commerce.exception.CustomErrorType;
@@ -372,6 +373,297 @@ public class EstabelecimentoControllerTests {
                             .param("codigo", based.getCodigoAcesso())
                             .content(objectMapper.writeValueAsString(estabelecimentoPostRequestDTO)))
                     .andExpect(status().isBadRequest()) // Codigo 200
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+            // ASSERT
+            assertAll(
+                    () -> assertEquals("Estabelecimento nao encontrado", customErrorType.getMessage())
+            );
+        }
+
+        @Test
+        @DisplayName("Patch de codigo  Estabelecimento")
+        void patchEstabelecimentoCodigoValido() throws Exception {
+
+
+            // ENTREGADORES
+            Set<Entregador> entregadores = new HashSet<Entregador>();
+            Veiculo v = Veiculo.builder()
+                    .cor("verde")
+                    .placa("123123")
+                    .tipo("moto")
+                    .build();
+
+            Entregador e1 = Entregador.builder()
+                    .codigoAcesso("12345")
+                    .usuario("igor")
+                    .veiculo(v)
+                    .build();
+
+            entregadores.add(e1);
+
+
+            // CARDAPIO
+            Set<Sabor> sabores = new HashSet<Sabor>();
+            Sabor s = Sabor.builder()
+                    .nome("calabresa")
+                    .tipo("salgada")
+                    .valorGrande(30.00)
+                    .valorMedia(20.00)
+                    .disponivel(true)
+                    .build();
+
+            Sabor s2 = Sabor.builder()
+                    .nome("frango")
+                    .tipo("salgada")
+                    .valorGrande(35.00)
+                    .valorMedia(23.00)
+                    .disponivel(true)
+                    .build();
+
+            sabores.add(s);
+            sabores.add(s2);
+
+            estabelecimentoPostRequestDTO.setCardapio(sabores);
+            estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+
+            Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
+            //PATCH
+            EstabelecimentoPatchCodigoDTO estabelecimentoPatchCodigoDTO = EstabelecimentoPatchCodigoDTO.builder()
+                    .codigo("29042003")
+                    .build();
+
+
+            // Act
+            String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + based.getId())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("codigo", based.getCodigoAcesso())
+                            .content(objectMapper.writeValueAsString(estabelecimentoPatchCodigoDTO)))
+                    .andExpect(status().isOk()) // Codigo 200
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            Estabelecimento resultado = objectMapper.readValue(responseJsonString, Estabelecimento.class);
+
+            // Assert
+            assertAll(
+                    () -> assertNotNull(resultado.getId()),
+                    () -> assertNotEquals(estabelecimentoPostRequestDTO.getCodigoAcesso(), resultado.getCodigoAcesso()),
+                    () -> assertEquals(estabelecimentoPostRequestDTO.getCardapio().size(), resultado.getCardapio().size()),
+                    () -> assertEquals(estabelecimentoPostRequestDTO.getEntregadores().size(), resultado.getEntregadores().size())
+            );
+        }
+
+        @Test
+        @DisplayName("Patch de codigo Invalido Estabelecimento")
+        void patchEstabelecimentoCodigoInvalido() throws Exception {
+
+
+            // ENTREGADORES
+            Set<Entregador> entregadores = new HashSet<Entregador>();
+            Veiculo v = Veiculo.builder()
+                    .cor("verde")
+                    .placa("123123")
+                    .tipo("moto")
+                    .build();
+
+            Entregador e1 = Entregador.builder()
+                    .codigoAcesso("12345")
+                    .usuario("igor")
+                    .veiculo(v)
+                    .build();
+
+            entregadores.add(e1);
+
+
+            // CARDAPIO
+            Set<Sabor> sabores = new HashSet<Sabor>();
+            Sabor s = Sabor.builder()
+                    .nome("calabresa")
+                    .tipo("salgada")
+                    .valorGrande(30.00)
+                    .valorMedia(20.00)
+                    .disponivel(true)
+                    .build();
+
+            Sabor s2 = Sabor.builder()
+                    .nome("frango")
+                    .tipo("salgada")
+                    .valorGrande(35.00)
+                    .valorMedia(23.00)
+                    .disponivel(true)
+                    .build();
+
+            sabores.add(s);
+            sabores.add(s2);
+
+            estabelecimentoPostRequestDTO.setCardapio(sabores);
+            estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+
+            Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
+            //PATCH
+            EstabelecimentoPatchCodigoDTO estabelecimentoPatchCodigoDTO = EstabelecimentoPatchCodigoDTO.builder()
+                    .codigo("")
+                    .build();
+
+
+            // Act
+            String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + based.getId())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("codigo", based.getCodigoAcesso())
+                            .content(objectMapper.writeValueAsString(estabelecimentoPatchCodigoDTO)))
+                    .andExpect(status().isBadRequest()) // Codigo 400
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+            // ASSERT
+            assertAll(
+                    () -> assertEquals("Erros de validacao encontrados", customErrorType.getMessage()),
+                    () -> assertEquals(
+                            1, customErrorType.getErrors().size()
+                    ),
+                    () -> assertTrue(
+                            customErrorType.getErrors().stream().anyMatch(
+                                    (msg) -> msg.contains("Campo de Codigo de acesso obrigatorio")
+                            )
+                    )
+            );
+        }
+
+        @Test
+        @DisplayName("Patch de codigo de acesso do Estabelecimento Invalido")
+        void patchEstabelecimentoCodigoDeAcessoDoEstabelecimentoInvalido() throws Exception {
+
+
+            // ENTREGADORES
+            Set<Entregador> entregadores = new HashSet<Entregador>();
+            Veiculo v = Veiculo.builder()
+                    .cor("verde")
+                    .placa("123123")
+                    .tipo("moto")
+                    .build();
+
+            Entregador e1 = Entregador.builder()
+                    .codigoAcesso("12345")
+                    .usuario("igor")
+                    .veiculo(v)
+                    .build();
+
+            entregadores.add(e1);
+
+
+            // CARDAPIO
+            Set<Sabor> sabores = new HashSet<Sabor>();
+            Sabor s = Sabor.builder()
+                    .nome("calabresa")
+                    .tipo("salgada")
+                    .valorGrande(30.00)
+                    .valorMedia(20.00)
+                    .disponivel(true)
+                    .build();
+
+            Sabor s2 = Sabor.builder()
+                    .nome("frango")
+                    .tipo("salgada")
+                    .valorGrande(35.00)
+                    .valorMedia(23.00)
+                    .disponivel(true)
+                    .build();
+
+            sabores.add(s);
+            sabores.add(s2);
+
+            estabelecimentoPostRequestDTO.setCardapio(sabores);
+            estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+
+            Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
+            //PATCH
+            EstabelecimentoPatchCodigoDTO estabelecimentoPatchCodigoDTO = EstabelecimentoPatchCodigoDTO.builder()
+                    .codigo("3123123")
+                    .build();
+
+
+            // Act
+            String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + based.getId())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("codigo", "123123123")
+                            .content(objectMapper.writeValueAsString(estabelecimentoPatchCodigoDTO)))
+                    .andExpect(status().isBadRequest()) // Codigo 400
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+            // ASSERT
+            assertAll(
+                    () -> assertEquals("Codigo de acesso invalido", customErrorType.getMessage())
+            );
+        }
+
+        @Test
+        @DisplayName("Patch de codigo de acesso do Estabelecimento Invalido")
+        void patchEstabelecimentoComIdInvalido() throws Exception {
+
+
+            // ENTREGADORES
+            Set<Entregador> entregadores = new HashSet<Entregador>();
+            Veiculo v = Veiculo.builder()
+                    .cor("verde")
+                    .placa("123123")
+                    .tipo("moto")
+                    .build();
+
+            Entregador e1 = Entregador.builder()
+                    .codigoAcesso("12345")
+                    .usuario("igor")
+                    .veiculo(v)
+                    .build();
+
+            entregadores.add(e1);
+
+
+            // CARDAPIO
+            Set<Sabor> sabores = new HashSet<Sabor>();
+            Sabor s = Sabor.builder()
+                    .nome("calabresa")
+                    .tipo("salgada")
+                    .valorGrande(30.00)
+                    .valorMedia(20.00)
+                    .disponivel(true)
+                    .build();
+
+            Sabor s2 = Sabor.builder()
+                    .nome("frango")
+                    .tipo("salgada")
+                    .valorGrande(35.00)
+                    .valorMedia(23.00)
+                    .disponivel(true)
+                    .build();
+
+            sabores.add(s);
+            sabores.add(s2);
+
+            estabelecimentoPostRequestDTO.setCardapio(sabores);
+            estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+
+            Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
+            //PATCH
+            EstabelecimentoPatchCodigoDTO estabelecimentoPatchCodigoDTO = EstabelecimentoPatchCodigoDTO.builder()
+                    .codigo("3123123")
+                    .build();
+
+
+            // Act
+            String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + 100)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("codigo", based.getCodigoAcesso())
+                            .content(objectMapper.writeValueAsString(estabelecimentoPatchCodigoDTO)))
+                    .andExpect(status().isBadRequest()) // Codigo 400
                     .andDo(print())
                     .andReturn().getResponse().getContentAsString();
 
