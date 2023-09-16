@@ -1,4 +1,4 @@
-/*package com.ufcg.psoft.commerce.controller;
+package com.ufcg.psoft.commerce.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -937,4 +937,3 @@ public class PedidoControllerTests {
         }
     }
 }
-*/
