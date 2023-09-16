@@ -1,10 +1,7 @@
 package com.ufcg.psoft.commerce.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,13 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Embeddable
 public class Veiculo {
-    @Column(name = "placa")
+    @Column(name = "placa_veiculo")
     private String placa;
 
-    @Column(name = "tipo")
+    @Column(name = "tipo_veiculo")
     private String tipo;
     
-    @Column(name = "cor")
+    @Column(name = "cor_veiculo")
     private String cor;
 }
