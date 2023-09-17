@@ -34,7 +34,7 @@ public class EstabelecimentoV1RejeitaAssociacaoService implements Estabeleciment
         }
         Entregador entregador = entregadorRepository.findById(entregadorId)
                 .orElseThrow(EntregadorNotFound::new);
-        Associacao associacao = associacaoRepository.findByAssociacao(entregadorId, estabelecimentoId);
+        Associacao associacao = associacaoRepository.findByEntregadorIdAndEstabelecimentoId(entregadorId, estabelecimentoId);
         if (associacao == null) {
             throw new EntregadorNaoAssociadoException();
         }
