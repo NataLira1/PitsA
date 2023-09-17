@@ -34,11 +34,11 @@ public class Estabelecimento {
     private String codigoAcesso;
 
     @Column(name = "estabelecimento_entregadores", nullable = true)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Entregador> entregadores;
 
     @Column(name = "estabelecimento_cardapio", nullable = true)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Sabor> cardapio;
 
 
