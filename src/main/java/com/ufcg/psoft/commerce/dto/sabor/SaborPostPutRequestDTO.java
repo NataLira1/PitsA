@@ -1,7 +1,7 @@
-package com.ufcg.psoft.commerce.dto;
+package com.ufcg.psoft.commerce.dto.sabor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,19 +14,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SaborPostPutRequestDTO {
 
-    @NotBlank
+    @NotBlank(message = "CAMPO NOME OBRIGATORIO")
     @JsonProperty("nome")
     private String nome;
 
-    @NotBlank
+    @NotBlank(message = "CAMPO TIPO OBRIGATORIO")
     @JsonProperty("tipo")
     private String tipo;
 
-    @NotBlank
-    @JsonProperty("valorMedia")
-    private double valorMedia;
+    @JsonProperty("precoM")
+    private double precoM;
 
-   @NotBlank
-    @JsonProperty("valorGrande")
-    private double valorGrande;
+    @JsonProperty("precoG")
+    private double precoG;
+
+    @JsonProperty("disponvel")
+    private boolean disponivel;
 }
