@@ -36,4 +36,7 @@ public class Entregador {
 
     @Column(name = "disponivel")
     private String disponivel;
+
+    @Column(name = "status")
+    private String status;
 }
