@@ -3,6 +3,7 @@ package com.ufcg.psoft.commerce.service.associacao;
 import com.ufcg.psoft.commerce.exception.EntregadorCodigoAcessoInvalidoException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoCodigoAcessoInvalidoException;
 import com.ufcg.psoft.commerce.exception.entregador.EntregadorNotFound;
+import com.ufcg.psoft.commerce.models.Associacao;
 import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.repositories.AssociacaoRepository;
@@ -33,7 +34,12 @@ public class EntregadorV1AssociaService implements EntregadorAssociaService {
         if (!codigoAcessoEstabelecimento.equals(estabelecimento.getCodigoAcesso())) {
             throw new EstabelecimentoCodigoAcessoInvalidoException();
         }
+        Associacao associacao = new Associacao();
+        associacao.setEntregadorId(entregador.getId());
+        associacao.setEstabelecimentoId(estabelecimento.getId());
+        associacaoRepository.save(associacao);
         entregador.setStatus("sob análise");
-        return associacaoRepository.save(entregador);
+        entregadorRepository.save(entregador);
+        return entregador;
     }
 }
