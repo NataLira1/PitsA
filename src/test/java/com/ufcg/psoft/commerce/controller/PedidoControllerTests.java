@@ -1,12 +1,11 @@
-package com.ufcg.psoft.commerce.controller;
+/*package com.ufcg.psoft.commerce.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-//import com.ufcg.psoft.commerce.model.*;
-import com.ufcg.psoft.commerce.repositories.ClienteRepository;
+import com.ufcg.psoft.commerce.model.*;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
-//import com.ufcg.psoft.commerce.repository.*;
+import com.ufcg.psoft.commerce.repository.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName("Testes do controlador de pedidos")
 public class PedidoControllerTests {
-    /*
     final String URI_PEDIDOS = "/pedidos";
 
     @Autowired
@@ -938,6 +936,6 @@ public class PedidoControllerTests {
             );
         }
     }
-    */
-
 }
+
+ */
