@@ -16,17 +16,19 @@ public class ClienteV1DeleteService implements ClienteDeleteService{
     ClienteRepository clienteRepository;
 
     @Override
-    public void excluir(Long id, String codigoAcesso) {
+    public void excluir(Long id, String codigoAcesso, String usuario) {
 
-        Optional<Cliente> clienteOp = clienteRepository.findById(id);
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoExisteException());
 
-        if(!clienteOp.isPresent()){
-            throw new ClienteNaoExisteException();
-        }
-        if(codigoAcesso.equals(clienteRepository.findById(id).get().getCodigoAcesso())){
-            clienteRepository.deleteById(id);
-        } else {
+        if(!codigoAcesso.equals(cliente.getCodigoAcesso()) || usuario.equals(cliente.getUsuario())){
             throw new CodigoAcessoInvalidException();
         }
+        clienteRepository.deleteById(id);
+
+       // if(codigoAcesso.equals(cliente.getCodigoAcesso())){
+       //     clienteRepository.deleteById(id);
+       // } else {
+       //     throw new CodigoAcessoInvalidException();
+       // }
     }
 }

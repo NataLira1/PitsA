@@ -18,13 +18,9 @@ public class ClienteV1BuscarService implements  ClienteBuscarService{
     @Override
     public Cliente buscar(Long id) {
 
-        Optional<Cliente> clienteOp = clienteRepository.findById(id);
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoExisteException());
 
-        if(!clienteOp.isPresent()){
-            throw new ClienteNaoExisteException();
-        }
-
-        return clienteOp.get();
+        return cliente;
     }
 
     @Override

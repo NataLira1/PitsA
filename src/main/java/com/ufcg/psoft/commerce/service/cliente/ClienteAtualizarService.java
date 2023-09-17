@@ -6,6 +6,6 @@ import com.ufcg.psoft.commerce.models.Cliente;
 @FunctionalInterface
 public interface ClienteAtualizarService {
 
-    public Cliente atualizar(Long id, String codigoAcesso,ClientePostPutRequestDTO clientePostPutRequestDTO);
+    public Cliente atualizar(Long id, String codigoAcesso, String usuario,ClientePostPutRequestDTO clientePostPutRequestDTO);
 
 }

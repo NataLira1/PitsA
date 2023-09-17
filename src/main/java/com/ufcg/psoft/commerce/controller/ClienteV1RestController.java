@@ -43,11 +43,12 @@ public class ClienteV1RestController {
     public ResponseEntity<?> atualizarCliente(
             @PathVariable("id") Long id,
             @RequestParam String codigoAcesso,
+            @RequestParam String usuario,
             @RequestBody @Valid ClientePostPutRequestDTO clientePostPutRequestDTO
     ){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(clienteAtualizarService.atualizar(id, codigoAcesso,clientePostPutRequestDTO));
+                .body(clienteAtualizarService.atualizar(id, codigoAcesso, usuario ,clientePostPutRequestDTO));
     }
 
     @GetMapping
@@ -71,9 +72,10 @@ public class ClienteV1RestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> excluindoCliente(
             @PathVariable("id") Long id,
-            @RequestParam String codigoAcesso
+            @RequestParam String codigoAcesso,
+            @RequestParam String usuario
     ){
-        clienteDeleteService.excluir(id, codigoAcesso);
+        clienteDeleteService.excluir(id, codigoAcesso, usuario);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

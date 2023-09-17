@@ -18,43 +18,20 @@ public class ClienteV1AtualizarService implements ClienteAtualizarService{
     private ClienteRepository clienteRepository;
 
     @Override
-    public Cliente atualizar(Long id, String codigoAcesso, ClientePostPutRequestDTO clientePostPutRequestDTO) {
+    public Cliente atualizar(Long id, String codigoAcesso, String usuario,ClientePostPutRequestDTO clientePostPutRequestDTO) {
 
-        Optional<Cliente> clienteOp = clienteRepository.findById(id);
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoExisteException());
 
-        if(!clienteOp.isPresent()){
-            throw new ClienteNaoExisteException();
-        }
 
-        Cliente cliente = clienteOp.get();
-
-        if(codigoAcesso.equals(cliente.getCodigoAcesso())){
-
-            if(clientePostPutRequestDTO.getCodigoAcesso().length() == 6 && saoNumericos(clientePostPutRequestDTO.getCodigoAcesso())){
-
-                cliente.setCodigoAcesso(clientePostPutRequestDTO.getCodigoAcesso());
-                cliente.setEndereco(clientePostPutRequestDTO.getEndereco());
-                cliente.setNomeCompleto(clientePostPutRequestDTO.getNomeCompleto());
-                cliente.setUsuario(clientePostPutRequestDTO.getUsuario());
-
-                return clienteRepository.save(cliente);
-            }else {
-                throw new CodigoDeAcessoNumericoException();
-            }
-
-        } else {
+        if(!codigoAcesso.equals(cliente.getCodigoAcesso()) || usuario.equals(cliente.getUsuario())){
             throw new CodigoAcessoInvalidException();
         }
 
-    }
+        cliente.setCodigoAcesso(clientePostPutRequestDTO.getCodigoAcesso());
+        cliente.setEndereco(clientePostPutRequestDTO.getEndereco());
+        cliente.setNomeCompleto(clientePostPutRequestDTO.getNomeCompleto());
+        cliente.setUsuario(clientePostPutRequestDTO.getUsuario());
 
-    public boolean saoNumericos(String chaveAcesso){
-        for (char c : chaveAcesso.toCharArray()){
-            if(!Character.isDigit(c)){
-                return false;
-            }
-        }
-        return true;
+        return clienteRepository.save(cliente);
     }
-
 }
