@@ -1,9 +1,15 @@
 package com.ufcg.psoft.commerce.service.associacao;
 
+import com.ufcg.psoft.commerce.exception.CommerceException;
+import com.ufcg.psoft.commerce.exception.EntregadorCodigoAcessoInvalidoException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoCodigoAcessoInvalidoException;
+import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
+import com.ufcg.psoft.commerce.exception.entregador.EntregadorInvalido;
+import com.ufcg.psoft.commerce.exception.entregador.EntregadorNotFound;
 import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.repositories.AssociacaoRepository;
+import com.ufcg.psoft.commerce.repositories.EntregadorRepository;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class EntregadorV1AssociaService {
+public class EntregadorV1AssociaService implements EntregadorAssociaService {
 
     @Autowired
     private AssociacaoRepository associacaoRepository;
@@ -22,17 +28,17 @@ public class EntregadorV1AssociaService {
     @Autowired
     private EstabelecimentoRepository estabelecimentoRepository;
 
-    public Entregador associarEntregadorAEstabelecimento(Long entregadorId, String codigoAcessoEstabelecimento) {
-        Optional<Entregador> optionalEntregador = entregadorRepository.findById(entregadorId);
-        if (optionalEntregador.isPresent()) {
-            Entregador entregador = optionalEntregador.get();
-            Estabelecimento estabelecimento = estabelecimentoRepository.findByCodigoAcesso(codigoAcessoEstabelecimento);
-            if (estabelecimento.getCodigoAcesso() != codigoAcessoEstabelecimento) {
-                throw new EstabelecimentoCodigoAcessoInvalidoException();
-            }
-            entregador.setStatus("Sob Análise");
-            return associacaoRepository.save(entregador);
+    @Override
+    public Entregador associar(Long entregadorId, String codigoAcessoEntregador, String codigoAcessoEstabelecimento) {
+        Entregador entregador = entregadorRepository.findById(entregadorId).orElseThrow(() -> new EntregadorNotFound());
+        if (!codigoAcessoEntregador.equals(entregador.getCodigoAcesso())) {
+            throw new EntregadorCodigoAcessoInvalidoException();
         }
-        return null;
+        Estabelecimento estabelecimento = estabelecimentoRepository.findByCodigoAcesso(codigoAcessoEstabelecimento);
+        if (!codigoAcessoEstabelecimento.equals(estabelecimento.getCodigoAcesso())) {
+            throw new EstabelecimentoCodigoAcessoInvalidoException();
+        }
+        entregador.setStatus("sob análise");
+        return associacaoRepository.save(entregador);
     }
 }

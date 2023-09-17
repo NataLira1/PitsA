@@ -8,11 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
-@Table(name = "entregador")
 public class Entregador {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -20,23 +19,32 @@ public class Entregador {
     private Long id;
 
     @Column(name = "usuario")
+    @JsonProperty("usuario")
     private String usuario;
 
     @Column(name = "codigoAcesso")
+    @JsonProperty("codigoAcesso")
     private String codigoAcesso;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @Embedded
+    @Column(name = "veiculo")
+    @JsonProperty("veiculo")
     private Veiculo veiculo;
 
     @Column(name = "nome")
+    @JsonProperty("nome")
     private String nome;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "estabelecimento")
+    @JsonProperty("estabelecimento")
     private Estabelecimento estabelecimento;
 
     @Column(name = "disponivel")
+    @JsonProperty("disponivel")
     private String disponivel;
 
     @Column(name = "status")
+    @JsonProperty("status")
     private String status;
 }

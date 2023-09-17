@@ -18,8 +18,9 @@ public class AssociacaoV1Controller {
     @PostMapping("/associar/{entregadorId}")
     public ResponseEntity<Entregador> associarEntregadorAEstabelecimento(
             @PathVariable Long entregadorId,
+            @RequestParam String codigoAcessoEntregador,
             @RequestParam String codigoAcessoEstabelecimento) {
-        Entregador entregador = entregadorService.associarEntregadorAEstabelecimento(entregadorId, codigoAcessoEstabelecimento);
+        Entregador entregador = entregadorService.associar(entregadorId, codigoAcessoEntregador, codigoAcessoEstabelecimento);
         if (entregador != null) {
             return new ResponseEntity<>(entregador, HttpStatus.OK);
         } else {

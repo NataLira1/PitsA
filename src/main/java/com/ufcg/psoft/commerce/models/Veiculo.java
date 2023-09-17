@@ -11,17 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "veiculo")
+@Embeddable
 public class Veiculo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JsonProperty("id")
-    @Column(name = "pk_id_veiculo", unique = true, nullable = false)
-    Long id;
-
-    @Column(name = "placa")
+    @Column(name = "placa_veiculo")
     private String placa;
 
     @Column(name = "tipo")
