@@ -1331,7 +1331,7 @@ import jakarta.transaction.Transactional;
                         () -> assertEquals("Erros de validacao encontrados", resultado.getMessage()),
                         () -> assertEquals("Codigo de acesso deve ter exatamente 6 digitos numericos", resultado.getErrors().get(0))
                 );
-        } */
+        }*/
 
         @Test
         @DisplayName("Quando buscamos o cardapio de um estabelecimento")
@@ -1698,47 +1698,46 @@ import jakarta.transaction.Transactional;
         @DisplayName("Quando buscamos o cardapio de um estabelecimento por tipo Disponibilidade")
         void quandoBuscarCardapioEstabelecimentoPorDisponibilidade() throws Exception {
                 // Arrange
-                Sabor sabor1 = Sabor.builder()
-                        .nome("Calabresa")
-                        .valorMedia(25.0)
-                        .valorGrande(35.0)
-                        .tipo("salgado")
-                        .disponivel(true)
-                        .build();
+                Sabor sabor1 = saborRepository.save(Sabor.builder()
+                .nome("Calabresa")
+                .tipo("salgado")
+                .valorMedia(25.0)
+                .valorGrande(35.0)
+                .disponivel(true)
+                .estabelecimento(estabelecimento)
+                .build());
 
-                Sabor sabor2 = Sabor.builder()
+                Sabor sabor2 = saborRepository.save(Sabor.builder()
                         .nome("Mussarela")
+                        .tipo("salgado")
                         .valorMedia(20.0)
                         .valorGrande(30.0)
-                        .tipo("salgado")
                         .disponivel(true)
-                        .build();
-                Sabor sabor3 = Sabor.builder()
+                        .estabelecimento(estabelecimento)
+                        .build());
+                Sabor sabor3 = saborRepository.save(Sabor.builder()
                         .nome("Chocolate")
+                        .tipo("doce")
                         .valorMedia(25.0)
                         .valorGrande(35.0)
-                        .tipo("doce")
-                        .disponivel(false)
-                        .build();
+                        .estabelecimento(estabelecimento)
+                        .build());
 
-                Sabor sabor4 = Sabor.builder()
+                Sabor sabor4 = saborRepository.save(Sabor.builder()
                         .nome("Morango")
                         .valorMedia(20.0)
                         .valorGrande(30.0)
                         .tipo("doce")
-                        .disponivel(false)
-                        .build();
-                Estabelecimento estabelecimento1 = Estabelecimento.builder()
-                        .codigoAcesso("123456")
-                        .cardapio(Set.of(sabor1, sabor2, sabor3, sabor4))
-                        .build();
-                estabelecimentoRepository.save(estabelecimento1);
+                        .estabelecimento(estabelecimento)
+                        .build());
+                
+                estabelecimentoRepository.save(estabelecimento);
 
                 // Act
-                String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento1.getId() + "/sabores" + "/disponibilidade")
+                String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/disponibilidade")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("disponivel", "true")
-                                .param("codigo", estabelecimento1.getCodigoAcesso()))
+                                .param("codigo", estabelecimento.getCodigoAcesso()))
                         .andExpect(status().isOk()) // Codigo 200
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
