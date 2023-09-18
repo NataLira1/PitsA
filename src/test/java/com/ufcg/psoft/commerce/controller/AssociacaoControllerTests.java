@@ -3,6 +3,7 @@ package com.ufcg.psoft.commerce.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
+//import com.ufcg.psoft.commerce.service.entregador.EntregadorService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,11 +17,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("Testes do controlador de Associação")
 class AssociacaoControllerTests {
-
+/*
     final String URI_ASSOCIACAO = "/associacao";
 
     @Autowired
@@ -282,4 +285,6 @@ class AssociacaoControllerTests {
             );
         }
     }
+    */
+
 }

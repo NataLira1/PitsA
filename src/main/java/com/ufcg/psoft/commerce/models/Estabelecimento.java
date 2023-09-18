@@ -1,15 +1,14 @@
 package com.ufcg.psoft.commerce.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -27,23 +26,23 @@ public class Estabelecimento {
     private Long id;
 
     @JsonProperty("usuario")
-    @Column(name = "estabelecimento_usuario", unique = true, nullable = false)
+    @Column(name = "estabelecimento_usuario", nullable = true)
     private String usuario;
 
     @JsonProperty("codigoDeAcesso")
     @Column(name = "estabelecimento_codigoAcesso", nullable = false)
     private String codigoAcesso;
 
-    /*@JsonProperty("funcionarios")
-    @Column(name = "estabelecimento_funcionarios", nullable = true)
-    private Set<Entregador> funcionarios;*/
+    @Column(name = "estabelecimento_entregadores", nullable = true)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private Set<Entregador> entregadores;
 
-    /*@JsonProperty("Cardapio")
-    @Column(name = "estabelecimento_cardapio", nullable = false)
-    private Set<Sabor> cardapio;*/
+    @Column(name = "estabelecimento_cardapio", nullable = true)
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private Set<Sabor> cardapio;
 
 
-    /*@JsonProperty("pedidos")
+    /*
     @Column(name = "estabelecimento_pedidos", nullable = true)
     private Map<Long, List<Pedido>> pedidos;*/
 

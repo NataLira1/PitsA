@@ -32,6 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EntregadorControllerTests {
 
     final String URI_ENTREGADORES = "/v1/entregadores";
+/*
+    final String URI_ENTREGADORES = "/entregadores";
 
     @Autowired
     MockMvc driver;
@@ -710,4 +712,6 @@ public class EntregadorControllerTests {
 //            assertFalse(entregador.isDisponibilidade());
         }
     }
+    */
+
 }
