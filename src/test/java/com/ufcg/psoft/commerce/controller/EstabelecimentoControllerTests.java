@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPatchCodigoDTO;
 import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPostPutRequestDTO;
-import com.ufcg.psoft.commerce.dto.SaborPostPutRequestDTO;
 import com.ufcg.psoft.commerce.exception.CustomErrorType;
 import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
@@ -386,6 +385,7 @@ public class EstabelecimentoControllerTests {
 
         @Test
         @DisplayName("Patch de codigo  Estabelecimento")
+        @Transactional
         void patchEstabelecimentoCodigoValido() throws Exception {
 
 
@@ -1791,4 +1791,3 @@ public class EstabelecimentoControllerTests {
         }
     }
 }
-
