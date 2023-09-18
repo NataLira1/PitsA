@@ -1021,6 +1021,7 @@ public class EstabelecimentoControllerTests {
 
         @Test
         @DisplayName("Retornar o Estabelecimento desejado")
+        @Transactional
         void getOneEstabelecimentos() throws Exception {
 
 
