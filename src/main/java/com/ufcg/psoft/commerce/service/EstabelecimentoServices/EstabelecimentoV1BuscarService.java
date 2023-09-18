@@ -25,7 +25,7 @@ public class EstabelecimentoV1BuscarService implements EstabelecimentoBuscarServ
     public Estabelecimento getOne(Long id, String codigo) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(codigo == es.getCodigoAcesso()){
+        if(codigo.equals(es.getCodigoAcesso())){
             return es;
         }else{
             throw new EstabelecimentoCodigoAcessoInvalidoException();
