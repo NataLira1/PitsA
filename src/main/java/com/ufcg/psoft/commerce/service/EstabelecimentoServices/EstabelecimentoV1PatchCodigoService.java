@@ -19,7 +19,7 @@ public class EstabelecimentoV1PatchCodigoService implements EstabelecimentoPatch
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
         // VALIDAR O CODIGO DE ACESSO
-        if(es.getCodigoAcesso() != codigo) throw new EstabelecimentoCodigoAcessoInvalidoException();
+        if(!codigo.equals(es.getCodigoAcesso())) throw new EstabelecimentoCodigoAcessoInvalidoException();
 
         es.setCodigoAcesso(estabelecimentoPatchCodigoDTO.getCodigo());
 

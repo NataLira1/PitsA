@@ -813,8 +813,8 @@ public class EstabelecimentoControllerTests {
         }
 
         @Test
-        @DisplayName("Delete de Estabelecimento com codigo de acesso Invalido")
-        void deleteEstabelecimentoComCodigoDeAcessoInvalido() throws Exception {
+        @DisplayName("Delete de Estabelecimento com id Invalido")
+        void deleteEstabelecimentoComIdInvalido() throws Exception {
 
 
             // ENTREGADORES
@@ -882,6 +882,75 @@ public class EstabelecimentoControllerTests {
         }
 
         @Test
+        @DisplayName("Delete de Estabelecimento com Codigo de acesso Invalido")
+        void deleteEstabelecimentoComCodigoDeAcessoInvalido() throws Exception {
+
+
+            // ENTREGADORES
+            Set<Entregador> entregadores = new HashSet<Entregador>();
+            Veiculo v = Veiculo.builder()
+                    .cor("verde")
+                    .placa("123123")
+                    .tipo("moto")
+                    .build();
+
+            Entregador e1 = Entregador.builder()
+                    .codigoAcesso("12345")
+                    .usuario("igor")
+                    .veiculo(v)
+                    .build();
+
+            entregadores.add(e1);
+
+
+            // CARDAPIO
+            Set<Sabor> sabores = new HashSet<Sabor>();
+            Sabor s = Sabor.builder()
+                    .nome("calabresa")
+                    .tipo("salgada")
+                    .valorGrande(30.00)
+                    .valorMedia(20.00)
+                    .disponivel(true)
+                    .build();
+
+            Sabor s2 = Sabor.builder()
+                    .nome("frango")
+                    .tipo("salgada")
+                    .valorGrande(35.00)
+                    .valorMedia(23.00)
+                    .disponivel(true)
+                    .build();
+
+            sabores.add(s);
+            sabores.add(s2);
+
+            estabelecimentoPostRequestDTO.setCardapio(sabores);
+            estabelecimentoPostRequestDTO.setEntregadores(entregadores);
+            estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
+
+            Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
+            estabelecimentoRepository.save(modelMapper.map(estabelecimentoPutRequestDTO, Estabelecimento.class));
+
+
+            // Act
+            String responseJsonString = driver.perform(delete(URI_ESTABELECIMENTOS + "/" + based.getId())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("codigo", "1232134")
+                            .content(objectMapper.writeValueAsString(estabelecimentoPostRequestDTO)))
+                    .andExpect(status().isBadRequest())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+            // ASSERT
+            assertAll(
+                    () -> assertEquals("Codigo de acesso invalido", customErrorType.getMessage())
+            );
+        }
+
+        @Test
         @DisplayName("Retornar todos os Estabelecimentos")
         void getAllEstabelecimentos() throws Exception {
 
@@ -945,7 +1014,7 @@ public class EstabelecimentoControllerTests {
 
             // Assert
             assertAll(
-                    () -> assertEquals(3, resultado.size())
+                    () -> assertEquals(2, resultado.size())
             );
         }
 

@@ -23,7 +23,7 @@ public class EstabelecimentoV1PutService implements EstabelecimentoPutService{
     public Estabelecimento update(Long id, String codigo, EstabelecimentoPostPutRequestDTO estabelecimentoPostPutRequestDTO) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(es.getCodigoAcesso() != codigo) throw new EstabelecimentoCodigoAcessoInvalidoException();
+        if(!codigo.equals(es.getCodigoAcesso())) throw new EstabelecimentoCodigoAcessoInvalidoException();
 
         es.setCardapio(estabelecimentoPostPutRequestDTO.getCardapio());
         es.setCodigoAcesso(estabelecimentoPostPutRequestDTO.getCodigoAcesso());
