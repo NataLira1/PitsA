@@ -18,6 +18,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.Objects;
+import java.util.Set;
 
 @Data
 @Builder
@@ -42,43 +44,30 @@ public class Estabelecimento {
     private String codigoAcesso;
 
     @Column(name = "estabelecimento_entregadores", nullable = true)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Entregador> entregadores;
 
+
     //@JsonIgnore
-    @OneToMany(mappedBy = "estabelecimento", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Column(name = "estabelecimento_cardapio", nullable = true)
+    @OneToMany(mappedBy = "estabelecimento", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Sabor> cardapio;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Estabelecimento other = (Estabelecimento) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
-    }
-
-    
 
     /*
     @Column(name = "estabelecimento_pedidos", nullable = true)
     private Map<Long, List<Pedido>> pedidos;*/
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Estabelecimento that = (Estabelecimento) o;
+        return Objects.equals(codigoAcesso, that.codigoAcesso);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigoAcesso);
+    }
 }

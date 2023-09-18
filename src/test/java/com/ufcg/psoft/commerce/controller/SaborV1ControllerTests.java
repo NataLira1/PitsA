@@ -1,7 +1,7 @@
-/*package com.ufcg.psoft.commerce.controller;
+package com.ufcg.psoft.commerce.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ufcg.psoft.commerce.dto.SaborPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.sabor.SaborPostPutRequestDTO;
 import com.ufcg.psoft.commerce.models.Sabor;
 import com.ufcg.psoft.commerce.repositories.SaborRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -31,4 +31,3 @@ public class SaborV1ControllerTests {
 
 
 }
-*/

@@ -24,7 +24,7 @@ public class EstabelecimentoV1BuscarCardapioService implements EstabelecimentoBu
     public Set<Sabor> getCardapio(Long id, String codigo) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(codigo != es.getCodigoAcesso()) throw new EstabelecimentoCodigoAcessoInvalidoException();
+        if(!codigo.equals(es.getCodigoAcesso())) throw new EstabelecimentoCodigoAcessoInvalidoException();
 
         return es.getCardapio();
     }
@@ -33,7 +33,7 @@ public class EstabelecimentoV1BuscarCardapioService implements EstabelecimentoBu
     public Set<Sabor> getCardapioPorTipo(Long id, String codigo, String tipo) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(codigo != es.getCodigoAcesso()) throw new EstabelecimentoCodigoAcessoInvalidoException();
+        if(!codigo.equals(es.getCodigoAcesso())) throw new EstabelecimentoCodigoAcessoInvalidoException();
 
         Stream<Sabor> cardapioFiltrado = es.getCardapio().stream().filter(
                 item -> item.getTipo() == tipo
@@ -46,7 +46,7 @@ public class EstabelecimentoV1BuscarCardapioService implements EstabelecimentoBu
     public Set<Sabor> getCardapioPorDisponibilidade(Long id, String codigo, Boolean disponivel) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(codigo != es.getCodigoAcesso()) throw new EstabelecimentoCodigoAcessoInvalidoException();
+        if(!codigo.equals(es.getCodigoAcesso())) throw new EstabelecimentoCodigoAcessoInvalidoException();
 
 
         Stream<Sabor> cardapioFiltrado = es.getCardapio().stream().filter(
