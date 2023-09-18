@@ -2,8 +2,6 @@ package com.ufcg.psoft.commerce.dto.sabor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,28 +9,30 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class SaborPostPutRequestDTO {
+@NoArgsConstructor
+public class SaborResponseDTO {
 
-    @NotBlank(message = "CAMPO NOME OBRIGATORIO")
-    @NotNull(message = "CAMPO NOME NÃO PODE SER NULL")
+    @JsonProperty("id")
+    private Long id;
+
+    
     @JsonProperty("nome")
     private String nome;
 
-    @NotBlank(message = "CAMPO TIPO OBRIGATORIO")
-    @NotNull(message = "CAMPO TIPO NÃO PODE SER NULL")
+
     @JsonProperty("tipo")
     private String tipo;
 
-    @NotNull
+
     @JsonProperty("valorMedia")
     private double valorMedia;
 
-    @NotNull
+
     @JsonProperty("valorGrande")
     private double valorGrande;
 
-    @JsonProperty("disponvel")
+
+    @JsonProperty("disponivel")
     private boolean disponivel;
 }

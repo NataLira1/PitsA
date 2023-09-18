@@ -1,13 +1,16 @@
 package com.ufcg.psoft.commerce.service.sabor;
 
-import java.util.Set;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ufcg.psoft.commerce.dto.sabor.SaborPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.sabor.SaborResponseDTO;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoCodigoAcessoInvalidoException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
+import com.ufcg.psoft.commerce.exception.TipoInexistenteException;
+import com.ufcg.psoft.commerce.exception.ValorSaborInvalidoException;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Sabor;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
@@ -22,33 +25,47 @@ public class SaborV1CriarService implements SaborCriarService{
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
     @Override
-    public Sabor criar(Long idEstabelecimento, String codigoAcesso, SaborPostPutRequestDTO saborPostPutRequestDTO) {
+    public SaborResponseDTO criar(Long idEstabelecimento, String codigoAcesso, SaborPostPutRequestDTO saborPostPutRequestDTO) {
         
+        Optional<Estabelecimento> estabelecimentoOp = estabelecimentoRepository.findById(idEstabelecimento);
 
-        if(!estabelecimentoRepository.findById(idEstabelecimento).isPresent()){
+        if(!estabelecimentoOp.isPresent()){
             throw new EstabelecimentoNaoEncontradoException();
         }
-        Estabelecimento estabelecimento = estabelecimentoRepository.findById(idEstabelecimento).get();
+        
+        Estabelecimento estabelecimento = estabelecimentoOp.get();
         
         if(!estabelecimento.getCodigoAcesso().equals(codigoAcesso)){
             throw new EstabelecimentoCodigoAcessoInvalidoException();
         }
+        if(!saborPostPutRequestDTO.getTipo().toUpperCase().equals("SALGADO") && !saborPostPutRequestDTO.getTipo().toUpperCase().equals("DOCE")){
+            throw new TipoInexistenteException();
+        }
 
-        Sabor sabor = saborRepository.save(
-                Sabor.builder()
+        if(saborPostPutRequestDTO.getValorGrande()<=0 || saborPostPutRequestDTO.getValorMedia()<=0){
+            throw new ValorSaborInvalidoException();
+        }
+        
+        Sabor sabor =
+        		Sabor.builder()
                         .nome(saborPostPutRequestDTO.getNome())
                         .tipo(saborPostPutRequestDTO.getTipo())
-                        .precoM(saborPostPutRequestDTO.getPrecoM())
-                        .precoG(saborPostPutRequestDTO.getPrecoG())
+                        .valorMedia(saborPostPutRequestDTO.getValorMedia())
+                        .valorGrande(saborPostPutRequestDTO.getValorGrande())
                         .disponivel(true)
+                        .estabelecimento(estabelecimento)
                         .build()
-        );
+        ;
+        
+        saborRepository.save(sabor);
 
-        sabor.setEstabelecimento(estabelecimento);
-        Set<Sabor> novoCardapio = estabelecimento.getCardapio();
-        novoCardapio.add(sabor);
-        estabelecimento.setCardapio(novoCardapio);
-        estabelecimentoRepository.save(estabelecimento);
-        return sabor;
+        return SaborResponseDTO.builder()
+                .id(sabor.getId())
+                .nome(sabor.getNome())
+                .tipo(sabor.getTipo())
+                .valorMedia(sabor.getValorMedia())
+                .valorGrande(sabor.getValorGrande())
+                .disponivel(sabor.isDisponivel())
+                .build();
     }
 }

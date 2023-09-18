@@ -1,8 +1,8 @@
 package com.ufcg.psoft.commerce.service.sabor;
 
-import com.ufcg.psoft.commerce.models.Sabor;
+import com.ufcg.psoft.commerce.dto.sabor.SaborResponseDTO;
 
 @FunctionalInterface
 public interface SaborBuscarService {
-    public Sabor buscar(Long idEstabelecimento, String codigoAcesso, Long id);
+    public SaborResponseDTO buscar(Long idEstabelecimento, String codigoAcesso, Long id);
 }

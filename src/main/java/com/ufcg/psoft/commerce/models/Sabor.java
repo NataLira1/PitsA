@@ -1,5 +1,6 @@
 package com.ufcg.psoft.commerce.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -7,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,20 +35,22 @@ public class Sabor {
     @JsonProperty("tipo")
     private String tipo;
 
-    @Column(name = "double_preco_medio", nullable = false)
-    @JsonProperty("precoM")
-    private double precoM;
+    @Column(name = "double_valor_media", nullable = false)
+    @JsonProperty("valorMedia")
+    private double valorMedia;
 
-    @Column(name = "double_preco_grande", nullable = false)
-    @JsonProperty("precoG")
-    private double precoG;
+    @Column(name = "double_valor_grande", nullable = false)
+    @JsonProperty("valorGrande")
+    private double valorGrande;
 
     @Column(name = "bool_disponivel", nullable = false)
     @JsonProperty("disponivel")
     private boolean disponivel;
 
-    @ManyToOne()//cascade = CascadeType.PERSIST)
-    @JsonProperty("estabelecimento")
+//    @JsonProperty("estabelecimento")
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "estabelecimento_pk_id")
     private Estabelecimento estabelecimento;
 
     @Override

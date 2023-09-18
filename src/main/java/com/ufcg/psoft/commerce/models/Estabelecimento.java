@@ -3,7 +3,6 @@ package com.ufcg.psoft.commerce.models;
 
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -46,9 +45,8 @@ public class Estabelecimento {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Entregador> entregadores;
 
-    @JsonIgnore
-    @Column(name = "estabelecimento_cardapio", nullable = false)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //@JsonIgnore
+    @OneToMany(mappedBy = "estabelecimento", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Sabor> cardapio;
 
     @Override
