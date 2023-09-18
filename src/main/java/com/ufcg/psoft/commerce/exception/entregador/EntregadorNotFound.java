@@ -11,10 +11,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class EntregadorNotFound extends CommerceException{
     @JsonProperty("timestamp")
     private LocalDateTime timestamp;
@@ -25,10 +24,8 @@ public class EntregadorNotFound extends CommerceException{
     @JsonProperty("errors")
     private List<String> errors;
 
-    public EntregadorNotFound(CommerceException e) {
-        this.timestamp = LocalDateTime.now();
-        this.message = e.getMessage();
-        this.errors = new ArrayList<>();
+    public EntregadorNotFound() {
+        super("O entregador consultado nao existe!");
     }
 
 }

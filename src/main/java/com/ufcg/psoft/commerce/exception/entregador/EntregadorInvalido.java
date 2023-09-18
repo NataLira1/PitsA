@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
+@AllArgsConstructor
 public class EntregadorInvalido extends CommerceException{
     @JsonProperty("timestamp")
     private LocalDateTime timestamp;
@@ -21,10 +23,8 @@ public class EntregadorInvalido extends CommerceException{
     @JsonProperty("errors")
     private List<String> errors;
 
-    public EntregadorInvalido(CommerceException e) {
-        this.timestamp = LocalDateTime.now();
-        this.message = e.getMessage();
-        this.errors = new ArrayList<>();
+    public EntregadorInvalido() {
+        super("Erros de validacao encontrados");
     }
 
 }
