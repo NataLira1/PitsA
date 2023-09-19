@@ -51,8 +51,12 @@ public class Entregador {
     @JoinColumn(name = "estabelecimento")
     @JsonProperty("estabelecimento")
     private Estabelecimento estabelecimento;
- 
+
     @Column(name = "disponivel")
     @JsonProperty("disponivel")
     private String disponivel;
+
+    @Column(name = "status")
+    @JsonProperty("status")
+    private String status;
 }
