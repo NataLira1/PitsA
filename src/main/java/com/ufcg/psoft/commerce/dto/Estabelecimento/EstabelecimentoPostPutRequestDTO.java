@@ -1,15 +1,16 @@
 package com.ufcg.psoft.commerce.dto.Estabelecimento;
 
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Sabor;
+
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +26,7 @@ public class EstabelecimentoPostPutRequestDTO {
 
     private Set<Entregador> entregadores;
 
+    @JsonProperty("cardapio")
     private Set<Sabor> cardapio;
 
 

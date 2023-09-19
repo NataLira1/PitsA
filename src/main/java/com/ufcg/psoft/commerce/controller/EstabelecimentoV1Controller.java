@@ -4,6 +4,7 @@ package com.ufcg.psoft.commerce.controller;
 import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPatchCodigoDTO;
 import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.service.EstabelecimentoServices.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;

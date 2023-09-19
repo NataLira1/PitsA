@@ -1,21 +1,31 @@
 package com.ufcg.psoft.commerce.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.util.Objects;
 import java.util.Set;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "estabelecimentos")
 @Table(name = "estabelecimento")
 public class Estabelecimento {
 
@@ -37,8 +47,10 @@ public class Estabelecimento {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Entregador> entregadores;
 
+
+    //@JsonIgnore
     @Column(name = "estabelecimento_cardapio", nullable = true)
-    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "estabelecimento", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Sabor> cardapio;
 
 
@@ -46,5 +58,16 @@ public class Estabelecimento {
     @Column(name = "estabelecimento_pedidos", nullable = true)
     private Map<Long, List<Pedido>> pedidos;*/
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Estabelecimento that = (Estabelecimento) o;
+        return Objects.equals(codigoAcesso, that.codigoAcesso);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigoAcesso);
+    }
 }

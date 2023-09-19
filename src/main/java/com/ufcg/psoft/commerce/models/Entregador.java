@@ -1,7 +1,19 @@
 package com.ufcg.psoft.commerce.models;
 
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,8 +55,4 @@ public class Entregador {
     @Column(name = "disponivel")
     @JsonProperty("disponivel")
     private String disponivel;
-
-    @Column(name = "status")
-    @JsonProperty("status")
-    private String status;
 }
