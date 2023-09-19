@@ -35,7 +35,8 @@ public class AssociacaoV1Controller {
             @RequestParam Long estabelecimentoId,
             @RequestParam String codigoAcesso,
             boolean status) {
-        estabelecimentoAvaliaService.avaliar(entregadorId, estabelecimentoId, codigoAcesso, status);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(estabelecimentoAvaliaService.avaliar(entregadorId, estabelecimentoId, codigoAcesso, status));
     }
 }

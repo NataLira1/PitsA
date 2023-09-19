@@ -55,4 +55,8 @@ public class Entregador {
     @Column(name = "disponivel")
     @JsonProperty("disponivel")
     private String disponivel;
+
+    @Column(name = "status")
+    @JsonProperty("status")
+    private String status;
 }
