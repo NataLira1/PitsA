@@ -326,7 +326,7 @@ import jakarta.transaction.Transactional;
         }
 
         @Test
-        @DisplayName("Atualizacao de Estabelecimento nao encontrado")
+        @DisplayName("Atualizacao de O estabelecimento consultado nao existe!")
         void updateEstabelecimentoNaoEncontrado() throws Exception {
 
 
@@ -389,7 +389,7 @@ import jakarta.transaction.Transactional;
 
                 // ASSERT
                 assertAll(
-                        () -> assertEquals("Estabelecimento nao encontrado", customErrorType.getMessage())
+                        () -> assertEquals("O estabelecimento consultado nao existe!", customErrorType.getMessage())
                 );
         }
 
@@ -611,7 +611,7 @@ import jakarta.transaction.Transactional;
 
                 // ASSERT
                 assertAll(
-                        () -> assertEquals("Codigo de acesso invalido", customErrorType.getMessage())
+                        () -> assertEquals("Codigo de acesso invalido!", customErrorType.getMessage())
                 );
         }
 
@@ -681,7 +681,7 @@ import jakarta.transaction.Transactional;
 
                 // ASSERT
                 assertAll(
-                        () -> assertEquals("Estabelecimento nao encontrado", customErrorType.getMessage())
+                        () -> assertEquals("O estabelecimento consultado nao existe!", customErrorType.getMessage())
                 );
         }
 
@@ -750,7 +750,7 @@ import jakarta.transaction.Transactional;
 
                 // ASSERT
                 assertAll(
-                        () -> assertEquals("Codigo de acesso invalido", customErrorType.getMessage())
+                        () -> assertEquals("Codigo de acesso invalido!", customErrorType.getMessage())
                 );
         }
 
@@ -887,7 +887,7 @@ import jakarta.transaction.Transactional;
 
                 // ASSERT
                 assertAll(
-                        () -> assertEquals("Estabelecimento nao encontrado", customErrorType.getMessage())
+                        () -> assertEquals("O estabelecimento consultado nao existe!", customErrorType.getMessage())
                 );
         }
 
@@ -956,7 +956,7 @@ import jakarta.transaction.Transactional;
 
                 // ASSERT
                 assertAll(
-                        () -> assertEquals("Codigo de acesso invalido", customErrorType.getMessage())
+                        () -> assertEquals("Codigo de acesso invalido!", customErrorType.getMessage())
                 );
         }
 
@@ -1165,7 +1165,7 @@ import jakarta.transaction.Transactional;
 
                 // ASSERT
                 assertAll(
-                        () -> assertEquals("Estabelecimento nao encontrado", customErrorType.getMessage())
+                        () -> assertEquals("O estabelecimento consultado nao existe!", customErrorType.getMessage())
                 );
         }
 
@@ -1233,7 +1233,7 @@ import jakarta.transaction.Transactional;
 
                 // ASSERT
                 assertAll(
-                        () -> assertEquals("Codigo de acesso invalido", customErrorType.getMessage())
+                        () -> assertEquals("Codigo de acesso invalido!", customErrorType.getMessage())
                 );
         }
 
@@ -1407,7 +1407,7 @@ import jakarta.transaction.Transactional;
 
                 // Assert
                 assertAll(
-                        () -> assertEquals("Estabelecimento nao encontrado", resultado.getMessage())
+                        () -> assertEquals("O estabelecimento consultado nao existe!", resultado.getMessage())
                 );
         }
 
@@ -1521,7 +1521,7 @@ import jakarta.transaction.Transactional;
 
                 // Assert
                 assertAll(
-                        () -> assertEquals("Estabelecimento nao encontrado", resultado.getMessage())
+                        () -> assertEquals("O estabelecimento consultado nao existe!", resultado.getMessage())
                 );
         }
 
@@ -1634,7 +1634,7 @@ import jakarta.transaction.Transactional;
 
                 // Assert
                 assertAll(
-                        () -> assertEquals("Estabelecimento nao encontrado", resultado.getMessage())
+                        () -> assertEquals("O estabelecimento consultado nao existe!", resultado.getMessage())
                 );
         }
 
@@ -1804,7 +1804,7 @@ import jakarta.transaction.Transactional;
 
                 // Assert
                 assertAll(
-                        () -> assertEquals("Estabelecimento nao encontrado", resultado.getMessage())
+                        () -> assertEquals("O estabelecimento consultado nao existe!", resultado.getMessage())
                 );
         }
 
@@ -1861,7 +1861,7 @@ import jakarta.transaction.Transactional;
 
                 // Assert
                 assertAll(
-                        () -> assertEquals("Codigo de acesso invalido", resultado.getMessage())
+                        () -> assertEquals("Codigo de acesso invalido!", resultado.getMessage())
                 );
         }
 

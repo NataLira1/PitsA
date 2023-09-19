@@ -208,7 +208,7 @@ public class SaborControllerTests {
 
          // Assert
          assertAll(
-         () -> assertEquals("Estabelecimento nao encontrado",
+         () -> assertEquals("O estabelecimento consultado nao existe!",
          resultado.getMessage()));
          }
 
@@ -234,7 +234,7 @@ public class SaborControllerTests {
 
          // Assert
          assertAll(
-         () -> assertEquals("Codigo de acesso invalido", resultado.getMessage()));
+         () -> assertEquals("Codigo de acesso invalido!", resultado.getMessage()));
          }
 
          @Test
@@ -320,7 +320,7 @@ public class SaborControllerTests {
          CustomErrorType.class);
 
          // Assert
-         assertEquals(e.getMessage(), "Estabelecimento nao encontrado");
+         assertEquals(e.getMessage(), "O estabelecimento consultado nao existe!");
          }
 
          @Test
@@ -343,7 +343,7 @@ public class SaborControllerTests {
          CustomErrorType.class);
 
          // Assert
-         assertEquals(e.getMessage(), "Codigo de acesso invalido");
+         assertEquals(e.getMessage(), "Codigo de acesso invalido!");
          }
 
          @Test
@@ -447,7 +447,7 @@ public class SaborControllerTests {
          CustomErrorType e = objectMapper.readValue(responseJsonString,
          CustomErrorType.class);
          // Assert
-         assertEquals(e.getMessage(), "Estabelecimento nao encontrado");
+         assertEquals(e.getMessage(), "O estabelecimento consultado nao existe!");
          }
 
          @Test
@@ -472,7 +472,7 @@ public class SaborControllerTests {
          CustomErrorType e = objectMapper.readValue(responseJsonString,
          CustomErrorType.class);
          // Assert
-         assertEquals(e.getMessage(), "Codigo de acesso invalido");
+         assertEquals(e.getMessage(), "Codigo de acesso invalido!");
          }
 
          @Test
@@ -575,7 +575,7 @@ public class SaborControllerTests {
 
          // Assert
          assertAll(
-         () -> assertEquals("Estabelecimento nao encontrado",
+         () -> assertEquals("O estabelecimento consultado nao existe!",
          resultado.getMessage()));
          }
 
@@ -601,7 +601,7 @@ public class SaborControllerTests {
 
          // Assert
          assertAll(
-         () -> assertEquals("Codigo de acesso invalido", resultado.getMessage()));
+         () -> assertEquals("Codigo de acesso invalido!", resultado.getMessage()));
          }
          }
 
@@ -1068,7 +1068,7 @@ public class SaborControllerTests {
         CustomErrorType.class);
 
         // Assert
-        assertEquals("Codigo de acesso invalido", resultado.getMessage());
+        assertEquals("Codigo de acesso invalido!", resultado.getMessage());
         }
         }
 
