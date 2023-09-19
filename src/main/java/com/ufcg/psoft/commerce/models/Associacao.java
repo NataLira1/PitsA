@@ -24,8 +24,16 @@ public class Associacao {
     @JsonProperty("entregadorId")
     private Long entregadorId;
 
+    @Column(name = "codigoAcessoEntregador")
+    @JsonProperty("codigoAcesso")
+    private String codigoAcesso;
+
     @Column(name = "id_estabelecimento")
     @JsonProperty("estabelecimentoId")
     private Long estabelecimentoId;
+
+    @Column(name = "status")
+    @JsonProperty("status")
+    private boolean status;
 
 }
