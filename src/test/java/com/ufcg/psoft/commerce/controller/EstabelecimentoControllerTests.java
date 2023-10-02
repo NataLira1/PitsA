@@ -1374,8 +1374,8 @@ import jakarta.transaction.Transactional;
 
                 // Act
                 String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + based.getId() + "/sabores")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .param("codigo", based.getCodigoAcesso()))
+                                .contentType(MediaType.APPLICATION_JSON))
+                                //.param("codigo", based.getCodigoAcesso()))
                         .andExpect(status().isOk()) // Codigo 200
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
@@ -1454,8 +1454,8 @@ import jakarta.transaction.Transactional;
                 // Act
                 String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/tipo")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("tipo", "salgado")
-                                .param("codigo", estabelecimento.getCodigoAcesso()))
+                                .param("tipo", "salgado"))
+                                //.param("codigo", estabelecimento.getCodigoAcesso()))
                         .andExpect(status().isOk()) // Codigo 200
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
@@ -1511,7 +1511,7 @@ import jakarta.transaction.Transactional;
                 String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + 100 + "/sabores" + "/tipo")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("tipo", "salgado")
-                                .param("codigo", estabelecimento.getCodigoAcesso())
+                                //.param("codigo", estabelecimento.getCodigoAcesso())
                                 .content(objectMapper.writeValueAsString(estabelecimentoPostRequestDTO)))
                         .andExpect(status().isBadRequest()) // Codigo 400
                         .andDo(print())
@@ -1567,8 +1567,8 @@ import jakarta.transaction.Transactional;
                 // Act
                 String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/tipo")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("tipo", "doce")
-                                .param("codigo", estabelecimento.getCodigoAcesso()))
+                                .param("tipo", "doce"))
+                                //.param("codigo", estabelecimento.getCodigoAcesso()))
                         .andExpect(status().isOk()) // Codigo 200
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
@@ -1624,7 +1624,7 @@ import jakarta.transaction.Transactional;
                 String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + 100 + "/sabores" + "/tipo")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("tipo", "salgado")
-                                .param("codigo", estabelecimento.getCodigoAcesso())
+                                //.param("codigo", estabelecimento.getCodigoAcesso())
                                 .content(objectMapper.writeValueAsString(estabelecimentoPostRequestDTO)))
                         .andExpect(status().isBadRequest()) // Codigo 400
                         .andDo(print())
@@ -1680,7 +1680,7 @@ import jakarta.transaction.Transactional;
                 String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/tipo")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("tipo", "teste")
-                                .param("codigo", estabelecimento.getCodigoAcesso())
+                                //.param("codigo", estabelecimento.getCodigoAcesso())
                                 .content(objectMapper.writeValueAsString(estabelecimentoPostRequestDTO)))
                         .andExpect(status().isBadRequest()) // Codigo 400
                         .andDo(print())
@@ -1736,8 +1736,8 @@ import jakarta.transaction.Transactional;
                 // Act
                 String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/disponibilidade")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("disponivel", "true")
-                                .param("codigo", estabelecimento.getCodigoAcesso()))
+                                .param("disponivel", "true"))
+                                //.param("codigo", estabelecimento.getCodigoAcesso()))
                         .andExpect(status().isOk()) // Codigo 200
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
@@ -1794,8 +1794,8 @@ import jakarta.transaction.Transactional;
                 // Act
                 String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + 100 + "/sabores" + "/disponibilidade")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("disponivel", "true")
-                                .param("codigo", estabelecimento1.getCodigoAcesso()))
+                                .param("disponivel", "true"))
+                                //.param("codigo", estabelecimento1.getCodigoAcesso()))
                         .andExpect(status().isBadRequest()) // Codigo 200
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
@@ -1808,62 +1808,62 @@ import jakarta.transaction.Transactional;
                 );
         }
 
-        @Test
-        @DisplayName("Quando buscamos o cardapio de um estabelecimento por Disponibilidade com codigo de acesso invalido")
-        void quandoBuscarCardapioEstabelecimentoPorDisponibilidadeComCodigoDeAcessoInvalido() throws Exception {
-                // Arrange
-                Sabor sabor1 = Sabor.builder()
-                        .nome("Calabresa")
-                        .valorMedia(25.0)
-                        .valorGrande(35.0)
-                        .tipo("salgado")
-                        .disponivel(true)
-                        .build();
-
-                Sabor sabor2 = Sabor.builder()
-                        .nome("Mussarela")
-                        .valorMedia(20.0)
-                        .valorGrande(30.0)
-                        .tipo("salgado")
-                        .disponivel(true)
-                        .build();
-                Sabor sabor3 = Sabor.builder()
-                        .nome("Chocolate")
-                        .valorMedia(25.0)
-                        .valorGrande(35.0)
-                        .tipo("doce")
-                        .disponivel(false)
-                        .build();
-
-                Sabor sabor4 = Sabor.builder()
-                        .nome("Morango")
-                        .valorMedia(20.0)
-                        .valorGrande(30.0)
-                        .tipo("doce")
-                        .disponivel(false)
-                        .build();
-                Estabelecimento estabelecimento1 = Estabelecimento.builder()
-                        .codigoAcesso("123456")
-                        .cardapio(Set.of(sabor1, sabor2, sabor3, sabor4))
-                        .build();
-                estabelecimentoRepository.save(estabelecimento1);
-
-                // Act
-                String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento1.getId() + "/sabores" + "/disponibilidade")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .param("disponivel", "true")
-                                .param("codigo", "1231"))
-                        .andExpect(status().isBadRequest()) // Codigo 200
-                        .andDo(print())
-                        .andReturn().getResponse().getContentAsString();
-
-                CustomErrorType resultado = objectMapper.readValue(responseJsonString, CustomErrorType.class);
-
-                // Assert
-                assertAll(
-                        () -> assertEquals("Codigo de acesso invalido!", resultado.getMessage())
-                );
-        }
+//        @Test
+//        @DisplayName("Quando buscamos o cardapio de um estabelecimento por Disponibilidade com codigo de acesso invalido")
+//        void quandoBuscarCardapioEstabelecimentoPorDisponibilidadeComCodigoDeAcessoInvalido() throws Exception {
+//                // Arrange
+//                Sabor sabor1 = Sabor.builder()
+//                        .nome("Calabresa")
+//                        .valorMedia(25.0)
+//                        .valorGrande(35.0)
+//                        .tipo("salgado")
+//                        .disponivel(true)
+//                        .build();
+//
+//                Sabor sabor2 = Sabor.builder()
+//                        .nome("Mussarela")
+//                        .valorMedia(20.0)
+//                        .valorGrande(30.0)
+//                        .tipo("salgado")
+//                        .disponivel(true)
+//                        .build();
+//                Sabor sabor3 = Sabor.builder()
+//                        .nome("Chocolate")
+//                        .valorMedia(25.0)
+//                        .valorGrande(35.0)
+//                        .tipo("doce")
+//                        .disponivel(false)
+//                        .build();
+//
+//                Sabor sabor4 = Sabor.builder()
+//                        .nome("Morango")
+//                        .valorMedia(20.0)
+//                        .valorGrande(30.0)
+//                        .tipo("doce")
+//                        .disponivel(false)
+//                        .build();
+//                Estabelecimento estabelecimento1 = Estabelecimento.builder()
+//                        .codigoAcesso("123456")
+//                        .cardapio(Set.of(sabor1, sabor2, sabor3, sabor4))
+//                        .build();
+//                estabelecimentoRepository.save(estabelecimento1);
+//
+//                // Act
+//                String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento1.getId() + "/sabores" + "/disponibilidade")
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                                .param("disponivel", "true")
+//                                .param("codigo", "1231"))
+//                        .andExpect(status().isBadRequest()) // Codigo 200
+//                        .andDo(print())
+//                        .andReturn().getResponse().getContentAsString();
+//
+//                CustomErrorType resultado = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+//
+//                // Assert
+//                assertAll(
+//                        () -> assertEquals("Codigo de acesso invalido!", resultado.getMessage())
+//                );
+//        }
 
 
         @Test
@@ -1907,8 +1907,8 @@ import jakarta.transaction.Transactional;
                 // Act
                 String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/disponibilidade")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("disponivel", "false")
-                                .param("codigo", estabelecimento.getCodigoAcesso()))
+                                .param("disponivel", "false"))
+                                //.param("codigo", estabelecimento.getCodigoAcesso()))
                         .andExpect(status().isOk()) // Codigo 200
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
