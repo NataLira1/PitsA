@@ -1578,7 +1578,8 @@ import jakarta.transaction.Transactional;
 
                 // Assert
                 assertAll(
-                        () -> assertEquals(2, resultado.size())
+                        () -> assertEquals(2, resultado.size()),
+                        () -> assertEquals("Chocolate", resultado.get(0).getNome())
                 );
         }
 
