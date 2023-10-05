@@ -15,11 +15,12 @@ import lombok.NoArgsConstructor;
 public class EstabelecimentoPostResponseDTO {
 
     @Id
+            @JsonProperty("es_id")
     Long id;
 
-    @JsonProperty("codigoDeAcesso")
+    @JsonProperty("es_codigoDeAcesso")
     private String codigoAcesso;
 
-    @JsonProperty("usuario")
+    @JsonProperty("es_usuario")
     private String usuario;
 }

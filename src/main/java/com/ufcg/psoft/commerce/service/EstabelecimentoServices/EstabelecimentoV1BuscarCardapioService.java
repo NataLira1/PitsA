@@ -34,12 +34,12 @@ public class EstabelecimentoV1BuscarCardapioService implements EstabelecimentoBu
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
 
-        if(!tipo.toUpperCase().equals("SALGADO") && !tipo.toUpperCase().equals("DOCE")){
+        if(!tipo.equalsIgnoreCase("SALGADO") && !tipo.equalsIgnoreCase("DOCE")){
             throw new TipoInexistenteException();
         }
 
         Stream<Sabor> cardapioFiltrado = es.getCardapio().stream().filter(
-                item -> item.getTipo() == tipo
+                item -> item.getTipo().equalsIgnoreCase(tipo)
         );
 
         return cardapioFiltrado.collect(Collectors.toSet());
