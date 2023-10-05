@@ -9,7 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.jupiter.api.AfterEach;
+        import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPostResponseDTO;
+        import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -92,6 +93,7 @@ import jakarta.transaction.Transactional;
         void quandoCriarEstabelecimentoValido() throws Exception {
                 // Arrange
                 // nenhuma necessidade além do setup()
+                estabelecimentoPostRequestDTO.setUsuario("igoramf");
 
                 // Act
                 String responseJsonString = driver.perform(post(URI_ESTABELECIMENTOS)
@@ -102,7 +104,7 @@ import jakarta.transaction.Transactional;
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
 
-                Estabelecimento resultado = objectMapper.readValue(responseJsonString, Estabelecimento.class);
+                EstabelecimentoPostResponseDTO resultado = objectMapper.readValue(responseJsonString, EstabelecimentoPostResponseDTO.class);
 
                 // Assert
                 assertAll(
@@ -111,73 +113,31 @@ import jakarta.transaction.Transactional;
                 );
         }
 
-        @Test
-        @DisplayName("Quando criamos um novo estabelecimento com dados válidos juntamente com Cardapio e Entregadores")
-        void quandoCriarEstabelecimentoValidoComCardapioEentregadores() throws Exception {
+            @Test
+            @DisplayName("Quando criamos um novo estabelecimento com codigo de acesso menor que 6 digitos")
+            void quandoCriarEstabelecimentoComCodigoDeAcessoMenorQue6Digitos() throws Exception {
                 // Arrange
-
-                // ENTREGADORES
-                Set<Entregador> entregadores = new HashSet<Entregador>();
-                Veiculo v = Veiculo.builder()
-                        .cor("verde")
-                        .placa("123123")
-                        .tipo("moto")
-                        .build();
-
-                Entregador e1 = Entregador.builder()
-                        .codigoAcesso("12345")
-                        .usuario("igor")
-                        .veiculo(v)
-                        .build();
-
-                entregadores.add(e1);
-
-
-                // CARDAPIO
-                Set<Sabor> sabores = new HashSet<Sabor>();
-                Sabor s = Sabor.builder()
-                        .nome("calabresa")
-                        .tipo("salgada")
-                        .valorGrande(30.00)
-                        .valorMedia(20.00)
-                        .disponivel(true)
-                        .build();
-
-                Sabor s2 = Sabor.builder()
-                        .nome("frango")
-                        .tipo("salgada")
-                        .valorGrande(35.00)
-                        .valorMedia(23.00)
-                        .disponivel(true)
-                        .build();
-
-                sabores.add(s);
-                sabores.add(s2);
-
-                estabelecimentoPostRequestDTO.setCardapio(sabores);
-                estabelecimentoPostRequestDTO.setEntregadores(entregadores);
-                estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
+                // nenhuma necessidade além do setup()
+                estabelecimentoPostRequestDTO.setUsuario("igoramf");
+                estabelecimentoPostRequestDTO.setCodigoAcesso("1231");
 
                 // Act
                 String responseJsonString = driver.perform(post(URI_ESTABELECIMENTOS)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("codigoAcesso", estabelecimentoPostRequestDTO.getCodigoAcesso())
                                 .content(objectMapper.writeValueAsString(estabelecimentoPostRequestDTO)))
-                        .andExpect(status().isCreated()) // Codigo 201
+                        .andExpect(status().isBadRequest()) // Codigo 400
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
 
-                Estabelecimento resultado = objectMapper.readValue(responseJsonString, Estabelecimento.class);
+                    CustomErrorType customErrorType = objectMapper.readValue(responseJsonString, CustomErrorType.class);
 
-                // Assert
-                assertAll(
-                        () -> assertNotNull(resultado.getId()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getCodigoAcesso(), resultado.getCodigoAcesso()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getCardapio().size(), resultado.getCardapio().size()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getEntregadores().size(), resultado.getEntregadores().size()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getUsuario(), resultado.getUsuario())
-                );
-        }
+                    // ASSERT
+                    assertAll(
+                            () -> assertEquals("Codigo de acesso invalido!", customErrorType.getMessage())
+                    );
+            }
+
 
         @Test
         @DisplayName("Quando criamos um novo estabelecimento sem informar o codigo de Acesso")
@@ -226,7 +186,7 @@ import jakarta.transaction.Transactional;
                 estabelecimentoPostRequestDTO.setEntregadores(entregadores);
                 estabelecimentoPostRequestDTO.setUsuario("estabelecimento-1");
 
-                estabelecimentoPostRequestDTO.setCodigoAcesso("");
+                estabelecimentoPostRequestDTO.setCodigoAcesso(null);
 
                 // Act
                 String responseJsonString = driver.perform(post(URI_ESTABELECIMENTOS)
@@ -319,9 +279,7 @@ import jakarta.transaction.Transactional;
                 // Assert
                 assertAll(
                         () -> assertNotNull(resultado.getId()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getCodigoAcesso(), resultado.getCodigoAcesso()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getCardapio().size(), resultado.getCardapio().size()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getEntregadores().size(), resultado.getEntregadores().size())
+                        () -> assertEquals(estabelecimentoPostRequestDTO.getCodigoAcesso(), resultado.getCodigoAcesso())
                 );
         }
 
@@ -516,7 +474,7 @@ import jakarta.transaction.Transactional;
                 Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
                 //PATCH
                 EstabelecimentoPatchCodigoDTO estabelecimentoPatchCodigoDTO = EstabelecimentoPatchCodigoDTO.builder()
-                        .codigo("")
+                        .codigo(null)
                         .build();
 
 
@@ -1170,72 +1128,6 @@ import jakarta.transaction.Transactional;
         }
 
 
-        @Test
-        @DisplayName("Tentar retornar um Estabelecimento com Codigo de Acesso invalido")
-        void getOneCodigoDeAcessoInvalido() throws Exception {
-
-
-                // ENTREGADORES
-                Set<Entregador> entregadores = new HashSet<Entregador>();
-                Veiculo v = Veiculo.builder()
-                        .cor("verde")
-                        .placa("123123")
-                        .tipo("moto")
-                        .build();
-
-                Entregador e1 = Entregador.builder()
-                        .codigoAcesso("12345")
-                        .usuario("igor")
-                        .veiculo(v)
-                        .build();
-
-                entregadores.add(e1);
-
-
-                // CARDAPIO
-                Set<Sabor> sabores = new HashSet<Sabor>();
-                Sabor s = Sabor.builder()
-                        .nome("calabresa")
-                        .tipo("salgada")
-                        .valorGrande(30.00)
-                        .valorMedia(20.00)
-                        .disponivel(true)
-                        .build();
-
-                Sabor s2 = Sabor.builder()
-                        .nome("frango")
-                        .tipo("salgada")
-                        .valorGrande(35.00)
-                        .valorMedia(23.00)
-                        .disponivel(true)
-                        .build();
-
-                sabores.add(s);
-                sabores.add(s2);
-
-                estabelecimentoPostRequestDTO.setCardapio(sabores);
-                estabelecimentoPostRequestDTO.setEntregadores(entregadores);
-
-                Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
-                estabelecimentoRepository.save(modelMapper.map(estabelecimentoPutRequestDTO, Estabelecimento.class));
-
-
-                // Act
-                String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + based.getId())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .param("codigo", "132131"))
-                        .andExpect(status().isBadRequest())
-                        .andDo(print())
-                        .andReturn().getResponse().getContentAsString();
-
-
-                CustomErrorType customErrorType = objectMapper.readValue(responseJsonString, CustomErrorType.class);
-
-                // ASSERT
-                assertAll(
-                        () -> assertEquals("Codigo de acesso invalido!", customErrorType.getMessage())
-                );
-        }
 
 
         /*
@@ -1805,63 +1697,6 @@ import jakarta.transaction.Transactional;
                 // Assert
                 assertAll(
                         () -> assertEquals("O estabelecimento consultado nao existe!", resultado.getMessage())
-                );
-        }
-
-        @Test
-        @DisplayName("Quando buscamos o cardapio de um estabelecimento por Disponibilidade com codigo de acesso invalido")
-        void quandoBuscarCardapioEstabelecimentoPorDisponibilidadeComCodigoDeAcessoInvalido() throws Exception {
-                // Arrange
-                Sabor sabor1 = Sabor.builder()
-                        .nome("Calabresa")
-                        .valorMedia(25.0)
-                        .valorGrande(35.0)
-                        .tipo("salgado")
-                        .disponivel(true)
-                        .build();
-
-                Sabor sabor2 = Sabor.builder()
-                        .nome("Mussarela")
-                        .valorMedia(20.0)
-                        .valorGrande(30.0)
-                        .tipo("salgado")
-                        .disponivel(true)
-                        .build();
-                Sabor sabor3 = Sabor.builder()
-                        .nome("Chocolate")
-                        .valorMedia(25.0)
-                        .valorGrande(35.0)
-                        .tipo("doce")
-                        .disponivel(false)
-                        .build();
-
-                Sabor sabor4 = Sabor.builder()
-                        .nome("Morango")
-                        .valorMedia(20.0)
-                        .valorGrande(30.0)
-                        .tipo("doce")
-                        .disponivel(false)
-                        .build();
-                Estabelecimento estabelecimento1 = Estabelecimento.builder()
-                        .codigoAcesso("123456")
-                        .cardapio(Set.of(sabor1, sabor2, sabor3, sabor4))
-                        .build();
-                estabelecimentoRepository.save(estabelecimento1);
-
-                // Act
-                String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + estabelecimento1.getId() + "/sabores" + "/disponibilidade")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .param("disponivel", "true")
-                                .param("codigo", "1231"))
-                        .andExpect(status().isBadRequest()) // Codigo 200
-                        .andDo(print())
-                        .andReturn().getResponse().getContentAsString();
-
-                CustomErrorType resultado = objectMapper.readValue(responseJsonString, CustomErrorType.class);
-
-                // Assert
-                assertAll(
-                        () -> assertEquals("Codigo de acesso invalido!", resultado.getMessage())
                 );
         }
 

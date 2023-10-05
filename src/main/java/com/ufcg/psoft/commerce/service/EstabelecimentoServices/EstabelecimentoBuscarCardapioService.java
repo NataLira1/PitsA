@@ -8,9 +8,9 @@ import java.util.Set;
 
 public interface EstabelecimentoBuscarCardapioService {
 
-    Set<Sabor> getCardapio(Long id, String codigo);
+    Set<Sabor> getCardapio(Long id);
 
-    Set<Sabor> getCardapioPorTipo(Long id, String codigo, String tipo);
+    Set<Sabor> getCardapioPorTipo(Long id, String tipo);
 
-    Set<Sabor> getCardapioPorDisponibilidade(Long id, String codigo, Boolean disponivel);
+    Set<Sabor> getCardapioPorDisponibilidade(Long id,Boolean disponivel);
 }

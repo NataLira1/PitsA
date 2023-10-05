@@ -9,5 +9,5 @@ public interface EstabelecimentoBuscarService {
 
     List<Estabelecimento> getAll();
 
-    Estabelecimento getOne(Long id, String codigo);
+    Estabelecimento getOne(Long id);
 }
