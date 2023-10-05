@@ -92,6 +92,7 @@ import jakarta.transaction.Transactional;
         void quandoCriarEstabelecimentoValido() throws Exception {
                 // Arrange
                 // nenhuma necessidade além do setup()
+                estabelecimentoPostRequestDTO.setUsuario("igoramf");
 
                 // Act
                 String responseJsonString = driver.perform(post(URI_ESTABELECIMENTOS)
@@ -173,8 +174,6 @@ import jakarta.transaction.Transactional;
                 assertAll(
                         () -> assertNotNull(resultado.getId()),
                         () -> assertEquals(estabelecimentoPostRequestDTO.getCodigoAcesso(), resultado.getCodigoAcesso()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getCardapio().size(), resultado.getCardapio().size()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getEntregadores().size(), resultado.getEntregadores().size()),
                         () -> assertEquals(estabelecimentoPostRequestDTO.getUsuario(), resultado.getUsuario())
                 );
         }

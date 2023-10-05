@@ -17,7 +17,7 @@ public class EstabelecimentoV1DeleteService implements EstabelecimentoDeleteServ
     public void delete(Long id, String codigo) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(!codigo.equals(es.getCodigoAcesso())){
+        if(codigo == null || !codigo.equals(es.getCodigoAcesso())){
             throw new EstabelecimentoCodigoAcessoInvalidoException();
         }
 

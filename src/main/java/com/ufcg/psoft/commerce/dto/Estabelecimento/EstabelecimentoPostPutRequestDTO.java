@@ -22,7 +22,6 @@ public class EstabelecimentoPostPutRequestDTO {
     @JsonProperty("codigoDeAcesso")
     private String codigoAcesso;
 
-    @NotBlank(message = "Campo de usuario obrigatorio")
     @JsonProperty("usuario")
     private String usuario;
 
