@@ -48,12 +48,11 @@ public class EstabelecimentoV1Controller {
 
     @GetMapping("{id}")
     ResponseEntity getOne(
-            @Param("codigo") String codigo,
             @PathVariable("id") Long id
     ){
       return ResponseEntity
               .status(HttpStatus.OK)
-              .body(estabelecimentoBuscarService.getOne(id, codigo));
+              .body(estabelecimentoBuscarService.getOne(id));
     }
 
     @GetMapping("{id}/sabores")

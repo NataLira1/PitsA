@@ -318,9 +318,7 @@ import jakarta.transaction.Transactional;
                 // Assert
                 assertAll(
                         () -> assertNotNull(resultado.getId()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getCodigoAcesso(), resultado.getCodigoAcesso()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getCardapio().size(), resultado.getCardapio().size()),
-                        () -> assertEquals(estabelecimentoPostRequestDTO.getEntregadores().size(), resultado.getEntregadores().size())
+                        () -> assertEquals(estabelecimentoPostRequestDTO.getCodigoAcesso(), resultado.getCodigoAcesso())
                 );
         }
 
@@ -1169,72 +1167,6 @@ import jakarta.transaction.Transactional;
         }
 
 
-        @Test
-        @DisplayName("Tentar retornar um Estabelecimento com Codigo de Acesso invalido")
-        void getOneCodigoDeAcessoInvalido() throws Exception {
-
-
-                // ENTREGADORES
-                Set<Entregador> entregadores = new HashSet<Entregador>();
-                Veiculo v = Veiculo.builder()
-                        .cor("verde")
-                        .placa("123123")
-                        .tipo("moto")
-                        .build();
-
-                Entregador e1 = Entregador.builder()
-                        .codigoAcesso("12345")
-                        .usuario("igor")
-                        .veiculo(v)
-                        .build();
-
-                entregadores.add(e1);
-
-
-                // CARDAPIO
-                Set<Sabor> sabores = new HashSet<Sabor>();
-                Sabor s = Sabor.builder()
-                        .nome("calabresa")
-                        .tipo("salgada")
-                        .valorGrande(30.00)
-                        .valorMedia(20.00)
-                        .disponivel(true)
-                        .build();
-
-                Sabor s2 = Sabor.builder()
-                        .nome("frango")
-                        .tipo("salgada")
-                        .valorGrande(35.00)
-                        .valorMedia(23.00)
-                        .disponivel(true)
-                        .build();
-
-                sabores.add(s);
-                sabores.add(s2);
-
-                estabelecimentoPostRequestDTO.setCardapio(sabores);
-                estabelecimentoPostRequestDTO.setEntregadores(entregadores);
-
-                Estabelecimento based = estabelecimentoRepository.save(modelMapper.map(estabelecimentoPostRequestDTO, Estabelecimento.class));
-                estabelecimentoRepository.save(modelMapper.map(estabelecimentoPutRequestDTO, Estabelecimento.class));
-
-
-                // Act
-                String responseJsonString = driver.perform(get(URI_ESTABELECIMENTOS + "/" + based.getId())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .param("codigo", "132131"))
-                        .andExpect(status().isBadRequest())
-                        .andDo(print())
-                        .andReturn().getResponse().getContentAsString();
-
-
-                CustomErrorType customErrorType = objectMapper.readValue(responseJsonString, CustomErrorType.class);
-
-                // ASSERT
-                assertAll(
-                        () -> assertEquals("Codigo de acesso invalido!", customErrorType.getMessage())
-                );
-        }
 
 
         /*

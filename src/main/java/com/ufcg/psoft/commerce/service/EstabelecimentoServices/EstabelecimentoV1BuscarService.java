@@ -22,13 +22,9 @@ public class EstabelecimentoV1BuscarService implements EstabelecimentoBuscarServ
     }
 
     @Override
-    public Estabelecimento getOne(Long id, String codigo) {
+    public Estabelecimento getOne(Long id) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(codigo.equals(es.getCodigoAcesso())){
-            return es;
-        }else{
-            throw new EstabelecimentoCodigoAcessoInvalidoException();
-        }
+        return es;
     }
 }
