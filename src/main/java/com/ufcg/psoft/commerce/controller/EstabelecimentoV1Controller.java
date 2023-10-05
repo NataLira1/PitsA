@@ -57,34 +57,31 @@ public class EstabelecimentoV1Controller {
 
     @GetMapping("{id}/sabores")
     ResponseEntity getCardapio(
-            @Param("codigo") String codigo,
             @PathVariable("id") Long id
     ){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(estabelecimentoBuscarCardapioService.getCardapio(id, codigo));
+                .body(estabelecimentoBuscarCardapioService.getCardapio(id));
     }
 
     @GetMapping("{id}/sabores/tipo")
     ResponseEntity getCardapioPorTipo(
-            @Param("codigo") String codigo,
             @PathVariable("id") Long id,
             @Param("tipo") String tipo
     ){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(estabelecimentoBuscarCardapioService.getCardapioPorTipo(id, codigo, tipo));
+                .body(estabelecimentoBuscarCardapioService.getCardapioPorTipo(id, tipo));
     }
 
     @GetMapping("{id}/sabores/disponibilidade")
     ResponseEntity getCardapioPorDisponibilidade(
-            @Param("codigo") String codigo,
             @PathVariable("id") Long id,
             @Param("disponivel") Boolean disponivel
     ){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(estabelecimentoBuscarCardapioService.getCardapioPorDisponibilidade(id, codigo, disponivel));
+                .body(estabelecimentoBuscarCardapioService.getCardapioPorDisponibilidade(id, disponivel));
     }
 
     @PostMapping
