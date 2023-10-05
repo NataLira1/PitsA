@@ -1,11 +1,13 @@
-/*package com.ufcg.psoft.commerce.controller;
+package com.ufcg.psoft.commerce.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ufcg.psoft.commerce.model.*;
+import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
+import com.ufcg.psoft.commerce.models.*;
+import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
-import com.ufcg.psoft.commerce.repository.*;
+import com.ufcg.psoft.commerce.repositories.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,7 +33,6 @@ public class PedidoControllerTests {
 
     @Autowired
     MockMvc driver;
-
     @Autowired
     PedidoRepository pedidoRepository;
     @Autowired
@@ -48,6 +49,7 @@ public class PedidoControllerTests {
     ObjectMapper objectMapper = new ObjectMapper();
     Cliente cliente;
     Entregador entregador;
+    Veiculo veiculo;
     Sabor sabor1;
     Sabor sabor2;
     Pizza pizzaM;
@@ -55,6 +57,7 @@ public class PedidoControllerTests {
     Estabelecimento estabelecimento;
     Pedido pedido;
     Pedido pedido1;
+
     PedidoPostPutRequestDTO pedidoPostPutRequestDTO;
 
     @BeforeEach
@@ -66,40 +69,50 @@ public class PedidoControllerTests {
         sabor1 = saborRepository.save(Sabor.builder()
                 .nome("Sabor Um")
                 .tipo("salgado")
-                .precoM(10.0)
-                .precoG(20.0)
+                .valorMedia(10.0)
+                .valorGrande(20.0)
                 .disponivel(true)
                 .build());
         sabor2 = saborRepository.save(Sabor.builder()
                 .nome("Sabor Dois")
                 .tipo("doce")
-                .precoM(15.0)
-                .precoG(30.0)
+                .valorMedia(15.0)
+                .valorGrande(30.0)
                 .disponivel(true)
                 .build());
         cliente = clienteRepository.save(Cliente.builder()
-                .nome("Anton Ego")
+                .nomeCompleto("Anton Ego")
                 .endereco("Paris")
                 .codigoAcesso("123456")
                 .build());
+
+        veiculo = Veiculo.builder()
+                .placa("ABC-1234")
+                .cor("Azul")
+                .tipo("Moto")
+                .build();
+
         entregador = entregadorRepository.save(Entregador.builder()
                 .nome("Joãozinho")
-                .placaVeiculo("ABC-1234")
-                .corVeiculo("Azul")
-                .tipoVeiculo("Moto")
+                .veiculo(veiculo)
                 .codigoAcesso("101010")
                 .build());
+
+
         pizzaM = Pizza.builder()
                 .sabor1(sabor1)
                 .tamanho("media")
                 .build();
+
         pizzaG = Pizza.builder()
                 .sabor1(sabor1)
                 .sabor2(sabor2)
                 .tamanho("grande")
                 .build();
+
         List<Pizza> pizzas = List.of(pizzaM);
         List<Pizza> pizzas1 = List.of(pizzaM, pizzaG);
+
         pedido = Pedido.builder()
                 .preco(10.0)
                 .enderecoEntrega("Casa 237")
@@ -108,6 +121,7 @@ public class PedidoControllerTests {
                 .entregadorId(entregador.getId())
                 .pizzas(pizzas)
                 .build();
+
         pedido1 = Pedido.builder()
                 .preco(10.0)
                 .enderecoEntrega("Casa 237")
@@ -116,6 +130,7 @@ public class PedidoControllerTests {
                 .entregadorId(entregador.getId())
                 .pizzas(pizzas1)
                 .build();
+
         pedidoPostPutRequestDTO = PedidoPostPutRequestDTO.builder()
                 .enderecoEntrega(pedido.getEnderecoEntrega())
                 .pizzas(pedido.getPizzas())
@@ -938,4 +953,3 @@ public class PedidoControllerTests {
     }
 }
 
- */
