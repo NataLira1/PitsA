@@ -1,5 +1,8 @@
 package com.ufcg.psoft.commerce.service.cliente;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ufcg.psoft.commerce.dto.Cliente.ClienteResponseDTO;
 import com.ufcg.psoft.commerce.exception.ClienteNaoExisteException;
 import com.ufcg.psoft.commerce.models.Cliente;
 import com.ufcg.psoft.commerce.repositories.ClienteRepository;
@@ -15,16 +18,28 @@ public class ClienteV1BuscarService implements  ClienteBuscarService{
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Override
-    public Cliente buscar(Long id) {
+    public ClienteResponseDTO buscar(Long id) {
 
         Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoExisteException());
 
-        return cliente;
+        return ClienteResponseDTO.builder()
+                .id(cliente.getId())
+                .nomeCompleto(cliente.getNomeCompleto())
+                .endereco(cliente.getEndereco())
+                .usuario(cliente.getUsuario())
+                .build();
     }
 
     @Override
-    public List<Cliente> buscarTudo() {
-        return clienteRepository.findAll();
+    public List<ClienteResponseDTO> buscarTudo() {
+
+        //return clienteRepository.findAll();
+
+        return mapper.convertValue(clienteRepository.findAll(), new TypeReference<>() {
+        });
     }
 }
