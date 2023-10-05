@@ -1,6 +1,8 @@
 package com.ufcg.psoft.commerce.service.cliente;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ufcg.psoft.commerce.dto.Cliente.ClientePostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.Cliente.ClienteResponseDTO;
 import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
 import com.ufcg.psoft.commerce.models.Cliente;
 import com.ufcg.psoft.commerce.repositories.ClienteRepository;
@@ -14,9 +16,12 @@ public class ClienteV1CriarService implements  ClienteCriarService{
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Override
     @Transactional
-    public Cliente criar(ClientePostPutRequestDTO clientePostPutRequestDTO) {
+    public ClienteResponseDTO criar(ClientePostPutRequestDTO clientePostPutRequestDTO) {
 
         if(clientePostPutRequestDTO.getCodigoAcesso().length() == 6){
             Cliente cliente = Cliente.builder()
@@ -26,7 +31,14 @@ public class ClienteV1CriarService implements  ClienteCriarService{
                     .nomeCompleto(clientePostPutRequestDTO.getNomeCompleto())
                     .build();
 
-            return clienteRepository.save(cliente);
+            clienteRepository.save(cliente);
+
+            return ClienteResponseDTO.builder()
+                    .id(cliente.getId())
+                    .nomeCompleto(cliente.getNomeCompleto())
+                    .endereco(cliente.getEndereco())
+                    .usuario(cliente.getUsuario())
+                    .build();
         }else{
             throw new CodigoAcessoInvalidException();
         }

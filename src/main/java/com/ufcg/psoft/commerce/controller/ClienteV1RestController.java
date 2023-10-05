@@ -1,6 +1,7 @@
 package com.ufcg.psoft.commerce.controller;
 
 import com.ufcg.psoft.commerce.dto.Cliente.ClientePostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.Cliente.ClienteResponseDTO;
 import com.ufcg.psoft.commerce.service.cliente.ClienteAtualizarService;
 import com.ufcg.psoft.commerce.service.cliente.ClienteBuscarService;
 import com.ufcg.psoft.commerce.service.cliente.ClienteCriarService;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,6 +38,7 @@ public class ClienteV1RestController {
     ){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
+                //.body(responseDTO.get());
                 .body(clienteCriarService.criar(clientePostPutRequestDTO));
 
     }

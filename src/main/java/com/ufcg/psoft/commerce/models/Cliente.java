@@ -32,7 +32,7 @@ public class Cliente {
     private String usuario;
 
     @JsonProperty("codigoAcesso")
-    @JsonIgnore
+    //@JsonIgnore
     @Column(nullable = false, name = "desc_codigoAcesso")
     private String codigoAcesso;
 
