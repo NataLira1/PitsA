@@ -1,5 +1,6 @@
 package com.ufcg.psoft.commerce.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "pizza")
+@Entity(name = "pizzas")
+@Table(name = "pizza")
 public class Pizza {
 
     @Id
@@ -34,5 +36,10 @@ public class Pizza {
     @Column(name = "desc_valorPizza", nullable = false)
     @JsonProperty("valorPizza")
     private double valorPizza;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "pedido_pk_id")
+    private Pedido pedido;
 
 }

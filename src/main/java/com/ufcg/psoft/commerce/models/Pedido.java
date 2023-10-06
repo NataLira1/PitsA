@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "pedidos")
+@Table(name = "pedido")
 public class Pedido {
 
     @Id
@@ -43,6 +44,7 @@ public class Pedido {
 
     @Column(name = "list_pizzas", nullable = false)
     @JsonProperty("pizzas")
+    @OneToMany(mappedBy = "pedido", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private List<Pizza> pizzas;
 
 }

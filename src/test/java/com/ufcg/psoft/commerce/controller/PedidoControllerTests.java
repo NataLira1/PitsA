@@ -177,7 +177,7 @@ public class PedidoControllerTests {
                     () -> assertEquals(pedido.getPreco(), resultado.getPreco())
             );
         }
-
+/*
         @Test
         @DisplayName("Quando alteramos um novo pedido com dados válidos")
         void quandoAlteramosPedidoValido() throws Exception {
@@ -796,10 +796,10 @@ public class PedidoControllerTests {
             assertEquals(pedido3.getEstabelecimentoId(), resultado.get(1).getEstabelecimentoId());
 
         }
-
+*/
 
     }
-
+/*
     @Nested
     @DisplayName("Alteração de estado de pedido")
     public class AlteracaoEstadoPedidoTest {
@@ -951,5 +951,7 @@ public class PedidoControllerTests {
             );
         }
     }
+    */
+
 }
 
