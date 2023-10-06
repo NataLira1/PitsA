@@ -1,4 +1,4 @@
-package com.ufcg.psoft.commerce.service.sabor;
+package com.ufcg.psoft.commerce.service.EstabelecimentoServices;
 
 import com.ufcg.psoft.commerce.dto.sabor.SaborPatchDisponibilidadeDTO;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoBodyInvalidoException;
@@ -9,17 +9,11 @@ import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Sabor;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.SaborRepository;
-import com.ufcg.psoft.commerce.service.sabor.SaborPatchDisponibilidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Service
-public class SaborV1PatchDisponibilidadeServiceService implements SaborPatchDisponibilidadeService {
+public class EstabelecimentoV1PatchDisponibilidadeSaborService implements EstabelecimentoPatchDisponibilidadeSaborService {
 
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
@@ -34,7 +28,7 @@ public class SaborV1PatchDisponibilidadeServiceService implements SaborPatchDisp
                                         String codigoDeAcesso,
                                         SaborPatchDisponibilidadeDTO saborPatchDisponibilidadeDTO) {
 
-        try{
+
             Estabelecimento es = estabelecimentoRepository.findById(idEstabelecimento).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
             if(codigoDeAcesso == null || !codigoDeAcesso.equals(es.getCodigoAcesso())) throw new EstabelecimentoCodigoAcessoInvalidoException();
@@ -43,14 +37,13 @@ public class SaborV1PatchDisponibilidadeServiceService implements SaborPatchDisp
                     item -> item.getId() == idSabor
             ).findFirst().orElseThrow(SaborNaoExisteException::new);
 
+            if(saborPatchDisponibilidadeDTO.getDisponibilidade() == null) throw new EstabelecimentoBodyInvalidoException();
 
             sabor.setDisponivel(saborPatchDisponibilidadeDTO.getDisponibilidade());
             saborRepository.save(sabor);
 
             return sabor;
-        }catch (Exception e){
-            throw new EstabelecimentoBodyInvalidoException();
-        }
+
 
     }
 }
