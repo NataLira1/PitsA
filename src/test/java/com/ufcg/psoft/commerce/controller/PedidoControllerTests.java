@@ -73,125 +73,125 @@ public class PedidoControllerTests {
 
         PedidoPostPutRequestDTO pedidoPostPutRequestDTO;
 
-        @BeforeEach
-        void setup() {
-                objectMapper.registerModule(new JavaTimeModule());
-                estabelecimento = estabelecimentoRepository.save(Estabelecimento.builder()
-                                .codigoAcesso("654321")
-                                .build());
-                sabor1 = saborRepository.save(Sabor.builder()
-                                .nome("Sabor Um")
-                                .tipo("salgado")
-                                .valorMedia(10.0)
-                                .valorGrande(20.0)
-                                .disponivel(true)
-                                .build());
-                sabor2 = saborRepository.save(Sabor.builder()
-                                .nome("Sabor Dois")
-                                .tipo("doce")
-                                .valorMedia(15.0)
-                                .valorGrande(30.0)
-                                .disponivel(true)
-                                .build());
-                cliente = clienteRepository.save(Cliente.builder()
-                                .nomeCompleto("Anton Ego")
-                                .endereco("Paris")
-                                .codigoAcesso("123456")
-                                .build());
+                @BeforeEach
+                void setup() {
+                        objectMapper.registerModule(new JavaTimeModule());
+                        estabelecimento = estabelecimentoRepository.save(Estabelecimento.builder()
+                                        .codigoAcesso("654321")
+                                        .build());
+                        sabor1 = saborRepository.save(Sabor.builder()
+                                        .nome("Sabor Um")
+                                        .tipo("salgado")
+                                        .valorMedia(10.0)
+                                        .valorGrande(20.0)
+                                        .disponivel(true)
+                                        .build());
+                        sabor2 = saborRepository.save(Sabor.builder()
+                                        .nome("Sabor Dois")
+                                        .tipo("doce")
+                                        .valorMedia(15.0)
+                                        .valorGrande(30.0)
+                                        .disponivel(true)
+                                        .build());
+                        cliente = clienteRepository.save(Cliente.builder()
+                                        .nomeCompleto("Anton Ego")
+                                        .endereco("Paris")
+                                        .codigoAcesso("123456")
+                                        .build());
 
-                veiculo = Veiculo.builder()
-                                .placa("ABC-1234")
-                                .cor("Azul")
-                                .tipo("Moto")
-                                .build();
+                        veiculo = Veiculo.builder()
+                                        .placa("ABC-1234")
+                                        .cor("Azul")
+                                        .tipo("Moto")
+                                        .build();
 
-                entregador = entregadorRepository.save(Entregador.builder()
-                                .nome("Joãozinho")
-                                .veiculo(veiculo)
-                                .codigoAcesso("101010")
-                                .build());
+                        entregador = entregadorRepository.save(Entregador.builder()
+                                        .nome("Joãozinho")
+                                        .veiculo(veiculo)
+                                        .codigoAcesso("101010")
+                                        .build());
 
-                pizzaM = Pizza.builder()
-                                .sabor1(sabor1)
-                                .tamanho("media")
-                                .build();
+                        pizzaM = Pizza.builder()
+                                        .sabor1(sabor1)
+                                        .tamanho("media")
+                                        .build();
 
-                pizzaG = Pizza.builder()
-                                .sabor1(sabor1)
-                                .sabor2(sabor2)
-                                .tamanho("grande")
-                                .build();
+                        pizzaG = Pizza.builder()
+                                        .sabor1(sabor1)
+                                        .sabor2(sabor2)
+                                        .tamanho("grande")
+                                        .build();
 
-                List<Pizza> pizzas = List.of(pizzaM);
-                List<Pizza> pizzas1 = List.of(pizzaM, pizzaG);
+                        List<Pizza> pizzas = List.of(pizzaM);
+                        List<Pizza> pizzas1 = List.of(pizzaM, pizzaG);
 
-                pedido = Pedido.builder()
-                                .preco(10.0)
-                                .enderecoEntrega("Casa 237")
-                                .clienteId(cliente.getId())
-                                .estabelecimentoId(estabelecimento.getId())
-                                .entregadorId(entregador.getId())
-                                .pizzas(pizzas)
-                                .build();
+                        pedido = Pedido.builder()
+                                        .preco(10.0)
+                                        .enderecoEntrega("Casa 237")
+                                        .clienteId(cliente.getId())
+                                        .estabelecimentoId(estabelecimento.getId())
+                                        .entregadorId(entregador.getId())
+                                        .pizzas(pizzas)
+                                        .build();
 
-                pedido1 = Pedido.builder()
-                                .preco(10.0)
-                                .enderecoEntrega("Casa 237")
-                                .clienteId(cliente.getId())
-                                .estabelecimentoId(estabelecimento.getId())
-                                .entregadorId(entregador.getId())
-                                .pizzas(pizzas1)
-                                .build();
+                        pedido1 = Pedido.builder()
+                                        .preco(10.0)
+                                        .enderecoEntrega("Casa 237")
+                                        .clienteId(cliente.getId())
+                                        .estabelecimentoId(estabelecimento.getId())
+                                        .entregadorId(entregador.getId())
+                                        .pizzas(pizzas1)
+                                        .build();
 
-                pedidoPostPutRequestDTO = PedidoPostPutRequestDTO.builder()
-                                .enderecoEntrega(pedido.getEnderecoEntrega())
-                                .pizzas(pedido.getPizzas())
-                                .build();
-        }
-
-        @AfterEach
-        void tearDown() {
-                clienteRepository.deleteAll();
-                estabelecimentoRepository.deleteAll();
-                pedidoRepository.deleteAll();
-                saborRepository.deleteAll();
-        }
-
-        @Nested
-        @DisplayName("Conjunto de casos de verificação dos fluxos básicos API Rest")
-        class PedidoVerificacaoFluxosBasicosApiRest {
-
-                @Test
-                @DisplayName("Quando criamos um novo pedido com dados válidos")
-                void quandoCriamosUmNovoPedidoComDadosValidos() throws Exception {
-                        // Arrange
-
-                        // Act
-                        String responseJsonString = driver.perform(post(URI_PEDIDOS)
-                                        .contentType(MediaType.APPLICATION_JSON)
-                                        .param("clienteId", cliente.getId().toString())
-                                        .param("clienteCodigoAcesso", cliente.getCodigoAcesso())
-                                        .param("estabelecimentoId", estabelecimento.getId().toString())
-                                        .content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
-                                        .andExpect(status().isCreated())
-                                        .andDo(print())// Codigo 201
-                                        .andReturn().getResponse().getContentAsString();
-
-                        PedidoResponseDTO resultado = objectMapper.readValue(responseJsonString,
-                                        PedidoResponseDTO.class);
-
-                        // Assert
-                        assertAll(
-                                        // () -> assertNotNull(resultado.getId()),
-                                        () -> assertEquals(pedidoPostPutRequestDTO.getEnderecoEntrega(),
-                                                        resultado.getEnderecoEntrega()),
-                                        () -> assertEquals(pedidoPostPutRequestDTO.getPizzas().get(0).getSabor1(),
-                                                        resultado.getPizzas().get(0).getSabor1()),
-                                        () -> assertEquals(pedido.getClienteId(), resultado.getClienteId()),
-                                        () -> assertEquals(pedido.getEstabelecimentoId(),
-                                                        resultado.getEstabelecimentoId()),
-                                        () -> assertEquals(pedido.getPreco(), resultado.getPreco()));
+                        pedidoPostPutRequestDTO = PedidoPostPutRequestDTO.builder()
+                                        .enderecoEntrega(pedido.getEnderecoEntrega())
+                                        .pizzas(pedido.getPizzas())
+                                        .build();
                 }
+
+                @AfterEach
+                void tearDown() {
+                        clienteRepository.deleteAll();
+                        estabelecimentoRepository.deleteAll();
+                        pedidoRepository.deleteAll();
+                        saborRepository.deleteAll();
+                }
+
+                @Nested
+                @DisplayName("Conjunto de casos de verificação dos fluxos básicos API Rest")
+                class PedidoVerificacaoFluxosBasicosApiRest {
+
+                        @Test
+                        @DisplayName("Quando criamos um novo pedido com dados válidos")
+                        void quandoCriamosUmNovoPedidoComDadosValidos() throws Exception {
+                                // Arrange
+
+                                // Act
+                                String responseJsonString = driver.perform(post(URI_PEDIDOS)
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .param("clienteId", cliente.getId().toString())
+                                                .param("clienteCodigoAcesso", cliente.getCodigoAcesso())
+                                                .param("estabelecimentoId", estabelecimento.getId().toString())
+                                                .content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
+                                                .andExpect(status().isCreated())
+                                                .andDo(print())// Codigo 201
+                                                .andReturn().getResponse().getContentAsString();
+
+                                PedidoResponseDTO resultado = objectMapper.readValue(responseJsonString,
+                                                PedidoResponseDTO.class);
+
+                                // Assert
+                                assertAll(
+                                                // () -> assertNotNull(resultado.getId()),
+                                                () -> assertEquals(pedidoPostPutRequestDTO.getEnderecoEntrega(),
+                                                                resultado.getEnderecoEntrega()),
+                                                () -> assertEquals(pedidoPostPutRequestDTO.getPizzas().get(0).getSabor1(),
+                                                                resultado.getPizzas().get(0).getSabor1()),
+                                                () -> assertEquals(pedido.getClienteId(), resultado.getClienteId()),
+                                                () -> assertEquals(pedido.getEstabelecimentoId(),
+                                                                resultado.getEstabelecimentoId()),
+                                                () -> assertEquals(pedido.getPreco(), resultado.getPreco()));
+                        }
                 /*
                  * @Test
                  * 

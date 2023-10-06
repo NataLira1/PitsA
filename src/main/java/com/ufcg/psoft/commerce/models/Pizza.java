@@ -3,16 +3,8 @@
     import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+    import jakarta.persistence.*;
+    import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,17 +18,20 @@ import lombok.NoArgsConstructor;
     public class Pizza {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         @Column(name = "pk_id_pizza", nullable = false)
         private Long id;
 
 
-        @Column(name = "desc_sabor1", nullable = false)
-        @JsonProperty("sabor1")
+//        @Column(name = "pk_id_sabor", nullable = false)
+//        @JsonProperty("sabor1")
+//        @JoinColumn(name = "pk_id_sabor")
+        @ManyToOne
         private Sabor sabor1;
 
-        @Column(name = "desc_sabor2", nullable = true)
-        @JsonProperty("sabor2")
+//        @Column(name = "pk_id_sabor", nullable = true)
+//        @JsonProperty("sabor2")
+        @ManyToOne
         private Sabor sabor2;
 
         @Column(name = "desc_tamanho", nullable = false)
@@ -49,7 +44,7 @@ import lombok.NoArgsConstructor;
 
         @JsonIgnore
         @ManyToOne
-        @JoinColumn(name = "pedido_pk_id")
+        @JoinColumn(name = "pk_id_pedido")
         private Pedido pedido;
 
         

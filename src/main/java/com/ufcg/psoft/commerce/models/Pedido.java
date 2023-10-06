@@ -57,4 +57,5 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido", cascade = {CascadeType.REMOVE, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private List<Pizza> pizzas;
 
+
 }
