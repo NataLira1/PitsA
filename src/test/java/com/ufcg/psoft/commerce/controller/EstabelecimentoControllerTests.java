@@ -1758,7 +1758,7 @@ import jakarta.transaction.Transactional;
                 );
         }
                 @Test
-                @DisplayName("PatchDisponibilidadeSabor")
+                @DisplayName("Patch Disponibilidade Sabor")
                 void PatchDisponibilidadeSabor() throws Exception {
                         // Arrange
                         Sabor sabor1 = saborRepository.save(Sabor.builder()
@@ -1804,7 +1804,7 @@ import jakarta.transaction.Transactional;
                         String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/disponibilidade")
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .param("idSabor", String.valueOf(sabor1.getId()))
-                                        .param("codigo", estabelecimento.getCodigoAcesso())
+                                        .param("codigoDeAcesso", estabelecimento.getCodigoAcesso())
                                         .content(objectMapper.writeValueAsString(saborPatchDisponibilidadeDTO)))
                                 .andExpect(status().isOk()) // Codigo 200
                                 .andDo(print())
@@ -1818,5 +1818,249 @@ import jakarta.transaction.Transactional;
                                 () -> assertEquals(resultado.getNome(), sabor1.getNome())
                         );
                 }
+
+                @Test
+                @DisplayName("Patch Disponibilidade Sabor, estabelecimento invalido")
+                void PatchDisponibilidadeSaborComIdEstabelecimentoInvalido() throws Exception {
+                        // Arrange
+                        Sabor sabor1 = saborRepository.save(Sabor.builder()
+                                .nome("Calabresa")
+                                .tipo("salgado")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor2 = saborRepository.save(Sabor.builder()
+                                .nome("Mussarela")
+                                .tipo("salgado")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+                        Sabor sabor3 = saborRepository.save(Sabor.builder()
+                                .nome("Chocolate")
+                                .tipo("doce")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor4 = saborRepository.save(Sabor.builder()
+                                .nome("Morango")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .tipo("doce")
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+
+                        SaborPatchDisponibilidadeDTO saborPatchDisponibilidadeDTO = SaborPatchDisponibilidadeDTO.builder()
+                                .disponibilidade(false)
+                                .build();
+
+
+                        // Act
+                        String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + 1000 + "/sabores" + "/disponibilidade")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .param("idSabor", String.valueOf(sabor1.getId()))
+                                        .param("codigoDeAcesso", estabelecimento.getCodigoAcesso())
+                                        .content(objectMapper.writeValueAsString(saborPatchDisponibilidadeDTO)))
+                                .andExpect(status().isBadRequest()) // Codigo 400
+                                .andDo(print())
+                                .andReturn().getResponse().getContentAsString();
+
+                        CustomErrorType resultado = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+                        // Assert
+                        assertAll(
+                                () -> assertEquals("O estabelecimento consultado nao existe!", resultado.getMessage())
+                        );
+                }
+
+                @Test
+                @DisplayName("Patch Disponibilidade Sabor, codigo de acesso invalido")
+                void PatchDisponibilidadeSaborComCodigoDeAcessoInvalido() throws Exception {
+                        // Arrange
+                        Sabor sabor1 = saborRepository.save(Sabor.builder()
+                                .nome("Calabresa")
+                                .tipo("salgado")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor2 = saborRepository.save(Sabor.builder()
+                                .nome("Mussarela")
+                                .tipo("salgado")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+                        Sabor sabor3 = saborRepository.save(Sabor.builder()
+                                .nome("Chocolate")
+                                .tipo("doce")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor4 = saborRepository.save(Sabor.builder()
+                                .nome("Morango")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .tipo("doce")
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+
+                        SaborPatchDisponibilidadeDTO saborPatchDisponibilidadeDTO = SaborPatchDisponibilidadeDTO.builder()
+                                .disponibilidade(false)
+                                .build();
+
+
+                        // Act
+                        String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/disponibilidade")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .param("idSabor", String.valueOf(sabor1.getId()))
+                                        .param("codigoDeAcesso", "1321312")
+                                        .content(objectMapper.writeValueAsString(saborPatchDisponibilidadeDTO)))
+                                .andExpect(status().isBadRequest()) // Codigo 400
+                                .andDo(print())
+                                .andReturn().getResponse().getContentAsString();
+
+                        CustomErrorType resultado = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+                        // Assert
+                        assertAll(
+                                () -> assertEquals("Codigo de acesso invalido!", resultado.getMessage())
+                        );
+                }
+
+                @Test
+                @DisplayName("Patch Disponibilidade Sabor, com sabor inexistente")
+                void PatchDisponibilidadeSaborComSaborInexistente() throws Exception {
+                        // Arrange
+                        Sabor sabor1 = saborRepository.save(Sabor.builder()
+                                .nome("Calabresa")
+                                .tipo("salgado")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor2 = saborRepository.save(Sabor.builder()
+                                .nome("Mussarela")
+                                .tipo("salgado")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+                        Sabor sabor3 = saborRepository.save(Sabor.builder()
+                                .nome("Chocolate")
+                                .tipo("doce")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor4 = saborRepository.save(Sabor.builder()
+                                .nome("Morango")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .tipo("doce")
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+
+                        SaborPatchDisponibilidadeDTO saborPatchDisponibilidadeDTO = SaborPatchDisponibilidadeDTO.builder()
+                                .disponibilidade(false)
+                                .build();
+
+
+                        // Act
+                        String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/disponibilidade")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .param("idSabor", "1000")
+                                        .param("codigoDeAcesso", estabelecimento.getCodigoAcesso())
+                                        .content(objectMapper.writeValueAsString(saborPatchDisponibilidadeDTO)))
+                                .andExpect(status().isBadRequest()) // Codigo 400
+                                .andDo(print())
+                                .andReturn().getResponse().getContentAsString();
+
+                        CustomErrorType resultado = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+                        // Assert
+                        assertAll(
+                                () -> assertEquals("O sabor não existe", resultado.getMessage())
+                        );
+                }
+
+                @Test
+                @DisplayName("Patch Disponibilidade Sabor, com sabor inexistente")
+                void PatchDisponibilidadeSaborComDTOInvalido() throws Exception {
+                        // Arrange
+                        Sabor sabor1 = saborRepository.save(Sabor.builder()
+                                .nome("Calabresa")
+                                .tipo("salgado")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor2 = saborRepository.save(Sabor.builder()
+                                .nome("Mussarela")
+                                .tipo("salgado")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+                        Sabor sabor3 = saborRepository.save(Sabor.builder()
+                                .nome("Chocolate")
+                                .tipo("doce")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor4 = saborRepository.save(Sabor.builder()
+                                .nome("Morango")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .tipo("doce")
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+
+                        SaborPatchDisponibilidadeDTO saborPatchDisponibilidadeDTO = SaborPatchDisponibilidadeDTO.builder()
+                                .build();
+
+
+                        // Act
+                        String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/disponibilidade")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .param("idSabor", String.valueOf(sabor1.getId()))
+                                        .param("codigoDeAcesso", estabelecimento.getCodigoAcesso())
+                                        .content(objectMapper.writeValueAsString(saborPatchDisponibilidadeDTO)))
+                                .andExpect(status().isBadRequest()) // Codigo 400
+                                .andDo(print())
+                                .andReturn().getResponse().getContentAsString();
+
+                        CustomErrorType resultado = objectMapper.readValue(responseJsonString, CustomErrorType.class);
+
+                        // Assert
+                        assertAll(
+                                () -> assertEquals("Corpo da requisicao invalido", resultado.getMessage())
+                        );
+                }
+
         }
         }
