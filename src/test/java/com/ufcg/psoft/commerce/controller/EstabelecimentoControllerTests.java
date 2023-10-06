@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
         import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPostResponseDTO;
+        import com.ufcg.psoft.commerce.dto.sabor.SaborPatchDisponibilidadeDTO;
         import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -1756,5 +1757,66 @@ import jakarta.transaction.Transactional;
                         () -> assertEquals(2, resultado.size())
                 );
         }
+                @Test
+                @DisplayName("PatchDisponibilidadeSabor")
+                void PatchDisponibilidadeSabor() throws Exception {
+                        // Arrange
+                        Sabor sabor1 = saborRepository.save(Sabor.builder()
+                                .nome("Calabresa")
+                                .tipo("salgado")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor2 = saborRepository.save(Sabor.builder()
+                                .nome("Mussarela")
+                                .tipo("salgado")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .disponivel(true)
+                                .estabelecimento(estabelecimento)
+                                .build());
+                        Sabor sabor3 = saborRepository.save(Sabor.builder()
+                                .nome("Chocolate")
+                                .tipo("doce")
+                                .valorMedia(25.0)
+                                .valorGrande(35.0)
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+                        Sabor sabor4 = saborRepository.save(Sabor.builder()
+                                .nome("Morango")
+                                .valorMedia(20.0)
+                                .valorGrande(30.0)
+                                .tipo("doce")
+                                .estabelecimento(estabelecimento)
+                                .build());
+
+
+                        SaborPatchDisponibilidadeDTO saborPatchDisponibilidadeDTO = SaborPatchDisponibilidadeDTO.builder()
+                                .disponibilidade(false)
+                                .build();
+
+
+                        // Act
+                        String responseJsonString = driver.perform(patch(URI_ESTABELECIMENTOS + "/" + estabelecimento.getId() + "/sabores" + "/disponibilidade")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .param("idSabor", String.valueOf(sabor1.getId()))
+                                        .param("codigo", estabelecimento.getCodigoAcesso())
+                                        .content(objectMapper.writeValueAsString(saborPatchDisponibilidadeDTO)))
+                                .andExpect(status().isOk()) // Codigo 200
+                                .andDo(print())
+                                .andReturn().getResponse().getContentAsString();
+
+                        Sabor resultado = objectMapper.readValue(responseJsonString, Sabor.class);
+
+                        // Assert
+                        assertAll(
+                                () -> assertFalse(resultado.isDisponivel()),
+                                () -> assertEquals(resultado.getNome(), sabor1.getNome())
+                        );
+                }
         }
         }
