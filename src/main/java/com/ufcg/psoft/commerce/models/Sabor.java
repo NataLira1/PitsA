@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "sabores")
+
 public class Sabor {
 
     @Id
@@ -46,6 +48,10 @@ public class Sabor {
     @Column(name = "bool_disponivel", nullable = false)
     @JsonProperty("disponivel")
     private boolean disponivel;
+
+    @JoinColumn(name = "pizza_pl_id")
+    @Embedded
+    private Pizza pizza;
 
 //    @JsonProperty("estabelecimento")
     @JsonIgnore

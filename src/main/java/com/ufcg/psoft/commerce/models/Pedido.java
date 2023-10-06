@@ -1,13 +1,22 @@
 package com.ufcg.psoft.commerce.models;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -15,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity(name = "pedidos")
 @Table(name = "pedido")
+
 public class Pedido {
 
     @Id
@@ -26,7 +36,7 @@ public class Pedido {
     @JsonProperty("preco")
     private double preco;
 
-    @Column(name = "desc_enderecoEntrega", nullable = false)
+    @Column(name = "desc_enderecoEntrega", nullable = true)
     @JsonProperty("enderecoEntrega")
     private String enderecoEntrega;
 
@@ -44,7 +54,7 @@ public class Pedido {
 
     @Column(name = "list_pizzas", nullable = false)
     @JsonProperty("pizzas")
-    @OneToMany(mappedBy = "pedido", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pedido", cascade = {CascadeType.REMOVE, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private List<Pizza> pizzas;
 
 }

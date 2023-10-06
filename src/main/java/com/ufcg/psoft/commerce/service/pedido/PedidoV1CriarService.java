@@ -1,5 +1,10 @@
 package com.ufcg.psoft.commerce.service.pedido;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
 import com.ufcg.psoft.commerce.exception.ClienteNaoExisteException;
@@ -11,21 +16,21 @@ import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.ClienteRepository;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PedidoV1CriarService implements PedidoCriarService {
 
     @Autowired
     PedidoRepository pedidoRepository;
+
     @Autowired
     ClienteRepository clienteRepository;
+
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
+    
     @Override
     @Transactional
     public PedidoResponseDTO criar(Long clienteId, String clienteCodigoAcesso, Long estabelecimentoId, PedidoPostPutRequestDTO pedidoPostPutRequestDTO) {
