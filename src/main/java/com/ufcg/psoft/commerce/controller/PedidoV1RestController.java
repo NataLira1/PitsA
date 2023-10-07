@@ -1,16 +1,12 @@
 package com.ufcg.psoft.commerce.controller;
 
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
@@ -28,6 +24,12 @@ public class PedidoV1RestController {
 
     @Autowired
     private PedidoAtualizarService pedidoAtualizarService;
+
+    @Autowired
+    private PedidoBuscarTudoService pedidoBuscarTudoService;
+
+    @Autowired
+    private PedidoBuscarService pedidoBuscarService;
 
     @PostMapping
     public ResponseEntity<?> criarPedido(
@@ -50,4 +52,34 @@ public class PedidoV1RestController {
                 .status(HttpStatus.OK)
                 .body(pedidoAtualizarService.atualizar(pedidoId, clienteCodigoAcesso, pedidoPutRequestDTO));
     }
+
+    @GetMapping
+    public ResponseEntity<?> getAll(
+            @RequestParam @Valid String clienteCodigoAcesso
+    ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(pedidoBuscarTudoService.BuscarTodos(clienteCodigoAcesso));
+    }
+
+//    @GetMapping
+//    public ResponseEntity<?> getAllEstabelecimento(
+//            @RequestParam @Valid String estabelecimentoCodigoAcesso
+//    ){
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(pedidoBuscarTudoService.BuscarTodos(estabelecimentoCodigoAcesso));
+//    }
+
+    @GetMapping("/{pedidoId}/{clienteId}")
+    public ResponseEntity<?> getOne(
+            @PathVariable("pedidoId") @Valid Long pedidoId,
+            @PathVariable("clienteId") @Valid Long clienteId,
+            @RequestParam @Valid String clienteCodigoAcesso
+    ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(pedidoBuscarService.buscar(pedidoId, clienteId, clienteCodigoAcesso));
+    }
+
 }
