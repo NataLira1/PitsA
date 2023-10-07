@@ -42,7 +42,7 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
 @AutoConfigureMockMvc
 @DisplayName("Testes do controlador de pedidos")
 public class PedidoControllerTests {
-        final String URI_PEDIDOS = "/pedidos";
+        final String URI_PEDIDOS = "/v1/pedidos";
 
         @Autowired
         MockMvc driver;
@@ -128,33 +128,37 @@ public class PedidoControllerTests {
                         pedido = Pedido.builder()
                                         .preco(10.0)
                                         .enderecoEntrega("Casa 237")
-                                        .clienteId(cliente.getId())
-                                        .estabelecimentoId(estabelecimento.getId())
-                                        .entregadorId(entregador.getId())
+                                        .cliente(cliente)
+                                        .estabelecimento(estabelecimento)
+//                                        .entregador(entregador)
                                         .pizzas(pizzas)
                                         .build();
 
                         pedido1 = Pedido.builder()
                                         .preco(10.0)
                                         .enderecoEntrega("Casa 237")
-                                        .clienteId(cliente.getId())
-                                        .estabelecimentoId(estabelecimento.getId())
-                                        .entregadorId(entregador.getId())
+                                        .cliente(cliente)
+                                        .estabelecimento(estabelecimento)
+//                                        .entregador(entregador)
                                         .pizzas(pizzas1)
                                         .build();
 
                         pedidoPostPutRequestDTO = PedidoPostPutRequestDTO.builder()
                                         .enderecoEntrega(pedido.getEnderecoEntrega())
+                                        .clienteId(cliente.getId())
+                                        .estabelecimentoId(estabelecimento.getId())
                                         .pizzas(pedido.getPizzas())
                                         .build();
                 }
 
                 @AfterEach
                 void tearDown() {
-                        clienteRepository.deleteAll();
-                        estabelecimentoRepository.deleteAll();
-                        pedidoRepository.deleteAll();
-                        saborRepository.deleteAll();
+//                	pedidoRepository.deleteById(1L);
+                	// pizzaRepository.deleteAll();
+                	// pedidoRepository.deleteAll();
+                	// clienteRepository.deleteAll();
+                	// saborRepository.deleteAll();
+                	// estabelecimentoRepository.deleteAll();
                 }
 
                 @Nested
@@ -169,28 +173,22 @@ public class PedidoControllerTests {
                                 // Act
                                 String responseJsonString = driver.perform(post(URI_PEDIDOS)
                                                 .contentType(MediaType.APPLICATION_JSON)
-                                                .param("clienteId", cliente.getId().toString())
                                                 .param("clienteCodigoAcesso", cliente.getCodigoAcesso())
-                                                .param("estabelecimentoId", estabelecimento.getId().toString())
                                                 .content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
                                                 .andExpect(status().isCreated())
                                                 .andDo(print())// Codigo 201
                                                 .andReturn().getResponse().getContentAsString();
 
-                                PedidoResponseDTO resultado = objectMapper.readValue(responseJsonString,
-                                                PedidoResponseDTO.class);
+                                PedidoResponseDTO resultado = objectMapper.readValue(responseJsonString, PedidoResponseDTO.class);
 
                                 // Assert
                                 assertAll(
-                                                // () -> assertNotNull(resultado.getId()),
-                                                () -> assertEquals(pedidoPostPutRequestDTO.getEnderecoEntrega(),
-                                                                resultado.getEnderecoEntrega()),
-                                                () -> assertEquals(pedidoPostPutRequestDTO.getPizzas().get(0).getSabor1(),
-                                                                resultado.getPizzas().get(0).getSabor1()),
-                                                () -> assertEquals(pedido.getClienteId(), resultado.getClienteId()),
-                                                () -> assertEquals(pedido.getEstabelecimentoId(),
-                                                                resultado.getEstabelecimentoId()),
-                                                () -> assertEquals(pedido.getPreco(), resultado.getPreco()));
+                                        // () -> assertNotNull(resultado.getId()),
+                                        () -> assertEquals(pedidoPostPutRequestDTO.getEnderecoEntrega(), resultado.getEnderecoEntrega()),
+                                        () -> assertEquals(pedidoPostPutRequestDTO.getPizzas().get(0).getSabor1(), resultado.getPizzas().get(0).getSabor1()),
+                                        () -> assertEquals(pedido.getCliente().getId(), resultado.getCliente().getId()),
+                                        () -> assertEquals(pedido.getEstabelecimento().getId(), resultado.getEstabelecimento().getId()),
+                                        () -> assertEquals(pedido.getPreco(), resultado.getPreco()));
                         }
                 /*
                  * @Test

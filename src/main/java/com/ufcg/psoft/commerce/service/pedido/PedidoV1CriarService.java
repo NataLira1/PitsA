@@ -13,11 +13,10 @@ import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
 import com.ufcg.psoft.commerce.models.Cliente;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
+import com.ufcg.psoft.commerce.models.Pizza;
 import com.ufcg.psoft.commerce.repositories.ClienteRepository;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class PedidoV1CriarService implements PedidoCriarService {
@@ -32,10 +31,9 @@ public class PedidoV1CriarService implements PedidoCriarService {
     EstabelecimentoRepository estabelecimentoRepository;
     
     @Override
-    @Transactional
-    public PedidoResponseDTO criar(Long clienteId, String clienteCodigoAcesso, Long estabelecimentoId, PedidoPostPutRequestDTO pedidoPostPutRequestDTO) {
+    public PedidoResponseDTO criar(String clienteCodigoAcesso, PedidoPostPutRequestDTO pedidoPostPutRequestDTO) {
 
-        Optional<Cliente> clienteOp = clienteRepository.findById(clienteId);
+        Optional<Cliente> clienteOp = clienteRepository.findById(pedidoPostPutRequestDTO.getClienteId());
 
         if(!clienteOp.isPresent()){
             throw new ClienteNaoExisteException();
@@ -45,27 +43,36 @@ public class PedidoV1CriarService implements PedidoCriarService {
             throw new CodigoAcessoInvalidException();
         }
 
-        Optional<Estabelecimento> estabelecimentoOp = estabelecimentoRepository.findById(estabelecimentoId);
+        Optional<Estabelecimento> estabelecimentoOp = estabelecimentoRepository.findById(pedidoPostPutRequestDTO.getEstabelecimentoId());
 
         if(!estabelecimentoOp.isPresent()){
             throw new EstabelecimentoNaoEncontradoException();
         }
-
+        
+        Cliente cliente = clienteOp.get();
+        Estabelecimento estabelecimento = estabelecimentoOp.get();
+        
+//        double precoPedido = getPreco
+        
         Pedido pedido = Pedido.builder()
-                .preco(pedidoPostPutRequestDTO.getPreco())
-                .clienteId(pedidoPostPutRequestDTO.getClienteId()) //analisar
+                .cliente(cliente) //analisar
                 .enderecoEntrega(pedidoPostPutRequestDTO.getEnderecoEntrega())
-                .estabelecimentoId(pedidoPostPutRequestDTO.getEstabelecimentoId()) //analisar
+                .estabelecimento(estabelecimento) //analisar
                 .pizzas(pedidoPostPutRequestDTO.getPizzas())
                 .build();
-
+        pedido.setPreco(pedido.calcularPrecoPedido());
+        
+        for (Pizza p : pedido.getPizzas()) {
+        	p.setPedido(pedido);
+        }
+        
         pedidoRepository.save(pedido);
 
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())
-                .clienteId(pedido.getClienteId())
+                .cliente(pedido.getCliente())
                 .enderecoEntrega(pedido.getEnderecoEntrega())
-                .estabelecimentoId(pedido.getEstabelecimentoId())
+                .estabelecimento(pedido.getEstabelecimento())
                 .pizzas(pedido.getPizzas())
                 .build();
     }

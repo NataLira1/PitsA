@@ -1,52 +1,55 @@
-    package com.ufcg.psoft.commerce.models;
+package com.ufcg.psoft.commerce.models;
 
-    import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-    import jakarta.persistence.*;
-    import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Entity(name = "pizzas")
-    @Table(name = "pizza")
-    public class Pizza {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity(name = "pizza")
+@Table(name = "pizza")
+public class Pizza {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
-        @Column(name = "pk_id_pizza", nullable = false)
-        private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name = "pk_id_pizza", nullable = false)
+	private Long id;
 
-
-//        @Column(name = "pk_id_sabor", nullable = false)
-//        @JsonProperty("sabor1")
+	@JsonProperty("sabor1")
+	@OneToOne
 //        @JoinColumn(name = "pk_id_sabor")
-        @ManyToOne
-        private Sabor sabor1;
+	private Sabor sabor1;
 
-//        @Column(name = "pk_id_sabor", nullable = true)
-//        @JsonProperty("sabor2")
-        @ManyToOne
-        private Sabor sabor2;
+	@JsonProperty("sabor2")
+	@OneToOne
+	private Sabor sabor2;
 
-        @Column(name = "desc_tamanho", nullable = false)
-        @JsonProperty("tamanho")
-        private String tamanho;
+	@Column(name = "desc_tamanho", nullable = false)
+	@JsonProperty("tamanho")
+	private String tamanho;
 
-        @Column(name = "desc_valorPizza", nullable = false)
-        @JsonProperty("valorPizza")
-        private double valorPizza;
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "pk_id_pedido")
+	private Pedido pedido;
 
-        @JsonIgnore
-        @ManyToOne
-        @JoinColumn(name = "pk_id_pedido")
-        private Pedido pedido;
-
-        
-
-    }
+	public double calcularPrecoTotal() {
+		double precoTotal = sabor1.getValorMedia();
+		return precoTotal;
+	}
+}

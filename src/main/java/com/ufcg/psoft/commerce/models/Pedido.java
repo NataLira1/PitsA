@@ -11,6 +11,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -29,33 +31,45 @@ public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "pk_id_pedido", nullable = false)
+    @Column(name = "pk_id_pedido")
     private Long id;
 
     @Column(name = "desc_preco", nullable = false)
     @JsonProperty("preco")
     private double preco;
 
-    @Column(name = "desc_enderecoEntrega", nullable = true)
+    @Column(name = "desc_enderecoEntrega")
     @JsonProperty("enderecoEntrega")
     private String enderecoEntrega;
 
-    @Column(name = "fk_id_cliente", nullable = false)
-    @JsonProperty("clienteId")
-    private Long clienteId;
+    @JsonProperty("cliente")
+    @ManyToOne
+	@JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
-    @Column(name = "fk_id_estabelecimento", nullable = false)
-    @JsonProperty("estabelecimentoId")
-    private Long estabelecimentoId;
+    @JsonProperty("estabelecimento")
+    @ManyToOne
+	@JoinColumn(name = "estabelecimento_id")
+    private Estabelecimento estabelecimento;
 
-    @Column(name = "fk_id_entregador", nullable = false)
-    @JsonProperty("entregadorId")
-    private Long entregadorId;
+    @JsonProperty("entregador")
+    @ManyToOne
+	@JoinColumn(name = "entregador_id")
+    private Entregador entregador;
 
-    @Column(name = "list_pizzas", nullable = false)
     @JsonProperty("pizzas")
-    @OneToMany(mappedBy = "pedido", cascade = {CascadeType.REMOVE, CascadeType.MERGE}, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Pizza> pizzas;
 
+    
+    public double calcularPrecoPedido() {
+    	double precoPedido = 0;
+    	
+    	for (Pizza p : pizzas) {
+    		precoPedido += p.calcularPrecoTotal();
+    	}
+    	
+    	return precoPedido;
+    }
 
 }
