@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
-import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
 import com.ufcg.psoft.commerce.models.Cliente;
 import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
@@ -72,6 +70,7 @@ public class PedidoControllerTests {
         Pedido pedido1;
 
         PedidoPostPutRequestDTO pedidoPostPutRequestDTO;
+        PedidoPostPutRequestDTO pedidoPostPutRequestDTO2;
 
                 @BeforeEach
                 void setup() {
@@ -135,7 +134,7 @@ public class PedidoControllerTests {
                                         .build();
 
                         pedido1 = Pedido.builder()
-                                        .preco(10.0)
+                                        .preco(12.5)
                                         .enderecoEntrega("Casa 237")
                                         .cliente(cliente)
                                         .estabelecimento(estabelecimento)
@@ -149,6 +148,14 @@ public class PedidoControllerTests {
                                         .estabelecimentoId(estabelecimento.getId())
                                         .pizzas(pedido.getPizzas())
                                         .build();
+
+                        pedidoPostPutRequestDTO2 = PedidoPostPutRequestDTO.builder()
+                                .enderecoEntrega("Rua Manoel Paulino")
+                                .clienteId(null)
+                                .estabelecimentoId(null)
+                                .pizzas(pizzas)
+                                
+
                 }
 
                 @AfterEach
@@ -161,71 +168,75 @@ public class PedidoControllerTests {
                 	// estabelecimentoRepository.deleteAll();
                 }
 
-                @Nested
-                @DisplayName("Conjunto de casos de verificação dos fluxos básicos API Rest")
-                class PedidoVerificacaoFluxosBasicosApiRest {
+                // @Nested
+                // @DisplayName("Conjunto de casos de verificação dos fluxos básicos API Rest")
+                // class PedidoVerificacaoFluxosBasicosApiRest {
 
-                        @Test
-                        @DisplayName("Quando criamos um novo pedido com dados válidos")
-                        void quandoCriamosUmNovoPedidoComDadosValidos() throws Exception {
-                                // Arrange
+                //         @Test
+                //         @DisplayName("Quando criamos um novo pedido com dados válidos")
+                //         void quandoCriamosUmNovoPedidoComDadosValidos() throws Exception {
+                //                 // Arrange
 
-                                // Act
-                                String responseJsonString = driver.perform(post(URI_PEDIDOS)
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .param("clienteCodigoAcesso", cliente.getCodigoAcesso())
-                                                .content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
-                                                .andExpect(status().isCreated())
-                                                .andDo(print())// Codigo 201
-                                                .andReturn().getResponse().getContentAsString();
+                //                 // Act
+                //                 String responseJsonString = driver.perform(post(URI_PEDIDOS)
+                //                                 .contentType(MediaType.APPLICATION_JSON)
+                //                                 .param("clienteCodigoAcesso", cliente.getCodigoAcesso())
+                //                                 .content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
+                //                                 .andExpect(status().isCreated())
+                //                                 .andDo(print())// Codigo 201
+                //                                 .andReturn().getResponse().getContentAsString();
 
-                                PedidoResponseDTO resultado = objectMapper.readValue(responseJsonString, PedidoResponseDTO.class);
+                //                 PedidoResponseDTO resultado = objectMapper.readValue(responseJsonString, PedidoResponseDTO.class);
 
-                                // Assert
-                                assertAll(
-                                        // () -> assertNotNull(resultado.getId()),
-                                        () -> assertEquals(pedidoPostPutRequestDTO.getEnderecoEntrega(), resultado.getEnderecoEntrega()),
-                                        () -> assertEquals(pedidoPostPutRequestDTO.getPizzas().get(0).getSabor1(), resultado.getPizzas().get(0).getSabor1()),
-                                        () -> assertEquals(pedido.getCliente().getId(), resultado.getCliente().getId()),
-                                        () -> assertEquals(pedido.getEstabelecimento().getId(), resultado.getEstabelecimento().getId()),
-                                        () -> assertEquals(pedido.getPreco(), resultado.getPreco()));
+                //                 // Assert
+                //                 assertAll(
+                //                         // () -> assertNotNull(resultado.getId()),
+                //                         () -> assertEquals(pedidoPostPutRequestDTO.getEnderecoEntrega(), resultado.getEnderecoEntrega()),
+                //                         () -> assertEquals(pedidoPostPutRequestDTO.getPizzas().get(0).getSabor1(), resultado.getPizzas().get(0).getSabor1()),
+                //                         () -> assertEquals(pedido.getCliente().getId(), resultado.getCliente().getId()),
+                //                         () -> assertEquals(pedido.getEstabelecimento().getId(), resultado.getEstabelecimento().getId()),
+                //                         () -> assertEquals(pedido.getPreco(), resultado.getPreco()));
+                //         }
+                
+                @Test
+                
+                @DisplayName("Quando alteramos um novo pedido com dados válidos")
+                void quandoAlteramosPedidoValido() throws Exception {
+                        // Arrange
+                        pedidoRepository.save(pedido);
+                        Long pedidoId = pedido.getId();
+                
+                
+                        // Act
+                        String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" + pedido.getId())
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .param("pedidoId", pedido.getId().toString())
+                                        .param("codigoAcesso", cliente.getCodigoAcesso())
+                                        .content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
+                                .andExpect(status().isOk())
+                                .andDo(print())
+                                .andReturn().getResponse().getContentAsString();
+                        
+                        Pedido resultado = objectMapper.readValue(responseJsonString,
+                        Pedido.PedidoBuilder.class).build();
+                        
+                        // Assert
+                        assertAll(
+                        () -> assertEquals(pedidoId, resultado.getId().longValue()),
+                        () -> assertEquals(pedidoPostPutRequestDTO.getEnderecoEntrega(),
+                        resultado.getEnderecoEntrega()),
+                        () -> assertEquals(pedidoPostPutRequestDTO.getPizzas().get(0).getSabor1(),
+                        resultado.getPizzas().get(0).getSabor1()),
+                        () -> assertEquals(pedido.getCliente(), resultado.getCliente()),
+                        () -> assertEquals(pedido.getEstabelecimento(),
+                        resultado.getEstabelecimento()),
+                        () -> assertEquals(pedido.getPreco(), resultado.getPreco())
+                        );
                         }
-                /*
-                 * @Test
-                 * 
-                 * @DisplayName("Quando alteramos um novo pedido com dados válidos")
-                 * void quandoAlteramosPedidoValido() throws Exception {
-                 * // Arrange
-                 * pedidoRepository.save(pedido);
-                 * Long pedidoId = pedido.getId();
-                 * 
-                 * // Act
-                 * String responseJsonString = driver.perform(put(URI_PEDIDOS)
-                 * .contentType(MediaType.APPLICATION_JSON)
-                 * .param("pedidoId", pedido.getId().toString())
-                 * .param("codigoAcesso", cliente.getCodigoAcesso())
-                 * .content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
-                 * .andExpect(status().isOk())
-                 * .andDo(print())
-                 * .andReturn().getResponse().getContentAsString();
-                 * 
-                 * Pedido resultado = objectMapper.readValue(responseJsonString,
-                 * Pedido.PedidoBuilder.class).build();
-                 * 
-                 * // Assert
-                 * assertAll(
-                 * () -> assertEquals(pedidoId, resultado.getId().longValue()),
-                 * () -> assertEquals(pedidoPostPutRequestDTO.getEnderecoEntrega(),
-                 * resultado.getEnderecoEntrega()),
-                 * () -> assertEquals(pedidoPostPutRequestDTO.getPizzas().get(0).getSabor1(),
-                 * resultado.getPizzas().get(0).getSabor1()),
-                 * () -> assertEquals(pedido.getClienteId(), resultado.getClienteId()),
-                 * () -> assertEquals(pedido.getEstabelecimentoId(),
-                 * resultado.getEstabelecimentoId()),
-                 * () -> assertEquals(pedido.getPreco(), resultado.getPreco())
-                 * );
-                 * }
-                 * 
+}
+
+        
+                /* * 
                  * @Test
                  * 
                  * @DisplayName("Quando alteramos um pedido inexistente")
@@ -932,7 +943,7 @@ public class PedidoControllerTests {
                  * }
                  */
 
-        }
+//        }
         /*
          * @Nested
          * 
@@ -1105,4 +1116,3 @@ public class PedidoControllerTests {
          * }
          */
 
-}
