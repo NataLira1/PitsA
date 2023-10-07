@@ -19,6 +19,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PedidoResponseDTO {
 
+    @JsonProperty("id")
+    private Long id;
+
     @JsonProperty("preco")
     private double preco;
 

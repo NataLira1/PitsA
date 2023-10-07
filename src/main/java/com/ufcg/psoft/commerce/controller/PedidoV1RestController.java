@@ -4,13 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
+import com.ufcg.psoft.commerce.service.pedido.PedidoAtualizarService;
 import com.ufcg.psoft.commerce.service.pedido.PedidoCriarService;
 
 import jakarta.validation.Valid;
@@ -21,6 +25,9 @@ public class PedidoV1RestController {
 
     @Autowired
     private PedidoCriarService pedidoCriarService;
+
+    @Autowired
+    private PedidoAtualizarService pedidoAtualizarService;
 
     @PostMapping
     public ResponseEntity<?> criarPedido(
@@ -34,4 +41,13 @@ public class PedidoV1RestController {
                 .body(pedidoCriarService.criar(clienteCodigoAcesso, pedidoPostPutRequestDTO));
     }
 
+    @PutMapping("/{pedidoId}")
+    public ResponseEntity<?> atualizarPedido(
+        @PathVariable("pedidoId") @Valid Long pedidoId,
+        @RequestParam @Valid String clienteCodigoAcesso,
+        @RequestBody @Valid PedidoPutRequestDTO pedidoPutRequestDTO){
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(pedidoAtualizarService.atualizar(pedidoId, clienteCodigoAcesso, pedidoPutRequestDTO));
+    }
 }

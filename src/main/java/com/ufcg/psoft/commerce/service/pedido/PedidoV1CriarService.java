@@ -10,6 +10,7 @@ import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
 import com.ufcg.psoft.commerce.exception.ClienteNaoExisteException;
 import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
+import com.ufcg.psoft.commerce.exception.SaborNaoDisponivelException;
 import com.ufcg.psoft.commerce.models.Cliente;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
@@ -56,12 +57,32 @@ public class PedidoV1CriarService implements PedidoCriarService {
         
         Pedido pedido = Pedido.builder()
                 .cliente(cliente) //analisar
-                .enderecoEntrega(pedidoPostPutRequestDTO.getEnderecoEntrega())
                 .estabelecimento(estabelecimento) //analisar
                 .pizzas(pedidoPostPutRequestDTO.getPizzas())
                 .build();
         pedido.setPreco(pedido.calcularPrecoPedido());
-        
+
+    
+        if(pedidoPostPutRequestDTO.getEnderecoEntrega() != null){
+            pedido.setEnderecoEntrega(pedidoPostPutRequestDTO.getEnderecoEntrega());
+        }
+        else{
+            pedido.setEnderecoEntrega(cliente.getEndereco());
+        }
+
+        for(Pizza pizza : pedido.getPizzas()){
+            if(pizza.getTamanho().toUpperCase().equals("GRANDE")){
+                if(!estabelecimento.saboresDisponiveis().contains(pizza.getSabor1()) || !estabelecimento.saboresDisponiveis().contains(pizza.getSabor2())){
+                    throw new SaborNaoDisponivelException();
+                }
+            }
+            else{
+                if(!estabelecimento.saboresDisponiveis().contains(pizza.getSabor1())){
+                    throw new SaborNaoDisponivelException();
+                }
+            }
+        }
+
         for (Pizza p : pedido.getPizzas()) {
         	p.setPedido(pedido);
         }
