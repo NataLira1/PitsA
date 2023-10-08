@@ -15,6 +15,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -46,6 +48,10 @@ public class Sabor {
     @Column(name = "bool_disponivel", nullable = false)
     @JsonProperty("disponivel")
     private boolean disponivel;
+
+    @Column(name = "clientesInteressados")
+    @JsonProperty("clientesInteressados")
+    private Set<Long> clientesInteressados;
 
 //    @JsonProperty("estabelecimento")
     @JsonIgnore
