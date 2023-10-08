@@ -1,6 +1,9 @@
 package com.ufcg.psoft.commerce.service.EstabelecimentoServices;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,8 +28,20 @@ public class EstabelecimentoV1BuscarCardapioService implements EstabelecimentoBu
     public Set<Sabor> getCardapio(Long id) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
+        Set<Sabor> disponiveis = es.getCardapio().stream().filter(
+                (sabor) -> sabor.isDisponivel()
+        ).collect(Collectors.toSet());
 
-        return es.getCardapio();
+        Set<Sabor> indisponiveis = es.getCardapio().stream().filter(
+                (sabor) -> !sabor.isDisponivel()
+        ).collect(Collectors.toSet());
+
+        Set<Sabor> cardapioOrdenado = new LinkedHashSet<>();
+
+        cardapioOrdenado.addAll(disponiveis);
+        cardapioOrdenado.addAll(indisponiveis);
+
+        return cardapioOrdenado;
     }
 
     @Override

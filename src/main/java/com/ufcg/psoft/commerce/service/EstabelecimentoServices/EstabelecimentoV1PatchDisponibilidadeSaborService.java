@@ -37,6 +37,13 @@ public class EstabelecimentoV1PatchDisponibilidadeSaborService implements Estabe
                     item -> item.getId() == idSabor
             ).findFirst().orElseThrow(SaborNaoExisteException::new);
 
+            if(sabor.getClientesInteressados() != null){
+                sabor.getClientesInteressados().forEach(
+                        (cl) -> System.out.println("Ola, " + cl + ". O sabor voltou a estar disponivel")
+                );
+            }
+
+
             if(saborPatchDisponibilidadeDTO.getDisponibilidade() == null) throw new EstabelecimentoBodyInvalidoException();
 
             sabor.setDisponivel(saborPatchDisponibilidadeDTO.getDisponibilidade());
