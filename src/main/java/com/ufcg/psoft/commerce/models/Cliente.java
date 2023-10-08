@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -39,4 +40,9 @@ public class Cliente {
     @JsonProperty("endereco")
     @Column(nullable = false, name = "desc_endereco")
     private String endereco;
+
+    @JsonProperty("interesse")
+    @Column(name = "interesses")
+    @ManyToMany
+    private Set<Sabor> interesse;
 }

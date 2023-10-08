@@ -36,7 +36,7 @@ public class ClienteV1InteresseService implements ClienteInteresseService {
                             sabor.get().setClientesInteressados(new HashSet<>());
                         }
 
-                        sabor.get().getClientesInteressados().add(id);
+                        sabor.get().getClientesInteressados().add(cliente.get());
                     }else{
                         throw new SaborJaDisponivelException();
                     }
