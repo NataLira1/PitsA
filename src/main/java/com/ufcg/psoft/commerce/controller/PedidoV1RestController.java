@@ -1,17 +1,27 @@
 package com.ufcg.psoft.commerce.controller;
 
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
 import com.ufcg.psoft.commerce.service.pedido.PedidoAtualizarService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoService;
 import com.ufcg.psoft.commerce.service.pedido.PedidoCriarService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarClienteService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarEstabelecimentoService;
 
 import jakarta.validation.Valid;
 
@@ -30,6 +40,14 @@ public class PedidoV1RestController {
 
     @Autowired
     private PedidoBuscarService pedidoBuscarService;
+
+    @Autowired
+    private PedidoDeletarClienteService pedidoDeletarClienteService;
+
+    @Autowired
+    private PedidoDeletarEstabelecimentoService pedidoDeletarEstabelecimentoService;
+
+
 
     @PostMapping
     public ResponseEntity<?> criarPedido(
@@ -82,4 +100,25 @@ public class PedidoV1RestController {
                 .body(pedidoBuscarService.buscar(pedidoId, clienteId, clienteCodigoAcesso));
     }
 
+    @DeleteMapping("/{pedidoId}/{clienteEstabelecimentoId}")
+    public ResponseEntity<?> deletePorCliente(
+        @PathVariable("pedidoId") @Valid Long pedidoId,
+        @PathVariable("clienteEstabelecimentoId") @Valid Long clienteEstabelecimentoId,
+        @RequestParam @Valid String codigoAcesso){
+            pedidoDeletarClienteService.deletar(pedidoId, clienteEstabelecimentoId, codigoAcesso);
+            return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+        }
+    
+    // @DeleteMapping("/{pedidoId}/{estabelecimentoId}")
+    // public ResponseEntity<?> deletePorEstabeleciemnto(
+    //     @PathVariable("pedidoId") @Valid Long pedidoId,
+    //     @PathVariable("clienteId") @Valid Long estabelecimentoId,
+    //     @RequestParam @Valid String codigoAcesso){
+    //         pedidoDeletarEstabelecimentoService.deletar(pedidoId, estabelecimentoId, codigoAcesso);
+    //         return ResponseEntity
+    //             .status(HttpStatus.NO_CONTENT)
+    //             .build();
+    //     }
 }
