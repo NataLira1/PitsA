@@ -2,6 +2,7 @@ package com.ufcg.psoft.commerce.dto.sabor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.ufcg.psoft.commerce.models.Cliente;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,5 +41,5 @@ public class SaborResponseDTO {
     private boolean disponivel;
 
     @JsonProperty("clientesInteressados")
-    private Set<Long> clientesInteressados;
+    private Set<Cliente> clientesInteressados;
 }
