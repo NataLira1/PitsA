@@ -39,6 +39,4 @@ public class Cliente {
     @JsonProperty("endereco")
     @Column(nullable = false, name = "desc_endereco")
     private String endereco;
-
-
 }

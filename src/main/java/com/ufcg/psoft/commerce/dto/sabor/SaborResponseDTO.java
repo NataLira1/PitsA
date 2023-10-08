@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
+import java.util.Set;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -35,4 +38,7 @@ public class SaborResponseDTO {
 
     @JsonProperty("disponivel")
     private boolean disponivel;
+
+    @JsonProperty("clientesInteressados")
+    private Set<Long> clientesInteressados;
 }
