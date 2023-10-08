@@ -20,8 +20,8 @@ import com.ufcg.psoft.commerce.service.pedido.PedidoAtualizarService;
 import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarService;
 import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoService;
 import com.ufcg.psoft.commerce.service.pedido.PedidoCriarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarClienteService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarEstabelecimentoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarPedidoUnicoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosService;
 
 import jakarta.validation.Valid;
 
@@ -42,10 +42,10 @@ public class PedidoV1RestController {
     private PedidoBuscarService pedidoBuscarService;
 
     @Autowired
-    private PedidoDeletarClienteService pedidoDeletarClienteService;
+    private PedidoDeletarPedidoUnicoService pedidoDeletarPedidoUnicoService;
 
     @Autowired
-    private PedidoDeletarEstabelecimentoService pedidoDeletarEstabelecimentoService;
+    private PedidoDeletarTodosService pedidoDeletarTodosService;
 
 
 
@@ -100,25 +100,26 @@ public class PedidoV1RestController {
                 .body(pedidoBuscarService.buscar(pedidoId, clienteId, clienteCodigoAcesso));
     }
 
+
+
     @DeleteMapping("/{pedidoId}/{clienteEstabelecimentoId}")
-    public ResponseEntity<?> deletePorCliente(
+    public ResponseEntity<?> deletar(
         @PathVariable("pedidoId") @Valid Long pedidoId,
         @PathVariable("clienteEstabelecimentoId") @Valid Long clienteEstabelecimentoId,
         @RequestParam @Valid String codigoAcesso){
-            pedidoDeletarClienteService.deletar(pedidoId, clienteEstabelecimentoId, codigoAcesso);
+            pedidoDeletarPedidoUnicoService.deletar(pedidoId, clienteEstabelecimentoId, codigoAcesso);
             return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
         }
     
-    // @DeleteMapping("/{pedidoId}/{estabelecimentoId}")
-    // public ResponseEntity<?> deletePorEstabeleciemnto(
-    //     @PathVariable("pedidoId") @Valid Long pedidoId,
-    //     @PathVariable("clienteId") @Valid Long estabelecimentoId,
-    //     @RequestParam @Valid String codigoAcesso){
-    //         pedidoDeletarEstabelecimentoService.deletar(pedidoId, estabelecimentoId, codigoAcesso);
-    //         return ResponseEntity
-    //             .status(HttpStatus.NO_CONTENT)
-    //             .build();
-    //     }
+    @DeleteMapping("/{clienteEstabelecimentoId}")
+    public ResponseEntity<?> deleteTodos(
+        @PathVariable("clienteEstabelecimentoId") @Valid Long clienteEstabelecimentoId,
+        @RequestParam @Valid String codigoAcesso){
+            pedidoDeletarTodosService.deletarTodos(clienteEstabelecimentoId, codigoAcesso);
+            return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+        }
 }

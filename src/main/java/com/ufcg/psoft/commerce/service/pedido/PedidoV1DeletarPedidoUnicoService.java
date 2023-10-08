@@ -18,7 +18,7 @@ import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
 
 @Service
-public class PedidoV1DeletarClienteService implements PedidoDeletarClienteService{
+public class PedidoV1DeletarPedidoUnicoService implements PedidoDeletarPedidoUnicoService{
 
 
     @Autowired

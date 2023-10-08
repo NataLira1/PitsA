@@ -582,31 +582,31 @@ public class PedidoControllerTests {
 //            assertEquals("O pedido consultado nao existe!", resultado.getMessage());
 //        }
 //
-//        @Test
-//        @DisplayName("Quando um cliente excluí todos seus pedidos feitos por ele salvos")
-//        void quandoClienteExcluiTodosPedidosSalvos() throws Exception {
-//            // Arrange
-//            pedidoRepository.save(pedido);
-//            pedidoRepository.save(Pedido.builder()
-//                    .preco(10.0)
-//                    .enderecoEntrega("Casa 237")
-//                    .clienteId(cliente.getId())
-//                    .estabelecimentoId(estabelecimento.getId())
-//                    .pizzas(List.of(pizzaM, pizzaG))
-//                    .build());
-//
-//            // Act
-//            String responseJsonString = driver.perform(delete(URI_PEDIDOS)
-//                            .param("clienteId", cliente.getId().toString())
-//                            .contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isNoContent())
-//                    .andDo(print())
-//                    .andReturn().getResponse().getContentAsString();
-//
-//            // Assert
-//            assertTrue(responseJsonString.isBlank());
-//        }
-//
+       @Test
+       @DisplayName("Quando um cliente excluí todos seus pedidos feitos por ele salvos")
+       void quandoClienteExcluiTodosPedidosSalvos() throws Exception {
+           // Arrange
+           pedidoRepository.save(pedido);
+           pedidoRepository.save(Pedido.builder()
+                   .preco(10.0)
+                   .enderecoEntrega("Casa 237")
+                   .cliente(cliente)
+                   .estabelecimento(estabelecimento)
+                   .pizzas(List.of(pizzaM, pizzaG))
+                   .build());
+
+           // Act
+           String responseJsonString = driver.perform(delete(URI_PEDIDOS + "/" + cliente.getId())
+                           .param("codigoAcesso", cliente.getCodigoAcesso())
+                           .contentType(MediaType.APPLICATION_JSON))
+                   .andExpect(status().isNoContent())
+                   .andDo(print())
+                   .andReturn().getResponse().getContentAsString();
+
+           // Assert
+           assertTrue(responseJsonString.isBlank());
+       }
+
        @Test
        @DisplayName("Quando um estabelencimento excluí um pedido feito nele salvo")
        void quandoEstabelecimentoExcluiPedidoSalvo() throws Exception {
@@ -632,7 +632,7 @@ public class PedidoControllerTests {
            // Assert
            assertTrue(responseJsonString.isBlank());
        }
-//
+// 
 //        @Test
 //        @DisplayName("Quando um estabelencimento excluí um pedido inexistente")
 //        void quandoEstabelecimentoExcluiPedidoInexistente() throws Exception {
@@ -682,29 +682,30 @@ public class PedidoControllerTests {
 //            assertEquals("Codigo de acesso invalido!", resultado.getMessage());
 //        }
 //
-//        @Test
-//        @DisplayName("Quando um estabelencimento excluí todos os pedidos feitos nele salvos")
-//        void quandoEstabelecimentoExcluiTodosPedidosSalvos() throws Exception {
-//            // Arrange
-//            pedidoRepository.save(pedido);
-//            pedidoRepository.save(Pedido.builder()
-//                    .preco(10.0)
-//                    .enderecoEntrega("Casa 237")
-//                    .clienteId(cliente.getId())
-//                    .estabelecimentoId(estabelecimento.getId())
-//                    .pizzas(List.of(pizzaM, pizzaG))
-//                    .build());
-//
-//            // Act
-//            String responseJsonString = driver.perform(delete(URI_PEDIDOS + "/" +
-//                            estabelecimento.getId())
-//                            .contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isNoContent())
-//                    .andDo(print())
-//                    .andReturn().getResponse().getContentAsString();
-//            // Assert
-//            assertTrue(responseJsonString.isBlank());
-//        }
+        @Test
+        @DisplayName("Quando um estabelencimento excluí todos os pedidos feitos nele salvos")
+        void quandoEstabelecimentoExcluiTodosPedidosSalvos() throws Exception {
+        // Arrange
+        pedidoRepository.save(pedido);
+        pedidoRepository.save(Pedido.builder()
+                .preco(10.0)
+                .enderecoEntrega("Casa 237")
+                .cliente(cliente)
+                .estabelecimento(estabelecimento)
+                .pizzas(List.of(pizzaM, pizzaG))
+                .build());
+
+        // Act
+        String responseJsonString = driver.perform(delete(URI_PEDIDOS + "/" +
+                        estabelecimento.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("codigoAcesso", estabelecimento.getCodigoAcesso()))
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andReturn().getResponse().getContentAsString();
+        // Assert
+        assertTrue(responseJsonString.isBlank());
+       }
 //
 //        @Test
 //        @DisplayName("Quando um cliente cancela um pedido")
