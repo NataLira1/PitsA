@@ -1,5 +1,6 @@
 package com.ufcg.psoft.commerce.controller;
 
+import com.ufcg.psoft.commerce.service.pedido.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,12 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
-import com.ufcg.psoft.commerce.service.pedido.PedidoAtualizarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoCriarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarPedidoUnicoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosService;
 
 import jakarta.validation.Valid;
 
@@ -46,8 +41,15 @@ public class PedidoV1RestController {
 
     @Autowired
     private PedidoDeletarTodosService pedidoDeletarTodosService;
+    @Autowired
+    private PedidoBuscarTudoEstabelecimentoService pedidoBuscarTudoEstabelecimentoService;
 
-
+    @Autowired
+    private PedidoBuscarEstabelecimentoService pedidoBuscarEstabelecimentoService;
+    @Autowired
+    private PedidoBuscarClienteEstabelecimentoService pedidoBuscarClienteEstabelecimentoService;
+    @Autowired
+    private PedidoBuscarTodosClientesEstabelecimentoService pedidoBuscarTodosClientesEstabelecimentoService;
 
     @PostMapping
     public ResponseEntity<?> criarPedido(
@@ -71,8 +73,8 @@ public class PedidoV1RestController {
                 .body(pedidoAtualizarService.atualizar(pedidoId, clienteCodigoAcesso, pedidoPutRequestDTO));
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAll(
+    @GetMapping("/cliente/")
+    public ResponseEntity<?> getAllCliente(
             @RequestParam @Valid String clienteCodigoAcesso
     ){
         return ResponseEntity
@@ -80,16 +82,17 @@ public class PedidoV1RestController {
                 .body(pedidoBuscarTudoService.BuscarTodos(clienteCodigoAcesso));
     }
 
-//    @GetMapping
-//    public ResponseEntity<?> getAllEstabelecimento(
-//            @RequestParam @Valid String estabelecimentoCodigoAcesso
-//    ){
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(pedidoBuscarTudoService.BuscarTodos(estabelecimentoCodigoAcesso));
-//    }
+    @GetMapping("/estabelecimento/{estabelecimentoId}")
+    public ResponseEntity<?> getAllEstabelecimento(
+            @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+            @RequestParam @Valid String estabelecimentoCodigoAcesso
+    ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(pedidoBuscarTudoEstabelecimentoService.buscarTodos(estabelecimentoId, estabelecimentoCodigoAcesso));
+    }
 
-    @GetMapping("/{pedidoId}/{clienteId}")
+    @GetMapping("/{pedidoId}/cliente/{clienteId}")
     public ResponseEntity<?> getOne(
             @PathVariable("pedidoId") @Valid Long pedidoId,
             @PathVariable("clienteId") @Valid Long clienteId,
@@ -98,6 +101,40 @@ public class PedidoV1RestController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(pedidoBuscarService.buscar(pedidoId, clienteId, clienteCodigoAcesso));
+    }
+
+    @GetMapping("/{pedidoId}/estabelecimeto/{estabelecimentoId}")
+    public ResponseEntity<?> getOneEstabelecimento(
+            @PathVariable("pedidoId") @Valid Long pedidoId,
+            @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+            @RequestParam @Valid String estabelecimentoCodigoAcesso
+    ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(pedidoBuscarEstabelecimentoService.buscar(pedidoId, estabelecimentoId, estabelecimentoCodigoAcesso));
+    }
+
+    @GetMapping("/pedido-cliente-estabelecimento/{clienteId}/{estabelecimentoId}/{pedidoId}")
+    public ResponseEntity<?> getOnePedidoClienteEstabelecimento(
+            @PathVariable("clienteId") @Valid Long clienteId,
+            @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+            @PathVariable("pedidoId") @Valid Long pedidoId,
+            @RequestParam @Valid String clienteCodigoAcesso
+    ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(pedidoBuscarClienteEstabelecimentoService.buscar(clienteId, estabelecimentoId, pedidoId, clienteCodigoAcesso));
+    }
+
+    @GetMapping("/pedidos-cliente-estabelecimento/{clienteId}/{estabelecimentoId}")
+    public ResponseEntity<?> getAllPedidosClientesEstabelecimento(
+            @PathVariable("clienteId") @Valid Long clienteId,
+            @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+            @RequestParam @Valid String clienteCodigoAcesso
+    ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(pedidoBuscarTodosClientesEstabelecimentoService.buscarTodos(clienteId, estabelecimentoId, clienteCodigoAcesso));
     }
 
 
