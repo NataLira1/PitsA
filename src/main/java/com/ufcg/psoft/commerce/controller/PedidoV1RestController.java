@@ -1,6 +1,5 @@
 package com.ufcg.psoft.commerce.controller;
 
-import com.ufcg.psoft.commerce.service.pedido.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
+import com.ufcg.psoft.commerce.service.pedido.PedidoAtualizarService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarClienteEstabelecimentoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarEstabelecimentoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTodosClienteEstabelecimentoEntregaService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTodosClientesEstabelecimentoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoEstabelecimentoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoCriarService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarClienteService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarEstabelecimentoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarPedidoUnicoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosClienteService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosEstabelecimentoService;
+import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosService;
 
 import jakarta.validation.Valid;
 
@@ -24,139 +38,195 @@ import jakarta.validation.Valid;
 @RequestMapping(value = "/v1/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PedidoV1RestController {
 
-    @Autowired
-    private PedidoCriarService pedidoCriarService;
+        @Autowired
+        private PedidoCriarService pedidoCriarService;
 
-    @Autowired
-    private PedidoAtualizarService pedidoAtualizarService;
+        @Autowired
+        private PedidoAtualizarService pedidoAtualizarService;
 
-    @Autowired
-    private PedidoBuscarTudoService pedidoBuscarTudoService;
+        @Autowired
+        private PedidoBuscarTudoService pedidoBuscarTudoService;
 
-    @Autowired
-    private PedidoBuscarService pedidoBuscarService;
+        @Autowired
+        private PedidoBuscarService pedidoBuscarService;
 
-    @Autowired
-    private PedidoDeletarPedidoUnicoService pedidoDeletarPedidoUnicoService;
+        @Autowired
+        private PedidoDeletarPedidoUnicoService pedidoDeletarPedidoUnicoService;
 
-    @Autowired
-    private PedidoDeletarTodosService pedidoDeletarTodosService;
-    @Autowired
-    private PedidoBuscarTudoEstabelecimentoService pedidoBuscarTudoEstabelecimentoService;
-
-    @Autowired
-    private PedidoBuscarEstabelecimentoService pedidoBuscarEstabelecimentoService;
-    @Autowired
-    private PedidoBuscarClienteEstabelecimentoService pedidoBuscarClienteEstabelecimentoService;
-    @Autowired
-    private PedidoBuscarTodosClientesEstabelecimentoService pedidoBuscarTodosClientesEstabelecimentoService;
-
-    @PostMapping
-    public ResponseEntity<?> criarPedido(
-//            @RequestParam @Valid  Long clienteId,
-            @RequestParam @Valid String clienteCodigoAcesso,
-//            @RequestParam @Valid Long estabelecimentoId,
-            @RequestBody @Valid PedidoPostPutRequestDTO pedidoPostPutRequestDTO){
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(pedidoCriarService.criar(clienteCodigoAcesso, pedidoPostPutRequestDTO));
-    }
-
-    @PutMapping("/{pedidoId}")
-    public ResponseEntity<?> atualizarPedido(
-        @PathVariable("pedidoId") @Valid Long pedidoId,
-        @RequestParam @Valid String clienteCodigoAcesso,
-        @RequestBody @Valid PedidoPutRequestDTO pedidoPutRequestDTO){
-            return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(pedidoAtualizarService.atualizar(pedidoId, clienteCodigoAcesso, pedidoPutRequestDTO));
-    }
-
-    @GetMapping("/cliente/")
-    public ResponseEntity<?> getAllCliente(
-            @RequestParam @Valid String clienteCodigoAcesso
-    ){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(pedidoBuscarTudoService.BuscarTodos(clienteCodigoAcesso));
-    }
-
-    @GetMapping("/estabelecimento/{estabelecimentoId}")
-    public ResponseEntity<?> getAllEstabelecimento(
-            @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
-            @RequestParam @Valid String estabelecimentoCodigoAcesso
-    ){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(pedidoBuscarTudoEstabelecimentoService.buscarTodos(estabelecimentoId, estabelecimentoCodigoAcesso));
-    }
-
-    @GetMapping("/{pedidoId}/cliente/{clienteId}")
-    public ResponseEntity<?> getOne(
-            @PathVariable("pedidoId") @Valid Long pedidoId,
-            @PathVariable("clienteId") @Valid Long clienteId,
-            @RequestParam @Valid String clienteCodigoAcesso
-    ){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(pedidoBuscarService.buscar(pedidoId, clienteId, clienteCodigoAcesso));
-    }
-
-    @GetMapping("/{pedidoId}/estabelecimeto/{estabelecimentoId}")
-    public ResponseEntity<?> getOneEstabelecimento(
-            @PathVariable("pedidoId") @Valid Long pedidoId,
-            @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
-            @RequestParam @Valid String estabelecimentoCodigoAcesso
-    ){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(pedidoBuscarEstabelecimentoService.buscar(pedidoId, estabelecimentoId, estabelecimentoCodigoAcesso));
-    }
-
-    @GetMapping("/pedido-cliente-estabelecimento/{clienteId}/{estabelecimentoId}/{pedidoId}")
-    public ResponseEntity<?> getOnePedidoClienteEstabelecimento(
-            @PathVariable("clienteId") @Valid Long clienteId,
-            @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
-            @PathVariable("pedidoId") @Valid Long pedidoId,
-            @RequestParam @Valid String clienteCodigoAcesso
-    ){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(pedidoBuscarClienteEstabelecimentoService.buscar(clienteId, estabelecimentoId, pedidoId, clienteCodigoAcesso));
-    }
-
-    @GetMapping("/pedidos-cliente-estabelecimento/{clienteId}/{estabelecimentoId}")
-    public ResponseEntity<?> getAllPedidosClientesEstabelecimento(
-            @PathVariable("clienteId") @Valid Long clienteId,
-            @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
-            @RequestParam @Valid String clienteCodigoAcesso
-    ){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(pedidoBuscarTodosClientesEstabelecimentoService.buscarTodos(clienteId, estabelecimentoId, clienteCodigoAcesso));
-    }
+        @Autowired
+        private PedidoDeletarTodosService pedidoDeletarTodosService;
 
 
 
-    @DeleteMapping("/{pedidoId}/{clienteEstabelecimentoId}")
-    public ResponseEntity<?> deletar(
-        @PathVariable("pedidoId") @Valid Long pedidoId,
-        @PathVariable("clienteEstabelecimentoId") @Valid Long clienteEstabelecimentoId,
-        @RequestParam @Valid String codigoAcesso){
-            pedidoDeletarPedidoUnicoService.deletar(pedidoId, clienteEstabelecimentoId, codigoAcesso);
-            return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
+                @Autowired
+                private PedidoDeletarClienteService pedidoDeletarClienteService;
+
+                @Autowired 
+                private PedidoDeletarEstabelecimentoService pedidoDeletarEstabelecimentoService;
+
+                @Autowired
+                private PedidoDeletarTodosClienteService pedidoDeletarTodosClienteService;
+
+                @Autowired
+                private PedidoDeletarTodosEstabelecimentoService pedidoDeletarTodosEstabelecimentoService;
+
+                @Autowired
+                private PedidoBuscarTodosClienteEstabelecimentoEntregaService pedidoBuscarTodosClientesEstabelecimentoEntregaService;
+
+
+
+
+
+
+        @Autowired
+        private PedidoBuscarTudoEstabelecimentoService pedidoBuscarTudoEstabelecimentoService;
+
+        @Autowired
+        private PedidoBuscarEstabelecimentoService pedidoBuscarEstabelecimentoService;
+        @Autowired
+        private PedidoBuscarClienteEstabelecimentoService pedidoBuscarClienteEstabelecimentoService;
+        @Autowired
+        private PedidoBuscarTodosClientesEstabelecimentoService pedidoBuscarTodosClientesEstabelecimentoService;
+
+        @PostMapping
+        public ResponseEntity<?> criarPedido(
+        //            @RequestParam @Valid  Long clienteId,
+                @RequestParam @Valid String clienteCodigoAcesso,
+        //            @RequestParam @Valid Long estabelecimentoId,
+                @RequestBody @Valid PedidoPostPutRequestDTO pedidoPostPutRequestDTO){
+
+                return ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body(pedidoCriarService.criar(clienteCodigoAcesso, pedidoPostPutRequestDTO));
         }
-    
-    @DeleteMapping("/{clienteEstabelecimentoId}")
-    public ResponseEntity<?> deleteTodos(
-        @PathVariable("clienteEstabelecimentoId") @Valid Long clienteEstabelecimentoId,
-        @RequestParam @Valid String codigoAcesso){
-            pedidoDeletarTodosService.deletarTodos(clienteEstabelecimentoId, codigoAcesso);
-            return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
+
+        @PutMapping("/{pedidoId}")
+        public ResponseEntity<?> atualizarPedido(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @RequestParam @Valid String clienteCodigoAcesso,
+                @RequestBody @Valid PedidoPutRequestDTO pedidoPutRequestDTO){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoAtualizarService.atualizar(pedidoId, clienteCodigoAcesso, pedidoPutRequestDTO));
         }
+
+        @GetMapping("/cliente/")
+        public ResponseEntity<?> getAllCliente(
+                @RequestParam @Valid String clienteCodigoAcesso
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoBuscarTudoService.BuscarTodos(clienteCodigoAcesso));
+        }
+
+        @GetMapping("/estabelecimento/{estabelecimentoId}")
+        public ResponseEntity<?> getAllEstabelecimento(
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String estabelecimentoCodigoAcesso
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoBuscarTudoEstabelecimentoService.buscarTodos(estabelecimentoId, estabelecimentoCodigoAcesso));
+        }
+
+        @GetMapping("/{pedidoId}/cliente/{clienteId}")
+        public ResponseEntity<?> getOne(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("clienteId") @Valid Long clienteId,
+                @RequestParam @Valid String clienteCodigoAcesso
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoBuscarService.buscar(pedidoId, clienteId, clienteCodigoAcesso));
+        }
+
+        @GetMapping("/{pedidoId}/estabelecimeto/{estabelecimentoId}")
+        public ResponseEntity<?> getOneEstabelecimento(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String estabelecimentoCodigoAcesso
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoBuscarEstabelecimentoService.buscar(pedidoId, estabelecimentoId, estabelecimentoCodigoAcesso));
+        }
+
+        @GetMapping("/pedido-cliente-estabelecimento/{clienteId}/{estabelecimentoId}/{pedidoId}")
+        public ResponseEntity<?> getOnePedidoClienteEstabelecimento(
+                @PathVariable("clienteId") @Valid Long clienteId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @RequestParam @Valid String clienteCodigoAcesso
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoBuscarClienteEstabelecimentoService.buscar(clienteId, estabelecimentoId, pedidoId, clienteCodigoAcesso));
+        }
+
+        @GetMapping("/pedidos-cliente-estabelecimento/{clienteId}/{estabelecimentoId}")
+        public ResponseEntity<?> getAllPedidosClientesEstabelecimento(
+                @PathVariable("clienteId") @Valid Long clienteId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String clienteCodigoAcesso
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoBuscarTodosClientesEstabelecimentoService.buscarTodos(clienteId, estabelecimentoId, clienteCodigoAcesso));
+        }
+
+        @GetMapping("/pedidos-cliente-estabelecimento/{clienteId}/{estabelecimentoId}/{status}")
+        public ResponseEntity<?> getAllPedidosClientesEstabelecimentoEntrega(
+                @PathVariable("clienteId") @Valid Long clienteId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @PathVariable("status") @Valid String status,
+                @RequestParam @Valid String clienteCodigoAcesso
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoBuscarTodosClientesEstabelecimentoService.buscarTodos(clienteId, estabelecimentoId, clienteCodigoAcesso));
+        }
+
+
+
+        @DeleteMapping("/{pedidoId}/cliente/{clienteId}")
+        public ResponseEntity<?> deletarCliente(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("clienteId") @Valid Long clienteId,
+                @RequestParam @Valid String clienteCodigoAcesso){
+                pedidoDeletarClienteService.deletar(pedidoId, clienteId, clienteCodigoAcesso);
+                return ResponseEntity
+                        .status(HttpStatus.NO_CONTENT)
+                        .build();
+                }
+
+                @DeleteMapping("/{pedidoId}/estabelecimento/{estabelecimentoId}")
+                public ResponseEntity<?> deletarEstabelecimento(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String estabelecimentoCodigoAcesso){
+                        pedidoDeletarEstabelecimentoService.deletar(pedidoId, estabelecimentoId, estabelecimentoCodigoAcesso);
+                        return ResponseEntity
+                        .status(HttpStatus.NO_CONTENT)
+                        .build();
+                }
+        
+        @DeleteMapping("/cliente/{clienteId}")
+        public ResponseEntity<?> deleteTodosCliente(
+                @PathVariable("clienteId") @Valid Long clienteId,
+                @RequestParam @Valid String clienteCodigoAcesso){
+                pedidoDeletarTodosClienteService.deletarTodos(clienteId, clienteCodigoAcesso);
+                return ResponseEntity
+                        .status(HttpStatus.NO_CONTENT)
+                        .build();
+                }
+
+                @DeleteMapping("/estabelecimento/{estabelecimentoId}")
+                public ResponseEntity<?> deleteTodosEstabelecimento(
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String estabelecimentoCodigoAcesso){
+                        pedidoDeletarTodosEstabelecimentoService.deletarTodos(estabelecimentoId, estabelecimentoCodigoAcesso);
+                        return ResponseEntity
+                        .status(HttpStatus.NO_CONTENT)
+                        .build();
+                }
 }
