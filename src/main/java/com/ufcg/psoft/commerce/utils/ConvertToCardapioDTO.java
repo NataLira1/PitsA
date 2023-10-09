@@ -37,14 +37,16 @@ public class ConvertToCardapioDTO {
         for (int i = 0; i < cardapioMid.size(); i++) {
             Set<ClienteResponseDTO> clienteResponseDTOS = new LinkedHashSet<>();
             Sabor curr = cardapioMid.get(i);
-            curr.getClientesInteressados().forEach(
-                    (cl) -> clienteResponseDTOS.add(ClienteResponseDTO.builder()
-                            .nomeCompleto(cl.getNomeCompleto())
-                            .usuario(cl.getUsuario())
-                            .endereco(cl.getEndereco())
-                            .id(cl.getId())
-                            .build())
-            );
+            if(curr.getClientesInteressados() != null){
+                curr.getClientesInteressados().forEach(
+                        (cl) -> clienteResponseDTOS.add(ClienteResponseDTO.builder()
+                                .nomeCompleto(cl.getNomeCompleto())
+                                .usuario(cl.getUsuario())
+                                .endereco(cl.getEndereco())
+                                .id(cl.getId())
+                                .build())
+                );
+            }
             saborInteresseResponseDTOS.get(i).setClientesInteressados(clienteResponseDTOS);
         }
 

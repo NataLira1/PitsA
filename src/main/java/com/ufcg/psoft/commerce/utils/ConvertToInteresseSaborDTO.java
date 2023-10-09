@@ -24,8 +24,7 @@ public class ConvertToInteresseSaborDTO {
                         .build())
         );
 
-        SaborInteresseResponseDTO saborInteresseResponseDTO = SaborInteresseResponseDTO.
-                builder()
+        SaborInteresseResponseDTO saborInteresseResponseDTO = SaborInteresseResponseDTO.builder()
                 .tipo(sabor.getTipo())
                 .valorMedia(sabor.getValorMedia())
                 .valorGrande(sabor.getValorGrande())

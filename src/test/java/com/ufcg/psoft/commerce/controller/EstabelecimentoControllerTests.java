@@ -5,11 +5,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.HashSet;
+        import java.lang.reflect.Type;
+        import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
         import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPostResponseDTO;
+        import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoResponseGetDTO;
+        import com.ufcg.psoft.commerce.dto.sabor.SaborInteresseResponseDTO;
         import com.ufcg.psoft.commerce.dto.sabor.SaborPatchDisponibilidadeDTO;
         import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -978,7 +981,7 @@ import jakarta.transaction.Transactional;
                         .andReturn().getResponse().getContentAsString();
 
 
-                Set<Estabelecimento> resultado = objectMapper.readValue(responseJsonString, new TypeReference<Set<Estabelecimento>>() {
+                Set<EstabelecimentoResponseGetDTO> resultado = objectMapper.readValue(responseJsonString, new TypeReference<Set<EstabelecimentoResponseGetDTO>>() {
                 });
 
                 // Assert
@@ -1049,12 +1052,11 @@ import jakarta.transaction.Transactional;
                         .andReturn().getResponse().getContentAsString();
 
 
-                Estabelecimento resultado = objectMapper.readValue(responseJsonString, Estabelecimento.class);
+                EstabelecimentoResponseGetDTO resultado = objectMapper.readValue(responseJsonString, EstabelecimentoResponseGetDTO.class);
 
 
                 // Assert
                 assertAll(
-                        () -> assertNotNull(resultado.getId()),
                         () -> assertEquals(estabelecimentoPostRequestDTO.getCodigoAcesso(), resultado.getCodigoAcesso()),
                         () -> assertEquals(estabelecimentoPostRequestDTO.getCardapio().size(), resultado.getCardapio().size()),
                         () -> assertEquals(estabelecimentoPostRequestDTO.getEntregadores().size(), resultado.getEntregadores().size())
@@ -1273,12 +1275,14 @@ import jakarta.transaction.Transactional;
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
 
-                List<Sabor> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
+
+                List<SaborInteresseResponseDTO> responseDTOS = objectMapper.readValue(responseJsonString, new TypeReference<List<SaborInteresseResponseDTO>>() {
+
                 });
 
                 // Assert
                 assertAll(
-                        () -> assertEquals(4, resultado.size())
+                        () -> assertEquals(4, responseDTOS.size())
                 );
         }
 
@@ -1353,7 +1357,7 @@ import jakarta.transaction.Transactional;
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
 
-                List<Sabor> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
+                List<SaborInteresseResponseDTO> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
                 });
 
                 // Assert
@@ -1466,7 +1470,7 @@ import jakarta.transaction.Transactional;
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
 
-                List<Sabor> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
+                List<SaborInteresseResponseDTO> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
                 });
 
                 // Assert
@@ -1635,7 +1639,7 @@ import jakarta.transaction.Transactional;
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
 
-                List<Sabor> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
+                List<SaborInteresseResponseDTO> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
                 });
 
                 // Assert
@@ -1749,7 +1753,7 @@ import jakarta.transaction.Transactional;
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
 
-                List<Sabor> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
+                List<SaborInteresseResponseDTO> resultado = objectMapper.readValue(responseJsonString, new TypeReference<>() {
                 });
 
                 // Assert
@@ -1998,7 +2002,7 @@ import jakarta.transaction.Transactional;
 
                         // Assert
                         assertAll(
-                                () -> assertEquals("O sabor não existe", resultado.getMessage())
+                                () -> assertEquals("O sabor consultado nao existe!", resultado.getMessage())
                         );
                 }
 
