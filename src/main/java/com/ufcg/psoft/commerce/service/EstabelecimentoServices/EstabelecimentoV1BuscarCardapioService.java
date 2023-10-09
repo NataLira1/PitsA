@@ -44,6 +44,7 @@ public class EstabelecimentoV1BuscarCardapioService implements EstabelecimentoBu
         return convertToCardapioDTO.convertToDTO(cardapioOrdenado);
     }
 
+
     @Override
     public Set<SaborInteresseResponseDTO> getCardapioPorTipo(Long id, String tipo) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
@@ -59,6 +60,7 @@ public class EstabelecimentoV1BuscarCardapioService implements EstabelecimentoBu
 
         return convertToCardapioDTO.convertToDTO(cardapioFiltrado);
     }
+
 
     @Override
     public Set<SaborInteresseResponseDTO> getCardapioPorDisponibilidade(Long id, Boolean disponivel) {

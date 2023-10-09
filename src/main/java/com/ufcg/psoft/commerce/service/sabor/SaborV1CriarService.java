@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.psoft.commerce.dto.sabor.SaborPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.sabor.SaborPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.sabor.SaborResponseDTO;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoCodigoAcessoInvalidoException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
@@ -25,7 +25,7 @@ public class SaborV1CriarService implements SaborCriarService{
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
     @Override
-    public SaborResponseDTO criar(Long idEstabelecimento, String codigoAcesso, SaborPostPutRequestDTO saborPostPutRequestDTO) {
+    public SaborResponseDTO criar(Long idEstabelecimento, String codigoAcesso, SaborPutRequestDTO saborPutRequestDTO) {
         
         Optional<Estabelecimento> estabelecimentoOp = estabelecimentoRepository.findById(idEstabelecimento);
 
@@ -38,20 +38,20 @@ public class SaborV1CriarService implements SaborCriarService{
         if(!estabelecimento.getCodigoAcesso().equals(codigoAcesso)){
             throw new EstabelecimentoCodigoAcessoInvalidoException();
         }
-        if(!saborPostPutRequestDTO.getTipo().toUpperCase().equals("SALGADO") && !saborPostPutRequestDTO.getTipo().toUpperCase().equals("DOCE")){
+        if(!saborPutRequestDTO.getTipo().toUpperCase().equals("SALGADO") && !saborPutRequestDTO.getTipo().toUpperCase().equals("DOCE")){
             throw new TipoInexistenteException();
         }
 
-        if(saborPostPutRequestDTO.getValorGrande()<=0 || saborPostPutRequestDTO.getValorMedia()<=0){
+        if(saborPutRequestDTO.getValorGrande()<=0 || saborPutRequestDTO.getValorMedia()<=0){
             throw new ValorSaborInvalidoException();
         }
         
         Sabor sabor =
         		Sabor.builder()
-                        .nome(saborPostPutRequestDTO.getNome())
-                        .tipo(saborPostPutRequestDTO.getTipo())
-                        .valorMedia(saborPostPutRequestDTO.getValorMedia())
-                        .valorGrande(saborPostPutRequestDTO.getValorGrande())
+                        .nome(saborPutRequestDTO.getNome())
+                        .tipo(saborPutRequestDTO.getTipo())
+                        .valorMedia(saborPutRequestDTO.getValorMedia())
+                        .valorGrande(saborPutRequestDTO.getValorGrande())
                         .disponivel(true)
                         .estabelecimento(estabelecimento)
                         .build()

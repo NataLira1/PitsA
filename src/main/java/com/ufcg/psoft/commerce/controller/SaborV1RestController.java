@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ufcg.psoft.commerce.dto.sabor.SaborPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.sabor.SaborPutRequestDTO;
 import com.ufcg.psoft.commerce.service.sabor.SaborAtualizarService;
 import com.ufcg.psoft.commerce.service.sabor.SaborBuscarService;
 import com.ufcg.psoft.commerce.service.sabor.SaborBuscarTodosService;
@@ -47,20 +47,20 @@ public class SaborV1RestController {
         @PostMapping
         ResponseEntity<?> criarSabor(
                 @RequestParam @Valid Long idEstabelecimento, @RequestParam @Valid String codigoDeAcesso,
-                @RequestBody @Valid SaborPostPutRequestDTO saborPostPutRequestDTO){
+                @RequestBody @Valid SaborPutRequestDTO saborPutRequestDTO){
                 return ResponseEntity
                         .status(HttpStatus.CREATED)
-                        .body(saborCriarService.criar(idEstabelecimento, codigoDeAcesso, saborPostPutRequestDTO));
+                        .body(saborCriarService.criar(idEstabelecimento, codigoDeAcesso, saborPutRequestDTO));
         }
 
         @PutMapping("/{saborId}")
         public ResponseEntity<?> atualizarSabor(
                 @RequestParam @Valid Long idEstabelecimento, @RequestParam @Valid String codigoDeAcesso,
                 @PathVariable("saborId") @Valid Long saborId,
-                @RequestBody @Valid SaborPostPutRequestDTO saborPostPutRequestDTO){
+                @RequestBody @Valid SaborPutRequestDTO saborPutRequestDTO){
                 return ResponseEntity
                         .status(HttpStatus.OK)
-                        .body(saborAtualizarService.atualizar(idEstabelecimento, codigoDeAcesso, saborId, saborPostPutRequestDTO));
+                        .body(saborAtualizarService.atualizar(idEstabelecimento, codigoDeAcesso, saborId, saborPutRequestDTO));
         }
 
         @GetMapping("/{saborId}")

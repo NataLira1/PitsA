@@ -7,6 +7,7 @@ import java.util.Set;
 
 public interface EstabelecimentoBuscarCardapioService {
 
+
     Set<SaborInteresseResponseDTO> getCardapio(Long id);
 
     Set<SaborInteresseResponseDTO> getCardapioPorTipo(Long id, String tipo);

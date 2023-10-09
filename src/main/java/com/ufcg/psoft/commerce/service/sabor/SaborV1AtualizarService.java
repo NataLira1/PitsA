@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.psoft.commerce.dto.sabor.SaborPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.sabor.SaborPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.sabor.SaborResponseDTO;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoCodigoAcessoInvalidoException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
@@ -33,7 +33,7 @@ public class SaborV1AtualizarService implements SaborAtualizarService {
 
 
     @Override
-    public SaborResponseDTO atualizar(Long idEstabelecimento, String codigoAcesso, Long id, SaborPostPutRequestDTO saborPostPutRequestDTO) {
+    public SaborResponseDTO atualizar(Long idEstabelecimento, String codigoAcesso, Long id, SaborPutRequestDTO saborPutRequestDTO) {
 
         Optional<Estabelecimento> estabelecimentoOp = estabelecimentoRepository.findById(idEstabelecimento);
 
@@ -47,16 +47,16 @@ public class SaborV1AtualizarService implements SaborAtualizarService {
             throw new EstabelecimentoCodigoAcessoInvalidoException();
         }
 
-        if(!saborPostPutRequestDTO.getTipo().toUpperCase().equals("SALGADO") && !saborPostPutRequestDTO.getTipo().toUpperCase().equals("DOCE")){
+        if(!saborPutRequestDTO.getTipo().toUpperCase().equals("SALGADO") && !saborPutRequestDTO.getTipo().toUpperCase().equals("DOCE")){
             throw new TipoInexistenteException();
         }
 
-        if(saborPostPutRequestDTO.getValorGrande()<=0 || saborPostPutRequestDTO.getValorMedia()<=0){
+        if(saborPutRequestDTO.getValorGrande()<=0 || saborPutRequestDTO.getValorMedia()<=0){
             throw new ValorSaborInvalidoException();
         }
 
         if (saborRepository.findById(id).isPresent()){
-            Sabor saborAtualizado = modelMapper.map(saborPostPutRequestDTO, Sabor.class);
+            Sabor saborAtualizado = modelMapper.map(saborPutRequestDTO, Sabor.class);
             saborAtualizado = saborRepository.save(saborAtualizado);
             return SaborResponseDTO.builder()
                 .id(saborAtualizado.getId())
