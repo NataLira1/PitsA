@@ -1,10 +1,8 @@
 package com.ufcg.psoft.commerce.service.cliente;
 
-import com.ufcg.psoft.commerce.models.Sabor;
-
-import java.util.Set;
+import com.ufcg.psoft.commerce.dto.sabor.SaborInteresseResponseDTO;
 
 @FunctionalInterface
 public interface ClienteInteresseService {
-    public Sabor salvarInteresse(Long id, String codigoAcesso, Long saborId);
+    public SaborInteresseResponseDTO salvarInteresse(Long id, String codigoAcesso, Long saborId);
 }

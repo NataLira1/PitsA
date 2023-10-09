@@ -1,6 +1,8 @@
 package com.ufcg.psoft.commerce.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
@@ -45,7 +47,7 @@ public class Sabor {
 
     @Column(name = "clientesInteressados")
     @JsonProperty("clientesInteressados")
-    @ManyToMany
+    @ManyToMany(mappedBy = "interesse")
     private Set<Cliente> clientesInteressados;
 
 //    @JsonProperty("estabelecimento")

@@ -9,6 +9,7 @@ import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Sabor;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.SaborRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class EstabelecimentoV1PatchDisponibilidadeSaborService implements Estabe
 
 
     @Override
+    @Transactional
     public Sabor alterarDisponibilidade(Long idEstabelecimento,
                                         Long idSabor,
                                         String codigoDeAcesso,
@@ -39,7 +41,7 @@ public class EstabelecimentoV1PatchDisponibilidadeSaborService implements Estabe
 
             if(sabor.getClientesInteressados() != null){
                 sabor.getClientesInteressados().forEach(
-                        (cl) -> System.out.println("Ola, " + cl + ". O sabor voltou a estar disponivel")
+                        (cl) -> System.out.println("Ola, " + cl.getNomeCompleto() + ". O sabor " + sabor.getNome() + " voltou a estar disponivel")
                 );
             }
 
@@ -50,7 +52,5 @@ public class EstabelecimentoV1PatchDisponibilidadeSaborService implements Estabe
             saborRepository.save(sabor);
 
             return sabor;
-
-
     }
 }
