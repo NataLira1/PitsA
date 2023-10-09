@@ -1,6 +1,8 @@
 package com.ufcg.psoft.commerce.service.cliente;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ufcg.psoft.commerce.dto.Cliente.ClientePostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.Cliente.ClienteResponseDTO;
 import com.ufcg.psoft.commerce.exception.ClienteNaoExisteException;
 import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
 import com.ufcg.psoft.commerce.exception.CodigoDeAcessoNumericoException;
@@ -17,8 +19,11 @@ public class ClienteV1AtualizarService implements ClienteAtualizarService{
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Override
-    public Cliente atualizar(Long id, String codigoAcesso, String usuario,ClientePostPutRequestDTO clientePostPutRequestDTO) {
+    public ClienteResponseDTO atualizar(Long id, String codigoAcesso, String usuario, ClientePostPutRequestDTO clientePostPutRequestDTO) {
 
         Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoExisteException());
 
@@ -32,6 +37,8 @@ public class ClienteV1AtualizarService implements ClienteAtualizarService{
         cliente.setNomeCompleto(clientePostPutRequestDTO.getNomeCompleto());
         cliente.setUsuario(clientePostPutRequestDTO.getUsuario());
 
-        return clienteRepository.save(cliente);
+        clienteRepository.save(cliente);
+
+        return mapper.convertValue(cliente, ClienteResponseDTO.class);
     }
 }

@@ -5,10 +5,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ufcg.psoft.commerce.dto.Cliente.ClientePostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.sabor.SaborInteresseResponseDTO;
+import com.ufcg.psoft.commerce.dto.sabor.SaborResponseDTO;
 import com.ufcg.psoft.commerce.exception.CustomErrorType;
 import com.ufcg.psoft.commerce.models.Cliente;
+import com.ufcg.psoft.commerce.models.Estabelecimento;
+import com.ufcg.psoft.commerce.models.Sabor;
 import com.ufcg.psoft.commerce.repositories.ClienteRepository;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
+import com.ufcg.psoft.commerce.repositories.SaborRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -578,7 +583,7 @@ public class ClienteControllerTests {
         }
 
     }
-/*
+
     @Nested
     @DisplayName("Conjunto de casos de demonstrar interesse em sabores")
     class ClienteDemonstrarInteresseEmSabores {
@@ -600,8 +605,8 @@ public class ClienteControllerTests {
             sabor = saborRepository.save(Sabor.builder()
                     .nome("Sabor Um")
                     .tipo("salgado")
-                    .precoM(10.0)
-                    .precoG(20.0)
+                    .valorMedia(10.0)
+                    .valorGrande(20.0)
                     .disponivel(false)
                     .build());
         }
@@ -627,7 +632,7 @@ public class ClienteControllerTests {
                     .andDo(print())
                     .andReturn().getResponse().getContentAsString();
 
-            SaborResponseDTO resultado = objectMapper.readValue(responseJsonString, SaborResponseDTO.SaborResponseDTOBuilder.class).build();
+            SaborInteresseResponseDTO resultado = objectMapper.readValue(responseJsonString, SaborInteresseResponseDTO.class);
 
             // Assert
             assertAll(
@@ -731,7 +736,4 @@ public class ClienteControllerTests {
 
 
     }
-*/
-
-
 }

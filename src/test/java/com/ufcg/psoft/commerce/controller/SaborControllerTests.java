@@ -34,8 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SaborControllerTests {
         final String URI_SABORES = "/v1/sabores";
 
-
-
         @Autowired
         MockMvc driver;
 
@@ -182,7 +180,7 @@ public class SaborControllerTests {
 
          // Assert
          assertAll(
-         () -> assertEquals("O sabor não existe", resultado.getMessage()));
+         () -> assertEquals("O sabor consultado nao existe!", resultado.getMessage()));
          }
 
          @Test
@@ -495,7 +493,7 @@ public class SaborControllerTests {
          CustomErrorType e = objectMapper.readValue(responseJsonString,
          CustomErrorType.class);
          // Assert
-         assertEquals(e.getMessage(), "O sabor não existe");
+         assertEquals(e.getMessage(), "O sabor consultado nao existe!");
          }
 
          @Test
@@ -550,7 +548,7 @@ public class SaborControllerTests {
 
          // Assert
          assertAll(
-         () -> assertEquals("O sabor não existe", resultado.getMessage()));
+         () -> assertEquals("O sabor consultado nao existe!", resultado.getMessage()));
          }
 
          @Test
@@ -749,8 +747,11 @@ public class SaborControllerTests {
                         // Assert
                         assertAll(
                                         () -> assertEquals("Erros de validacao encontrados", resultado.getMessage()),
+                                        () -> assertEquals("CAMPO TIPO OBRIGATORIO",
+                                                        resultado.getErrors().get(0)),
                                         () -> assertEquals("CAMPO TIPO NÃO PODE SER NULL",
-                                                        resultado.getErrors().get(0)));
+                                                resultado.getErrors().get(1))
+                        );
                 }
 
                 @Test

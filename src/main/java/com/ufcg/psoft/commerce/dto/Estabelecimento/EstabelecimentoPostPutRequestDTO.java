@@ -19,11 +19,13 @@ import lombok.NoArgsConstructor;
 public class EstabelecimentoPostPutRequestDTO {
 
     @NotBlank(message = "Campo de codigo de acesso obrigatorio")
+    @JsonProperty("codigoDeAcesso")
     private String codigoAcesso;
 
-
+    @JsonProperty("usuario")
     private String usuario;
 
+    @JsonProperty("entregadores")
     private Set<Entregador> entregadores;
 
     @JsonProperty("cardapio")

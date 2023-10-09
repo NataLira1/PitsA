@@ -1,17 +1,15 @@
 package com.ufcg.psoft.commerce.controller;
 
 import com.ufcg.psoft.commerce.dto.Cliente.ClientePostPutRequestDTO;
-import com.ufcg.psoft.commerce.service.cliente.ClienteAtualizarService;
-import com.ufcg.psoft.commerce.service.cliente.ClienteBuscarService;
-import com.ufcg.psoft.commerce.service.cliente.ClienteCriarService;
-import com.ufcg.psoft.commerce.service.cliente.ClienteDeleteService;
+import com.ufcg.psoft.commerce.service.cliente.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -29,12 +27,16 @@ public class ClienteV1RestController {
     @Autowired
     ClienteDeleteService clienteDeleteService;
 
+    @Autowired
+    ClienteInteresseService clienteInteresseService;
+
     @PostMapping
     public ResponseEntity<?> criarCliente(
             @RequestBody @Valid ClientePostPutRequestDTO clientePostPutRequestDTO
     ){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
+                //.body(responseDTO.get());
                 .body(clienteCriarService.criar(clientePostPutRequestDTO));
 
     }
@@ -49,6 +51,17 @@ public class ClienteV1RestController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(clienteAtualizarService.atualizar(id, codigoAcesso, usuario ,clientePostPutRequestDTO));
+    }
+
+    @PutMapping("/{id}/demonstrarInteresse")
+    public ResponseEntity<?> atualizarCliente(
+            @PathVariable("id") Long id,
+            @RequestParam String codigoAcesso,
+            @RequestParam Long saborId
+            ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(clienteInteresseService.salvarInteresse(id, codigoAcesso, saborId));
     }
 
     @GetMapping

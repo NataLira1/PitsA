@@ -1,19 +1,17 @@
 package com.ufcg.psoft.commerce.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @Builder
@@ -46,6 +44,11 @@ public class Sabor {
     @Column(name = "bool_disponivel", nullable = false)
     @JsonProperty("disponivel")
     private boolean disponivel;
+
+    @Column(name = "clientesInteressados")
+    @JsonProperty("clientesInteressados")
+    @ManyToMany(mappedBy = "interesse", cascade = CascadeType.ALL)
+    private Set<Cliente> clientesInteressados;
 
 //    @JsonProperty("estabelecimento")
     @JsonIgnore
