@@ -33,6 +33,9 @@ public class PedidoPostPutRequestDTO {
     @JsonProperty("clienteId")
     private Long clienteId;
 
+    @JsonProperty("statusPagamento")
+    private boolean statusPagamento;
+
     @NotNull(message = "ESTABELECIMENTO OBRIGATORIO")
     @JsonProperty("estabelecimentoId")
     private Long estabelecimentoId;
@@ -46,7 +49,7 @@ public class PedidoPostPutRequestDTO {
     private List<Pizza> pizzas;
 
     @NotNull(message = "FORMA DE PAGAMENTO OBRIGATORIO")
-    @JsonProperty("forma_pagamento")
+    @JsonProperty("formaPagamento")
     private FormaDePagamento formaDePagamento;
 
 }

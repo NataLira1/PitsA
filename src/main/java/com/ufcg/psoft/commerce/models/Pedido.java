@@ -33,8 +33,12 @@ public class Pedido {
     private String enderecoEntrega;
 
     @Column(name = "desc_status")
-    @JsonProperty
+    @JsonProperty("status")
     private String status;
+
+    @Column(name = "desc_status_pagamento")
+    @JsonProperty("statusPagamento")
+    private boolean statusPagamento;
 
     @JsonProperty("cliente")
     @ManyToOne
@@ -55,7 +59,7 @@ public class Pedido {
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Pizza> pizzas;
 
-    @JsonProperty("forma_pagamento")
+    @JsonProperty("formaPagamento")
     @Embedded
     private FormaDePagamento formaDePagamento;
     

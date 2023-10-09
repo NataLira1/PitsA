@@ -67,11 +67,15 @@ public class PedidoV1CriarService implements PedidoCriarService {
                 .estabelecimento(estabelecimento) //analisar
                 .pizzas(pedidoPostPutRequestDTO.getPizzas())
                 .status("Pedido recebido")
+                .formaDePagamento(pedidoPostPutRequestDTO.getFormaDePagamento())
+                .statusPagamento(false)
                 .build();
+
         pedido.setPreco(pedido.calcularPrecoPedido());
 
         TipoPagamento tipoPagamento = pedidoPostPutRequestDTO.getFormaDePagamento().getTipo();
         DescontoService descontoService = descontoDeciderService.desconto(tipoPagamento);
+
         double desconto = descontoService.calcularDesconto(pedido.calcularPrecoPedido());
         pedido.setPreco(pedido.calcularPrecoPedido() - desconto);
         
@@ -108,6 +112,8 @@ public class PedidoV1CriarService implements PedidoCriarService {
                 .estabelecimento(pedido.getEstabelecimento())
                 .pizzas(pedido.getPizzas())
                 .status(pedido.getStatus())
+                .formaDePagamento(pedido.getFormaDePagamento())
+                .statusPagamento(pedido.isStatusPagamento())
                 .build();
     }
 }

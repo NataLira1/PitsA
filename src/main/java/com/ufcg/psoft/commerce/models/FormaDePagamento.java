@@ -15,11 +15,11 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class FormaDePagamento {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    private Long id;
 
     @Enumerated(EnumType.STRING)
-    @JsonProperty("forma_pagamento")
+    @JsonProperty("formaPagamento")
     private TipoPagamento tipo;
 }

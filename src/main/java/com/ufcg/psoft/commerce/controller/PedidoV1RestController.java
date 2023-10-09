@@ -1,5 +1,7 @@
 package com.ufcg.psoft.commerce.controller;
 
+import com.ufcg.psoft.commerce.dto.pedido.PedidoPutConfirmarPagamentoRequestDTO;
+import com.ufcg.psoft.commerce.service.pedido.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,21 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
-import com.ufcg.psoft.commerce.service.pedido.PedidoAtualizarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarClienteEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTodosClienteEstabelecimentoEntregaService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTodosClientesEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoCriarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarClienteService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarPedidoUnicoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosClienteService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosService;
 
 import jakarta.validation.Valid;
 
@@ -73,7 +60,8 @@ public class PedidoV1RestController {
                 @Autowired
                 private PedidoBuscarTodosClienteEstabelecimentoEntregaService pedidoBuscarTodosClientesEstabelecimentoEntregaService;
 
-
+                @Autowired
+                private PedidoConfirmarPagamentoService pedidoConfirmarPagamentoService;
 
 
 
@@ -109,6 +97,20 @@ public class PedidoV1RestController {
                         .status(HttpStatus.OK)
                         .body(pedidoAtualizarService.atualizar(pedidoId, clienteCodigoAcesso, pedidoPutRequestDTO));
         }
+
+        @PutMapping("/{clienteId}/confirmar-pagamento")
+        public ResponseEntity<?> confirmarPagamento(
+                @PathVariable("clienteId") @Valid Long clienteId,
+                @RequestParam @Valid String codigoAcessoCliente,
+                @RequestParam @Valid Long pedidoId,
+                //@RequestParam @Valid String metodoPagamento,
+                @RequestBody @Valid PedidoPutConfirmarPagamentoRequestDTO pedidoPutConfirmarPagamentoRequestDTO){
+
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoConfirmarPagamentoService.confirmar(clienteId, codigoAcessoCliente, pedidoId, pedidoPutConfirmarPagamentoRequestDTO));
+        }
+
 
         @GetMapping("/cliente/")
         public ResponseEntity<?> getAllCliente(
