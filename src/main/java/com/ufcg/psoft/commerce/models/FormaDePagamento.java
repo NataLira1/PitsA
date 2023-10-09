@@ -19,6 +19,6 @@ public class FormaDePagamento {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @JsonProperty("tipo_pagamento")
-    private TipoPagamento tipo;
+    @JsonProperty("forma_pagamento")
+    private TipoPagamento forma;
 }
