@@ -1,16 +1,15 @@
 package com.ufcg.psoft.commerce.service.EstabelecimentoServices;
 
-import com.ufcg.psoft.commerce.models.Sabor;
+import com.ufcg.psoft.commerce.dto.sabor.SaborInteresseResponseDTO;
 
-import java.util.List;
 import java.util.Set;
 
 
 public interface EstabelecimentoBuscarCardapioService {
 
-    Set<Sabor> getCardapio(Long id);
+    Set<SaborInteresseResponseDTO> getCardapio(Long id);
 
-    Set<Sabor> getCardapioPorTipo(Long id, String tipo);
+    Set<SaborInteresseResponseDTO> getCardapioPorTipo(Long id, String tipo);
 
-    Set<Sabor> getCardapioPorDisponibilidade(Long id,Boolean disponivel);
+    Set<SaborInteresseResponseDTO> getCardapioPorDisponibilidade(Long id, Boolean disponivel);
 }

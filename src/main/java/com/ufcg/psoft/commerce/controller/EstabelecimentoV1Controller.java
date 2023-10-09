@@ -3,8 +3,9 @@ package com.ufcg.psoft.commerce.controller;
 
 import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPatchCodigoDTO;
 import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.sabor.SaborPatchDisponibilidadeDTO;
 import com.ufcg.psoft.commerce.service.EstabelecimentoServices.*;
-import jakarta.transaction.Transactional;
+import com.ufcg.psoft.commerce.service.EstabelecimentoServices.EstabelecimentoPatchDisponibilidadeSaborService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -38,6 +39,9 @@ public class EstabelecimentoV1Controller {
 
     @Autowired
     EstabelecimentoPatchCodigoService estabelecimentoPatchCodigoService;
+
+    @Autowired
+    EstabelecimentoPatchDisponibilidadeSaborService estabelecimentoPatchDisponibilidadeSaborService;
 
     @GetMapping
     ResponseEntity getAll(){
@@ -82,6 +86,18 @@ public class EstabelecimentoV1Controller {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(estabelecimentoBuscarCardapioService.getCardapioPorDisponibilidade(id, disponivel));
+    }
+
+    @PatchMapping("{idEstabelecimento}/sabores/disponibilidade")
+    public ResponseEntity<?> atualizarDisponibilidade(
+            @PathVariable("idEstabelecimento") Long idEstabelecimento,
+            @Param("idSabor") Long idSabor,
+            @Param("codigoDeAcesso") String codigoDeAcesso,
+            @RequestBody @Valid SaborPatchDisponibilidadeDTO saborPatchDisponibilidadeDTO
+    ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(estabelecimentoPatchDisponibilidadeSaborService.alterarDisponibilidade(idEstabelecimento, idSabor, codigoDeAcesso, saborPatchDisponibilidadeDTO));
     }
 
     @PostMapping

@@ -9,6 +9,7 @@ import com.ufcg.psoft.commerce.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +39,18 @@ public class ClienteV1BuscarService implements  ClienteBuscarService{
     public List<ClienteResponseDTO> buscarTudo() {
 
         //return clienteRepository.findAll();
+        List<ClienteResponseDTO> clienteResponseDTOS = new ArrayList<>();
 
-        return mapper.convertValue(clienteRepository.findAll(), new TypeReference<>() {
-        });
+        clienteRepository.findAll().forEach(
+                (cl) -> clienteResponseDTOS.add(
+                        ClienteResponseDTO.builder()
+                                .id(cl.getId())
+                                .endereco(cl.getEndereco())
+                                .usuario(cl.getUsuario())
+                                .nomeCompleto(cl.getNomeCompleto())
+                                .build()
+                )
+        );
+        return clienteResponseDTOS;
     }
 }
