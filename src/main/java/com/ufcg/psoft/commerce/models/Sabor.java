@@ -47,7 +47,7 @@ public class Sabor {
 
     @Column(name = "clientesInteressados")
     @JsonProperty("clientesInteressados")
-    @ManyToMany(mappedBy = "interesse")
+    @ManyToMany(mappedBy = "interesse", cascade = CascadeType.ALL)
     private Set<Cliente> clientesInteressados;
 
 //    @JsonProperty("estabelecimento")

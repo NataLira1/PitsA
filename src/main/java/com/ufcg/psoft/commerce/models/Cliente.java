@@ -46,7 +46,7 @@ public class Cliente {
 
     @JsonProperty("interesse")
     @Column(name = "interesses")
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "interesses_cardapio",
         joinColumns = @JoinColumn(name = "cliente_fk"),
             inverseJoinColumns = @JoinColumn(name = "sabor_fk")
