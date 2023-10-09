@@ -3,6 +3,7 @@ package com.ufcg.psoft.commerce.dto.pedido;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ufcg.psoft.commerce.models.FormaDePagamento;
 import com.ufcg.psoft.commerce.models.Pizza;
 
 import jakarta.validation.constraints.NotBlank;
@@ -43,5 +44,9 @@ public class PedidoPostPutRequestDTO {
     @NotNull(message = "PIZZAS OBRIGATORIO")
     @JsonProperty("pizzas")
     private List<Pizza> pizzas;
+
+    @NotNull(message = "FORMA DE PAGAMENTO OBRIGATORIO")
+    @JsonProperty("forma_pagamento")
+    private FormaDePagamento formaDePagamento;
 
 }

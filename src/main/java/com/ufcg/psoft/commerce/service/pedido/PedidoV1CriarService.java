@@ -2,7 +2,11 @@ package com.ufcg.psoft.commerce.service.pedido;
 
 import java.util.Optional;
 
+import com.ufcg.psoft.commerce.service.pagamento.DescontoDeciderService;
+import com.ufcg.psoft.commerce.service.pagamento.DescontoService;
+import com.ufcg.psoft.commerce.util.TipoPagamento;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
@@ -30,6 +34,9 @@ public class PedidoV1CriarService implements PedidoCriarService {
 
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
+
+    @Autowired
+    DescontoDeciderService descontoDeciderService;
     
     @Override
     public PedidoResponseDTO criar(String clienteCodigoAcesso, PedidoPostPutRequestDTO pedidoPostPutRequestDTO) {
@@ -63,7 +70,11 @@ public class PedidoV1CriarService implements PedidoCriarService {
                 .build();
         pedido.setPreco(pedido.calcularPrecoPedido());
 
-    
+        TipoPagamento tipoPagamento = pedidoPostPutRequestDTO.getFormaDePagamento().getTipo();
+        DescontoService descontoService = descontoDeciderService.desconto(tipoPagamento);
+        double desconto = descontoService.calcularDesconto(pedido.calcularPrecoPedido());
+        pedido.setPreco(pedido.calcularPrecoPedido() - desconto);
+        
         if(pedidoPostPutRequestDTO.getEnderecoEntrega() != null){
             pedido.setEnderecoEntrega(pedidoPostPutRequestDTO.getEnderecoEntrega());
         }
@@ -85,7 +96,7 @@ public class PedidoV1CriarService implements PedidoCriarService {
         }
 
         for (Pizza p : pedido.getPizzas()) {
-        	p.setPedido(pedido);
+            p.setPedido(pedido);
         }
         
         pedidoRepository.save(pedido);
