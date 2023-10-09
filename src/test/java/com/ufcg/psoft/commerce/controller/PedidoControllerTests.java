@@ -752,7 +752,7 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                         CustomErrorType.class);
 
                 // Assert
-                assertEquals("Estabelecimento distintos!", resultado.getMessage());
+                assertEquals("Estabelecimentos distintos!", resultado.getMessage());
         }
 
         @Test

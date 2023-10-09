@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Embeddable
 public class FormaDePagamento {
 
     @Id
@@ -20,5 +21,5 @@ public class FormaDePagamento {
 
     @Enumerated(EnumType.STRING)
     @JsonProperty("forma_pagamento")
-    private TipoPagamento forma;
+    private TipoPagamento tipo;
 }
