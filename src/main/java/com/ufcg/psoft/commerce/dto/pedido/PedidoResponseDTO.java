@@ -25,6 +25,9 @@ public class PedidoResponseDTO {
     @JsonProperty("preco")
     private double preco;
 
+    @JsonProperty("status")
+    private String status;
+
     @JsonProperty("enderecoEntrega")
     private String enderecoEntrega;
 

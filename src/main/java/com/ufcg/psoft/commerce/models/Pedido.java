@@ -42,6 +42,10 @@ public class Pedido {
     @JsonProperty("enderecoEntrega")
     private String enderecoEntrega;
 
+    @Column(name = "desc_status")
+    @JsonProperty
+    private String status;
+
     @JsonProperty("cliente")
     @ManyToOne
 	@JoinColumn(name = "cliente_id")

@@ -23,6 +23,10 @@ public class PedidoPutRequestDTO {
     @JsonProperty("enderecoEntrega")
     private String enderecoEntrega;
 
+    @NotBlank(message = "STATUS OBRIGATORIO")
+    @JsonProperty("status")
+    private String status;
+
     @NotNull(message = "PIZZAS OBRIGATORIO")
     @JsonProperty("pizzas")
     private List<Pizza> pizzas;

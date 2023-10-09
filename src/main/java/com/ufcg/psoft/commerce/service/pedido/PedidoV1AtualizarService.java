@@ -64,6 +64,7 @@ public class PedidoV1AtualizarService implements PedidoAtualizarService{
         
         pedido.setEnderecoEntrega(pedidoPutRequestDTO.getEnderecoEntrega());
         pedido.setPizzas(pedidoPutRequestDTO.getPizzas());
+        pedido.setStatus(pedidoPutRequestDTO.getStatus());
         pedido.setPreco(pedido.calcularPrecoPedido());
 
         pedido = pedidoRepository.save(pedido);
@@ -75,6 +76,7 @@ public class PedidoV1AtualizarService implements PedidoAtualizarService{
                 .enderecoEntrega(pedido.getEnderecoEntrega())
                 .estabelecimento(pedido.getEstabelecimento())
                 .pizzas(pedido.getPizzas())
+                .status(pedido.getStatus())
                 .build();
 
 

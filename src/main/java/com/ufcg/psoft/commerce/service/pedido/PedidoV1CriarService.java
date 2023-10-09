@@ -59,6 +59,7 @@ public class PedidoV1CriarService implements PedidoCriarService {
                 .cliente(cliente) //analisar
                 .estabelecimento(estabelecimento) //analisar
                 .pizzas(pedidoPostPutRequestDTO.getPizzas())
+                .status("Pedido recebido")
                 .build();
         pedido.setPreco(pedido.calcularPrecoPedido());
 
@@ -95,6 +96,7 @@ public class PedidoV1CriarService implements PedidoCriarService {
                 .enderecoEntrega(pedido.getEnderecoEntrega())
                 .estabelecimento(pedido.getEstabelecimento())
                 .pizzas(pedido.getPizzas())
+                .status(pedido.getStatus())
                 .build();
     }
 }

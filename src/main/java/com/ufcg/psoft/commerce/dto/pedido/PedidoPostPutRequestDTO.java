@@ -22,6 +22,8 @@ public class PedidoPostPutRequestDTO {
 //    @JsonProperty("preco")
 //    private double preco;
 
+
+
     @NotBlank(message = "ENDERECO OBRIGATORIO")
     @JsonProperty("enderecoEntrega")
     private String enderecoEntrega;
