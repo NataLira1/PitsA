@@ -16,12 +16,10 @@ import lombok.NoArgsConstructor;
 public class SaborPutRequestDTO {
 
     @NotBlank(message = "CAMPO NOME OBRIGATORIO")
-    @NotNull(message = "CAMPO NOME NÃO PODE SER NULL")
     @JsonProperty("nome")
     private String nome;
 
     @NotBlank(message = "CAMPO TIPO OBRIGATORIO")
-    @NotNull(message = "CAMPO TIPO NÃO PODE SER NULL")
     @JsonProperty("tipo")
     private String tipo;
 

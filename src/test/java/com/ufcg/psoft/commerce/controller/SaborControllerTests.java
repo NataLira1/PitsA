@@ -748,9 +748,7 @@ public class SaborControllerTests {
                         assertAll(
                                         () -> assertEquals("Erros de validacao encontrados", resultado.getMessage()),
                                         () -> assertEquals("CAMPO TIPO OBRIGATORIO",
-                                                        resultado.getErrors().get(0)),
-                                        () -> assertEquals("CAMPO TIPO NÃO PODE SER NULL",
-                                                resultado.getErrors().get(1))
+                                                        resultado.getErrors().get(0))
                         );
                 }
 

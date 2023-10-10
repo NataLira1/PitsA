@@ -18,6 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "sabores")
+//@Embeddable
 public class Sabor {
 
     @Id
@@ -45,10 +46,17 @@ public class Sabor {
     @JsonProperty("disponivel")
     private boolean disponivel;
 
+
+    @JsonIgnore
+    @JoinColumn(name = "pk_id_pizza")
+    @ManyToOne
+    private Pizza pizza;
+
     @Column(name = "clientesInteressados")
     @JsonProperty("clientesInteressados")
     @ManyToMany(mappedBy = "interesse", cascade = CascadeType.ALL)
     private Set<Cliente> clientesInteressados;
+
 
 //    @JsonProperty("estabelecimento")
     @JsonIgnore

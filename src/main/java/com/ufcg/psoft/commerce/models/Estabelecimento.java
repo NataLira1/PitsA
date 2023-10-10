@@ -1,6 +1,8 @@
 package com.ufcg.psoft.commerce.models;
 
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,8 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Objects;
-import java.util.Set;
 
 @Data
 @Builder
@@ -53,6 +53,15 @@ public class Estabelecimento {
     @OneToMany(mappedBy = "estabelecimento", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Sabor> cardapio;
 
+    public Set<Sabor> saboresDisponiveis(){
+        Set<Sabor> saboresDisponiveis = new HashSet<>();
+        for (Sabor sabor : cardapio){
+            if(sabor.isDisponivel()){
+                saboresDisponiveis.add(sabor);
+            }
+        }
+        return saboresDisponiveis;
+    }
 
     /*
     @Column(name = "estabelecimento_pedidos", nullable = true)
