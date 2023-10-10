@@ -72,6 +72,12 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
         Pedido pedido;
         Pedido pedido1;
 
+        FormaDePagamento formaDePagamento;
+
+        FormaDePagamento formaDePagamento1;
+
+        FormaDePagamento formaDePagamento2;
+
         PedidoPostPutRequestDTO pedidoPostPutRequestDTO;
         PedidoPostPutRequestDTO pedidoPostPutRequestDTO2;
 
@@ -154,8 +160,8 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                 .enderecoEntrega("Casa 237")
                 .cliente(cliente)
                 .estabelecimento(estabelecimento)
-//                                        .entregador(entregador)
-                .formaDePagamento(formaDePagamento)
+                .entregador(entregador)
+                //.formaDePagamento(formaDePagamento)
                 .status("Pedido recebido")
                 .pizzas(pizzas)
                 .build();
@@ -165,7 +171,7 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                 .enderecoEntrega("Casa 237")
                 .cliente(cliente)
                 .estabelecimento(estabelecimento)
-//                                        .entregador(entregador)
+                .entregador(entregador)
                 .status("Pedido recebido")
                 .pizzas(pizzas1)
                 .build();
@@ -180,7 +186,7 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                 .estabelecimentoId(estabelecimento.getId())
                 .pizzas(pedido.getPizzas())
                 .statusPagamento(false)
-                .formaDePagamento(formaDePagamento1)
+                //.formaDePagamento(formaDePagamento1)
                 .build();
 
 
@@ -1110,12 +1116,20 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
     @DisplayName("Conjunto de casos de teste da confirmação de pagamento de um pedido")
     public class PedidoConfirmarPagamentoTests {
 
-        Pedido pedido1;
+        Pedido pedido4;
 
         @BeforeEach
         void setUp() {
 
-        FormaDePagamento formaDePagamento = FormaDePagamento.builder()
+                formaDePagamento = FormaDePagamento.builder()
+                .tipo(TipoPagamento.PIX)
+                .build();
+
+         formaDePagamento1 = FormaDePagamento.builder()
+                .tipo(TipoPagamento.CARTAO_DEBITO)
+                .build();
+
+         formaDePagamento2 = FormaDePagamento.builder()
                 .tipo(TipoPagamento.CARTAO_CREDITO)
                 .build();
 
@@ -1123,15 +1137,15 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                 .formaDePagamento(formaDePagamento)
                 .build();
 
-            pedido1 = pedidoRepository.save(Pedido.builder()
+            pedido4 = pedidoRepository.save(Pedido.builder()
                     .estabelecimento(estabelecimento)
                     .cliente(cliente)
                     .enderecoEntrega("Rua 1")
                     .pizzas(List.of(pizzaG))
-                    .preco(10.0)
-                    //.entregador(entregador)
+                    //.preco(10.0)
+                    .entregador(entregador)
                     .statusPagamento(false)
-                    .formaDePagamento(formaDePagamento)
+                    //.formaDePagamento(formaDePagamento)
                     .status("Pedido recebido")
                     .build()
             );
@@ -1141,12 +1155,15 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
         @DisplayName("Quando confirmamos o pagamento de um pedido por cartão de crédito")
         void confirmaPagamentoCartaoCredito() throws Exception {
             // Arrange
+
+                pedidoPutConfirmarPagamentoRequestDTO.setFormaDePagamento(formaDePagamento2);
+
             // Act
             String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
                             cliente.getId() + "/confirmar-pagamento")
                             .contentType(MediaType.APPLICATION_JSON)
                             .param("codigoAcessoCliente", cliente.getCodigoAcesso())
-                            .param("pedidoId", pedido1.getId().toString())
+                            .param("pedidoId", pedido4.getId().toString())
                             //.param("metodoPagamento", "Cartão de crédito")
                             .content(objectMapper.writeValueAsString(pedidoPutConfirmarPagamentoRequestDTO)))
                     .andExpect(status().isOk()) // Codigo 200
@@ -1163,12 +1180,15 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
         @DisplayName("Quando confirmamos o pagamento de um pedido por cartão de crédito")
         void confirmaPagamentoCartaoDebito() throws Exception {
             // Arrange
+
+                pedidoPutConfirmarPagamentoRequestDTO.setFormaDePagamento(formaDePagamento1);
+
             // Act
             String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
                             cliente.getId() + "/confirmar-pagamento")
                             .contentType(MediaType.APPLICATION_JSON)
                             .param("codigoAcessoCliente", cliente.getCodigoAcesso())
-                            .param("pedidoId", pedido1.getId().toString())
+                            .param("pedidoId", pedido4.getId().toString())
                             //.param("metodoPagamento", "Cartão de débito")
                             .content(objectMapper.writeValueAsString(pedidoPutConfirmarPagamentoRequestDTO)))
                     .andExpect(status().isOk()) // Codigo 200
@@ -1185,12 +1205,15 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
         @DisplayName("Quando confirmamos o pagamento de um pedido por cartão de crédito")
         void confirmaPagamentoPIX() throws Exception {
             // Arrange
+
+                pedidoPutConfirmarPagamentoRequestDTO.setFormaDePagamento(formaDePagamento);
+
             // Act
             String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
                             cliente.getId() + "/confirmar-pagamento")
                             .contentType(MediaType.APPLICATION_JSON)
                             .param("codigoAcessoCliente", cliente.getCodigoAcesso())
-                            .param("pedidoId", pedido1.getId().toString())
+                            .param("pedidoId", pedido4.getId().toString())
                             //.param("metodoPagamento", "PIX")
                             .content(objectMapper.writeValueAsString(pedidoPutConfirmarPagamentoRequestDTO)))
                     .andExpect(status().isOk()) // Codigo 200

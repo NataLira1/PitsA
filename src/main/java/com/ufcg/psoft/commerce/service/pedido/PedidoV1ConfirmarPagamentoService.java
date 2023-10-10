@@ -10,6 +10,9 @@ import com.ufcg.psoft.commerce.models.Cliente;
 import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.ClienteRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
+import com.ufcg.psoft.commerce.service.pagamento.DescontoDeciderService;
+import com.ufcg.psoft.commerce.service.pagamento.DescontoService;
+import com.ufcg.psoft.commerce.util.TipoPagamento;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PedidoV1ConfirmarPagamentoService implements PedidoConfirmarPagamentoService{
 
+    @Autowired
+    private DescontoDeciderService descontoDeciderService;
 
     @Autowired
     private ClienteRepository clienteRepository;
@@ -34,9 +39,15 @@ public class PedidoV1ConfirmarPagamentoService implements PedidoConfirmarPagamen
         if(!pedido.getCliente().getCodigoAcesso().equals(cliente.getCodigoAcesso())){
             throw new CodigoAcessoInvalidException();
         }
-        if(!pedido.getFormaDePagamento().equals(pedidoPutConfirmarPagamentoRequestDTO.getFormaDePagamento())){
-            throw new FormaDePagamentoDiferenteException();
-        }
+        pedido.setFormaDePagamento(pedidoPutConfirmarPagamentoRequestDTO.getFormaDePagamento());
+
+        TipoPagamento tipoPagamento = pedidoPutConfirmarPagamentoRequestDTO.getFormaDePagamento().getTipo();
+        DescontoService descontoService = descontoDeciderService.desconto(tipoPagamento);
+
+        double desconto = descontoService.calcularDesconto(pedido.calcularPrecoPedido());
+
+        pedido.setPreco(pedido.calcularPrecoPedido() - desconto);
+
         pedido.setStatusPagamento(true);
 
         return PedidoResponseDTO.builder()

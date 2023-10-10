@@ -40,7 +40,7 @@ public class PedidoResponseDTO {
     @JsonProperty("formaPagamento")
     private FormaDePagamento formaDePagamento;
 
-    @JsonProperty("entregadorId")
+    @JsonProperty("entregador")
     private Entregador entregador;
 
     @JsonProperty("pizzas")
