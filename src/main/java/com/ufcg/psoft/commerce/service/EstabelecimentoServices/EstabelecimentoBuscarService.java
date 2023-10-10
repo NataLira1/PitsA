@@ -1,13 +1,13 @@
 package com.ufcg.psoft.commerce.service.EstabelecimentoServices;
 
-import com.ufcg.psoft.commerce.models.Estabelecimento;
+import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoResponseGetDTO;
 
 import java.util.List;
 
 public interface EstabelecimentoBuscarService {
 
 
-    List<Estabelecimento> getAll();
+    List<EstabelecimentoResponseGetDTO> getAll();
 
-    Estabelecimento getOne(Long id, String codigo);
+    EstabelecimentoResponseGetDTO getOne(Long id);
 }

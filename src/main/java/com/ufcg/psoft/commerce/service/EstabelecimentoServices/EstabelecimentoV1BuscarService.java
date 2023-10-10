@@ -1,10 +1,11 @@
 package com.ufcg.psoft.commerce.service.EstabelecimentoServices;
 
 
-import com.ufcg.psoft.commerce.exception.EstabelecimentoCodigoAcessoInvalidoException;
+import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoResponseGetDTO;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
+import com.ufcg.psoft.commerce.utils.ConvertEstabelecimentoToResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +17,19 @@ public class EstabelecimentoV1BuscarService implements EstabelecimentoBuscarServ
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
 
+    @Autowired
+    ConvertEstabelecimentoToResponseDTO convertEstabelecimentoToResponseDTO;
+
     @Override
-    public List<Estabelecimento> getAll() {
-        return estabelecimentoRepository.findAll();
+    public List<EstabelecimentoResponseGetDTO> getAll() {
+
+        return convertEstabelecimentoToResponseDTO.convertToDTO(estabelecimentoRepository.findAll());
     }
 
     @Override
-    public Estabelecimento getOne(Long id, String codigo) {
+    public EstabelecimentoResponseGetDTO getOne(Long id) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(codigo.equals(es.getCodigoAcesso())){
-            return es;
-        }else{
-            throw new EstabelecimentoCodigoAcessoInvalidoException();
-        }
+        return convertEstabelecimentoToResponseDTO.convertToDTO(es);
     }
 }

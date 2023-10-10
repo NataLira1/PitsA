@@ -1,13 +1,13 @@
 package com.ufcg.psoft.commerce.service.EstabelecimentoServices;
 
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import com.ufcg.psoft.commerce.dto.sabor.SaborInteresseResponseDTO;
+import com.ufcg.psoft.commerce.utils.ConvertToCardapioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.psoft.commerce.exception.EstabelecimentoCodigoAcessoInvalidoException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
 import com.ufcg.psoft.commerce.exception.TipoInexistenteException;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
@@ -21,43 +21,56 @@ public class EstabelecimentoV1BuscarCardapioService implements EstabelecimentoBu
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
 
+    @Autowired
+    ConvertToCardapioDTO convertToCardapioDTO;
+
     @Override
-    public Set<Sabor> getCardapio(Long id, String codigo) {
+    public Set<SaborInteresseResponseDTO> getCardapio(Long id) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(!codigo.equals(es.getCodigoAcesso())) throw new EstabelecimentoCodigoAcessoInvalidoException();
+        Set<Sabor> disponiveis = es.getCardapio().stream().filter(
+                (sabor) -> sabor.isDisponivel()
+        ).collect(Collectors.toSet());
 
-        return es.getCardapio();
+        Set<Sabor> indisponiveis = es.getCardapio().stream().filter(
+                (sabor) -> !sabor.isDisponivel()
+        ).collect(Collectors.toSet());
+
+        Set<Sabor> cardapioOrdenado = new LinkedHashSet<>();
+
+        cardapioOrdenado.addAll(disponiveis);
+        cardapioOrdenado.addAll(indisponiveis);
+
+        return convertToCardapioDTO.convertToDTO(cardapioOrdenado);
     }
 
+
     @Override
-    public Set<Sabor> getCardapioPorTipo(Long id, String codigo, String tipo) {
+    public Set<SaborInteresseResponseDTO> getCardapioPorTipo(Long id, String tipo) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(!codigo.equals(es.getCodigoAcesso())) throw new EstabelecimentoCodigoAcessoInvalidoException();
-
-        if(!tipo.toUpperCase().equals("SALGADO") && !tipo.toUpperCase().equals("DOCE")){
+        if(!tipo.equalsIgnoreCase("SALGADO") && !tipo.equalsIgnoreCase("DOCE")){
             throw new TipoInexistenteException();
         }
 
-        Stream<Sabor> cardapioFiltrado = es.getCardapio().stream().filter(
-                item -> item.getTipo() == tipo
-        );
+        Set<Sabor> cardapioFiltrado = es.getCardapio().stream().filter(
+                item -> item.getTipo().equalsIgnoreCase(tipo)
+        ).collect(Collectors.toSet());
 
-        return cardapioFiltrado.collect(Collectors.toSet());
+
+        return convertToCardapioDTO.convertToDTO(cardapioFiltrado);
     }
 
+
     @Override
-    public Set<Sabor> getCardapioPorDisponibilidade(Long id, String codigo, Boolean disponivel) {
+    public Set<SaborInteresseResponseDTO> getCardapioPorDisponibilidade(Long id, Boolean disponivel) {
         Estabelecimento es = estabelecimentoRepository.findById(id).orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        if(!codigo.equals(es.getCodigoAcesso())) throw new EstabelecimentoCodigoAcessoInvalidoException();
 
-
-        Stream<Sabor> cardapioFiltrado = es.getCardapio().stream().filter(
+        Set<Sabor> cardapioFiltrado = es.getCardapio().stream().filter(
                 item -> item.isDisponivel() == disponivel
-        );
+        ).collect(Collectors.toSet());
 
-        return cardapioFiltrado.collect(Collectors.toSet());
+        return convertToCardapioDTO.convertToDTO(cardapioFiltrado);
     }
 }
