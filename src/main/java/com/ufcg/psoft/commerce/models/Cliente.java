@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoAdapter;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "clientes")
-public class Cliente {
+public class Cliente extends PedidoAdapter {
 
     @JsonProperty("id")
     @Id
@@ -52,4 +54,14 @@ public class Cliente {
             inverseJoinColumns = @JoinColumn(name = "sabor_fk")
     )
     private Set<Sabor> interesse;
+
+    @Override
+    public void notificaPedidoEmRota(PedidoEvent pedido) {
+        System.out.println();
+    }
+
+    @Override
+    public void notificaPedidoEntregue(PedidoEvent pedido) {
+
+    }
 }
