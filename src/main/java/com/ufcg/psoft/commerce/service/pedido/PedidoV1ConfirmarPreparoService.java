@@ -26,17 +26,23 @@ public class PedidoV1ConfirmarPreparoService implements PedidoConfirmarPreparoSe
 
         Estabelecimento estabelecimento = estabelecimentoRepository.findById(estabelecimentoId).orElseThrow(() -> new EstabelecimentoNaoEncontradoException());
 
-        if(!estabelecimento.getCodigoAcesso().equals(codigoAcessoEstabelecimento)){
-            throw new CodigoAcessoInvalidException();
-        }
-
         Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(()->new PedidoNaoExisteException());
-
         boolean statusPagamento = pedido.isStatusPagamento();
 
         if(!statusPagamento){
             throw new PagamentoNaoAutorizadoExeption();
         }
+        if(!pedido.getEstabelecimento().equals(codigoAcessoEstabelecimento)){
+            throw new CodigoAcessoInvalidException();
+        }
+
+        if(!estabelecimento.getCodigoAcesso().equals(codigoAcessoEstabelecimento)){
+            throw new CodigoAcessoInvalidException();
+        }
+
+
+
+
 
         pedido.setStatus("Pedido em preparo");
 

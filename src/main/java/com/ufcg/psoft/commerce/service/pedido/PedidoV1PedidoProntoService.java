@@ -24,13 +24,9 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
 
         Estabelecimento estabelecimento = estabelecimentoRepository.findById(estabelecimentoId).orElseThrow(() -> new EstabelecimentoNaoEncontradoException());
 
-        if(!estabelecimento.getCodigoAcesso().equals(codigoAcessoEstabelecimento)){
-            throw new CodigoAcessoInvalidException();
-        }
-
         Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(()->new PedidoNaoExisteException());
 
-        if(!pedido.getEstabelecimento().getCodigoAcesso().equals(codigoAcessoEstabelecimento)){
+        if(!(estabelecimento.getCodigoAcesso().equals(codigoAcessoEstabelecimento) && pedido.getEstabelecimento().equals(codigoAcessoEstabelecimento))){
             throw new CodigoAcessoInvalidException();
         }
 
