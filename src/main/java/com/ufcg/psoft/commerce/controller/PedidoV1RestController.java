@@ -154,7 +154,7 @@ public class PedidoV1RestController {
                         .body(pedidoAssociarEntregadorService.associar(pedidoId, estabelecimentoId,codigoAcessoEstabelecimento));
         }
 
-        @PutMapping("/{pedidoId}/associar-pedido-entregador")
+        @PutMapping("/{pedidoId}/{clienteId}/cliente-confirmar-entrega")
         public ResponseEntity<?> confirmarPedidoCliente(
                 @PathVariable("pedidoId") @Valid Long pedidoId,
                 @PathVariable("clienteId") @Valid Long clienteId,

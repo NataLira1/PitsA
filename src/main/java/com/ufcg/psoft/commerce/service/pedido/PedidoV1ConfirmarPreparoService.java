@@ -32,9 +32,9 @@ public class PedidoV1ConfirmarPreparoService implements PedidoConfirmarPreparoSe
 
         Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(()->new PedidoNaoExisteException());
 
-        boolean StatusPagamento = pedido.isStatusPagamento();
+        boolean statusPagamento = pedido.isStatusPagamento();
 
-        if(!StatusPagamento){
+        if(!statusPagamento){
             throw new PagamentoNaoAutorizadoExeption();
         }
 

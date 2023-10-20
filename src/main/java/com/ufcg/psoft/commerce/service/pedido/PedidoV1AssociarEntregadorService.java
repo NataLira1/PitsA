@@ -16,6 +16,7 @@ public class PedidoV1AssociarEntregadorService implements PedidoAssociarEntregad
     @Autowired
     PedidoRepository pedidoRepository;
 
+    @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
 
     @Override
