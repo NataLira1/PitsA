@@ -18,7 +18,7 @@ import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
 
 @Service
-public class PedidoV1BuscarTodosClienteEstabelecimentoEntregaService implements PedidoBuscarTodosClienteEstabelecimentoEntregaService{
+public class PedidoV1BuscarTodosClienteEstabelecimentoStatusService implements PedidoBuscarTodosClienteEstabelecimentoStatusService {
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -65,8 +65,6 @@ public class PedidoV1BuscarTodosClienteEstabelecimentoEntregaService implements 
         }
 
         return pedidoResponseDTOS;
-
-
     }
     
 }

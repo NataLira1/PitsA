@@ -44,26 +44,23 @@ public class PedidoV1RestController {
         private PedidoDeletarTodosService pedidoDeletarTodosService;
 
 
+        @Autowired
+        private PedidoDeletarClienteService pedidoDeletarClienteService;
 
-                @Autowired
-                private PedidoDeletarClienteService pedidoDeletarClienteService;
+        @Autowired
+        private PedidoDeletarEstabelecimentoService pedidoDeletarEstabelecimentoService;
 
-                @Autowired 
-                private PedidoDeletarEstabelecimentoService pedidoDeletarEstabelecimentoService;
+        @Autowired
+        private PedidoDeletarTodosClienteService pedidoDeletarTodosClienteService;
 
-                @Autowired
-                private PedidoDeletarTodosClienteService pedidoDeletarTodosClienteService;
+        @Autowired
+        private PedidoDeletarTodosEstabelecimentoService pedidoDeletarTodosEstabelecimentoService;
 
-                @Autowired
-                private PedidoDeletarTodosEstabelecimentoService pedidoDeletarTodosEstabelecimentoService;
+        @Autowired
+        private PedidoBuscarTodosClienteEstabelecimentoStatusService pedidoBuscarTodosClientesEstabelecimentoStatusService;
 
-                @Autowired
-                private PedidoBuscarTodosClienteEstabelecimentoEntregaService pedidoBuscarTodosClientesEstabelecimentoEntregaService;
-
-                @Autowired
-                private PedidoConfirmarPagamentoService pedidoConfirmarPagamentoService;
-
-
+        @Autowired
+        private PedidoConfirmarPagamentoService pedidoConfirmarPagamentoService;
 
 
         @Autowired
@@ -185,7 +182,9 @@ public class PedidoV1RestController {
         ){
                 return ResponseEntity
                         .status(HttpStatus.OK)
-                        .body(pedidoBuscarTodosClientesEstabelecimentoService.buscarTodos(clienteId, estabelecimentoId, clienteCodigoAcesso));
+                        .body(pedidoBuscarTodosClientesEstabelecimentoStatusService.buscarTodos(
+                                clienteId, estabelecimentoId, status, clienteCodigoAcesso
+                        ));
         }
 
 

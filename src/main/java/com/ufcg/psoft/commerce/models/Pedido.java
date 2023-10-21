@@ -1,5 +1,6 @@
 package com.ufcg.psoft.commerce.models;
 
+import java.util.Comparator;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,8 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity(name = "pedidos")
 @Table(name = "pedido")
-
-public class Pedido {
+public class Pedido{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -72,5 +72,4 @@ public class Pedido {
     	
     	return precoPedido;
     }
-
 }
