@@ -60,6 +60,7 @@ public class PedidoV1BuscarTodosClienteEstabelecimentoStatusService implements P
                     .estabelecimento(p.getEstabelecimento())
                     .preco(p.getPreco())
                     .cliente(p.getCliente())
+                    .status(p.getStatus())
                     .build();
             pedidoResponseDTOS.add(aux);
         }

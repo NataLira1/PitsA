@@ -819,6 +819,7 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
             // Arrange
                 pedidoRepository.save(pedido);
 
+
                 // Act
                 String responseJsonString = driver.perform(get(URI_PEDIDOS + "/" +
                                 "pedido-cliente-estabelecimento" + "/" + cliente.getId() + "/" +
@@ -946,6 +947,15 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                         .status("Pedido em preparo")
                         .build());
 
+                Pedido pedido4 = pedidoRepository.save(Pedido.builder()
+                        .preco(30.0)
+                        .enderecoEntrega("Casa 145")
+                        .cliente(cliente)
+                        .estabelecimento(estabelecimento)
+                        .pizzas(List.of(pizzaM))
+                        .status("Pedido Entregue")
+                        .build());
+
 
                 // Act
                 String responseJsonString = driver.perform(get(URI_PEDIDOS +
@@ -968,54 +978,53 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                 assertEquals(pedido3.getEstabelecimento(), resultado.get(0).getEstabelecimento());
         }
 
-        // @Test
-        // @DisplayName("Quando um cliente busca todos os pedidos feitos naquele estabelcimento filtrados por entrega")
-        // void quandoClienteBuscaTodosPedidosFeitosNaqueleEstabelecimentoComPedidosFiltradosPorEntrega() throws Exception {
-        //         // Arrange
-        //                 // Arrange
-        //         Pedido pedido3 = pedidoRepository.save(Pedido.builder()
-        //         .preco(30.0)
-        //         .enderecoEntrega("Casa 237")
-        //         .cliente(cliente)
-        //         .estabelecimento(estabelecimento)
-        //         .pizzas(List.of(pizzaM))
-        //         .status("Pedido entregue")
-        //         .build());
-        // Pedido pedido4 = pedidoRepository.save(Pedido.builder()
-        //         .preco(30.0)
-        //         .enderecoEntrega("Casa 237")
-        //         .cliente(cliente)
-        //         .estabelecimento(estabelecimento)
-        //         .pizzas(List.of(pizzaM))
-        //         .status("Pedido em preparo")
-        //         .build());
+        @Test
+        @DisplayName("Quando um cliente busca todos os pedidos feitos naquele estabelcimento filtrados por entrega")
+        void quandoClienteBuscaTodosPedidosFeitosNaqueleEstabelecimentoComPedidosFiltradosPorEntrega() throws Exception {
+                         // Arrange
+                 Pedido pedido3 = pedidoRepository.save(Pedido.builder()
+                 .preco(30.0)
+                 .enderecoEntrega("Casa 237")
+                 .cliente(cliente)
+                .estabelecimento(estabelecimento)
+               .pizzas(List.of(pizzaM))
+                 .status("Pedido entregue")
+                 .build());
+         Pedido pedido4 = pedidoRepository.save(Pedido.builder()
+                 .preco(30.0)
+                .enderecoEntrega("Casa 237")
+                 .cliente(cliente)
+                 .estabelecimento(estabelecimento)
+                 .pizzas(List.of(pizzaM))
+                 .status("Pedido em preparo")
+                 .build());
 
-        //         // Act
-        //         String responseJsonString = driver.perform(get(URI_PEDIDOS +
-        //                         "/pedidos-cliente-estabelecimento/" + cliente.getId() + "/" +
-        //                         estabelecimento.getId())
-        //                         .contentType(MediaType.APPLICATION_JSON)
-        //                         .param("clienteCodigoAcesso", cliente.getCodigoAcesso()))
-        //                 .andExpect(status().isOk())
-        //                 .andDo(print())
-        //                 .andReturn().getResponse().getContentAsString();
+                 // Act
+                 String responseJsonString = driver.perform(get(URI_PEDIDOS +
+                                 "/pedidos-cliente-estabelecimento/" + cliente.getId() + "/" +
+                                 estabelecimento.getId())
+                                 .contentType(MediaType.APPLICATION_JSON)
+                                 .param("clienteCodigoAcesso", cliente.getCodigoAcesso()))
+                        .andExpect(status().isOk())
+                        .andDo(print())
+                        .andReturn().getResponse().getContentAsString();
 
-        //         List<PedidoResponseDTO> resultado =
-        //                 objectMapper.readValue(responseJsonString, new TypeReference<>() {
-        //                 });
+                List<PedidoResponseDTO> resultado =
+                         objectMapper.readValue(responseJsonString, new TypeReference<>() {
+                         });
 
-        //    // Assert
-        //         assertEquals(2, resultado.size());
-        //         //assertEquals(pedido4.getId(), resultado.get(0).getId());
-        //         assertEquals(pedido4.getCliente(), resultado.get(0).getCliente());
-        //         assertEquals(pedido4.getEstabelecimento(),
-        //                 resultado.get(0).getEstabelecimento());
-        //         assertEquals(pedido3.getId(), resultado.get(1).getId());
-        //         assertEquals(pedido3.getCliente(), resultado.get(1).getCliente());
-        //         assertEquals(pedido3.getEstabelecimento(),
-        //                 resultado.get(1).getEstabelecimento());
+            //Assert
+                 assertEquals(2, resultado.size());
+                 //assertEquals(pedido4.getId(), resultado.get(0).getId());
+                 assertEquals(pedido4.getCliente(), resultado.get(0).getCliente());
+                 assertEquals(pedido4.getEstabelecimento(),
+                         resultado.get(0).getEstabelecimento());
+                assertEquals(pedido3.getId(), resultado.get(1).getId());
+                 assertEquals(pedido3.getCliente(), resultado.get(1).getCliente());
+                assertEquals(pedido3.getEstabelecimento(),
+                        resultado.get(1).getEstabelecimento());
 
-        // }
+        }
 }
 //US12
 //    @Nested
