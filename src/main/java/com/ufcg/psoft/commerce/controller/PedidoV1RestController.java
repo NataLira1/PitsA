@@ -1,5 +1,6 @@
 package com.ufcg.psoft.commerce.controller;
 
+import com.ufcg.psoft.commerce.service.pedido.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,20 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutConfirmarPagamentoRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
-import com.ufcg.psoft.commerce.service.pedido.PedidoAtualizarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarClienteEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTodosClientesEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoBuscarTudoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoCancelarPedidoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoConfirmarPagamentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoCriarService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarClienteService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarEstabelecimentoService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosClienteService;
-import com.ufcg.psoft.commerce.service.pedido.PedidoDeletarTodosEstabelecimentoService;
 
 import jakarta.validation.Valid;
 
@@ -59,8 +46,14 @@ public class PedidoV1RestController {
         @Autowired
         private PedidoDeletarTodosClienteService pedidoDeletarTodosClienteService;
 
+
+
         @Autowired
         private PedidoDeletarTodosEstabelecimentoService pedidoDeletarTodosEstabelecimentoService;
+
+        @Autowired
+        private PedidoBuscarTodosClienteEstabelecimentoStatusService pedidoBuscarTodosClientesEstabelecimentoStatusService;
+
 
         @Autowired
         private PedidoConfirmarPagamentoService pedidoConfirmarPagamentoService;
@@ -189,7 +182,9 @@ public class PedidoV1RestController {
         ){
                 return ResponseEntity
                         .status(HttpStatus.OK)
-                        .body(pedidoBuscarTodosClientesEstabelecimentoService.buscarTodos(clienteId, estabelecimentoId, clienteCodigoAcesso));
+                        .body(pedidoBuscarTodosClientesEstabelecimentoStatusService.buscarTodos(
+                                clienteId, estabelecimentoId, status, clienteCodigoAcesso
+                        ));
         }
 
 

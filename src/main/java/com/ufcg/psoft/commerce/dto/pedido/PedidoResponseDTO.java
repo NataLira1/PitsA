@@ -1,5 +1,6 @@
 package com.ufcg.psoft.commerce.dto.pedido;
 
+import java.util.Comparator;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PedidoResponseDTO {
+public class PedidoResponseDTO implements Comparable<PedidoResponseDTO> {
 
     @JsonProperty("id")
     private Long id;
@@ -46,4 +47,12 @@ public class PedidoResponseDTO {
     @JsonProperty("pizzas")
     private List<Pizza> pizzas;
 
+    @Override
+    public int compareTo(PedidoResponseDTO pedido) {
+        if(this.getStatus().equals("Pedido em preparo")){
+            return -1;
+        }
+
+        return 0;
+    }
 }
