@@ -9,9 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ufcg.psoft.commerce.dto.pedido.PedidoPutConfirmarPagamentoRequestDTO;
-import com.ufcg.psoft.commerce.models.*;
-import com.ufcg.psoft.commerce.util.TipoPagamento;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,15 +25,25 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.pedido.PedidoPutConfirmarPagamentoRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
 import com.ufcg.psoft.commerce.exception.CustomErrorType;
+import com.ufcg.psoft.commerce.models.Cliente;
+import com.ufcg.psoft.commerce.models.Entregador;
+import com.ufcg.psoft.commerce.models.Estabelecimento;
+import com.ufcg.psoft.commerce.models.FormaDePagamento;
+import com.ufcg.psoft.commerce.models.Pedido;
+import com.ufcg.psoft.commerce.models.Pizza;
+import com.ufcg.psoft.commerce.models.Sabor;
+import com.ufcg.psoft.commerce.models.Veiculo;
 import com.ufcg.psoft.commerce.repositories.ClienteRepository;
 import com.ufcg.psoft.commerce.repositories.EntregadorRepository;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
 import com.ufcg.psoft.commerce.repositories.PizzaRepository;
 import com.ufcg.psoft.commerce.repositories.SaborRepository;
+import com.ufcg.psoft.commerce.util.TipoPagamento;
 
 @SpringBootTest
 @Transactional
@@ -794,25 +801,96 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
         }
 //us16
 //
-//        @Test
-//        @DisplayName("Quando um cliente cancela um pedido")
-//        void quandoClienteCancelaPedido() throws Exception {
-//            // Arrange
-//            pedidoRepository.save(pedido);
-//
-//            // Act
-//            String responseJsonString = driver.perform(delete(URI_PEDIDOS + "/" +
-//                            pedido.getId() + "/cancelar-pedido")
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .param("clienteCodigoAcesso", cliente.getCodigoAcesso()))
-//                    .andExpect(status().isNoContent())
-//                    .andDo(print())
-//                    .andReturn().getResponse().getContentAsString();
-//
-//            // Assert
-//            assertTrue(responseJsonString.isBlank());
-//        }
-//
+        @Test
+        @DisplayName("Quando um cliente cancela um pedido")
+        void quandoClienteCancelaPedido() throws Exception {
+                // Arrange
+                pedidoRepository.save(pedido);
+
+                // Act
+                String responseJsonString = driver.perform(delete(URI_PEDIDOS + "/" +
+                                pedido.getId() + "/cancelar-pedido")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("clienteCodigoAcesso", cliente.getCodigoAcesso()))
+                        .andExpect(status().isNoContent())
+                        .andDo(print())
+                        .andReturn().getResponse().getContentAsString();
+
+                // Assert
+                assertTrue(responseJsonString.isBlank());
+        }
+
+        @Test
+        @DisplayName("Quando um cliente cancela um pedido com id de pedido inexistente")
+        void quandoClienteCancelaPedidoComIdInexistente() throws Exception {
+                // Arrange
+                pedidoRepository.save(pedido);
+
+                // Act
+                String responseJsonString = driver.perform(delete(URI_PEDIDOS + "/" +
+                                "123" + "/cancelar-pedido")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("clienteCodigoAcesso", cliente.getCodigoAcesso()))
+                        .andExpect(status().isBadRequest())
+                        .andDo(print())
+                        .andReturn().getResponse().getContentAsString();
+
+                // Assert
+                CustomErrorType resultado = objectMapper.readValue(responseJsonString,
+                        CustomErrorType.class);
+
+                // Assert
+                assertEquals("O pedido não existe", resultado.getMessage());
+        }
+
+        @Test
+        @DisplayName("Quando um cliente cancela um pedido com código de acesso inválido")
+        void quandoClienteCancelaPedidoComCodigoAcessoInvalido() throws Exception {
+                // Arrange
+                pedidoRepository.save(pedido);
+
+                // Act
+                String responseJsonString = driver.perform(delete(URI_PEDIDOS + "/" +
+                                pedido.getId() + "/cancelar-pedido")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("clienteCodigoAcesso", "codigo invalido"))
+                        .andExpect(status().isBadRequest())
+                        .andDo(print())
+                        .andReturn().getResponse().getContentAsString();
+
+                // Assert
+                CustomErrorType resultado = objectMapper.readValue(responseJsonString,
+                        CustomErrorType.class);
+
+                // Assert
+                assertEquals("Codigo de acesso invalido!", resultado.getMessage());
+        }
+
+        @Test
+        @DisplayName("Quando um cliente cancela um pedido pedido com status Pedido pronto")
+        void quandoClienteCancelaPedidoComStatusPedidoPronto() throws Exception {
+                // Arrange
+                //pedido = pedidoRepository.save(pedido);
+                pedido.setStatus("Pedido pronto");
+                pedidoRepository.save(pedido);
+
+                // Act
+                String responseJsonString = driver.perform(delete(URI_PEDIDOS + "/" +
+                                pedido.getId() + "/cancelar-pedido")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("clienteCodigoAcesso", pedido.getCliente().getCodigoAcesso()))
+                        .andExpect(status().isBadRequest())
+                        .andDo(print())
+                        .andReturn().getResponse().getContentAsString();
+
+                // Assert
+                CustomErrorType resultado = objectMapper.readValue(responseJsonString,
+                        CustomErrorType.class);
+
+                // Assert
+                assertEquals("O pedido já está pronto e não pode ser cancelado", resultado.getMessage());
+        }
+
         @Test
         @DisplayName("Quando um cliente busca um pedido feito em um estabelecimento")
         void quandoClienteBuscaPedidoFeitoEmEstabelecimento() throws Exception {
@@ -862,6 +940,11 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                 assertEquals("O estabelecimento consultado nao existe!",
                         resultado.getMessage());
         }
+
+        
+
+
+
 
         @Test
         @DisplayName("Quando um cliente busca um pedido feito em um estabelecimento com pedido inexistente")

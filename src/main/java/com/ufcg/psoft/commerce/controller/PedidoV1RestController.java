@@ -1,6 +1,5 @@
 package com.ufcg.psoft.commerce.controller;
 
-import com.ufcg.psoft.commerce.dto.pedido.PedidoPutConfirmarPagamentoRequestDTO;
 import com.ufcg.psoft.commerce.service.pedido.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.pedido.PedidoPutConfirmarPagamentoRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
 
 import jakarta.validation.Valid;
@@ -38,13 +38,6 @@ public class PedidoV1RestController {
         private PedidoBuscarService pedidoBuscarService;
 
         @Autowired
-        private PedidoDeletarPedidoUnicoService pedidoDeletarPedidoUnicoService;
-
-        @Autowired
-        private PedidoDeletarTodosService pedidoDeletarTodosService;
-
-
-        @Autowired
         private PedidoDeletarClienteService pedidoDeletarClienteService;
 
         @Autowired
@@ -53,23 +46,30 @@ public class PedidoV1RestController {
         @Autowired
         private PedidoDeletarTodosClienteService pedidoDeletarTodosClienteService;
 
+
+
         @Autowired
         private PedidoDeletarTodosEstabelecimentoService pedidoDeletarTodosEstabelecimentoService;
 
         @Autowired
         private PedidoBuscarTodosClienteEstabelecimentoStatusService pedidoBuscarTodosClientesEstabelecimentoStatusService;
 
+
         @Autowired
         private PedidoConfirmarPagamentoService pedidoConfirmarPagamentoService;
 
+        @Autowired
+        private PedidoCancelarPedidoService pedidoCancelarPedidoService;
 
         @Autowired
         private PedidoBuscarTudoEstabelecimentoService pedidoBuscarTudoEstabelecimentoService;
 
         @Autowired
         private PedidoBuscarEstabelecimentoService pedidoBuscarEstabelecimentoService;
+        
         @Autowired
         private PedidoBuscarClienteEstabelecimentoService pedidoBuscarClienteEstabelecimentoService;
+        
         @Autowired
         private PedidoBuscarTodosClientesEstabelecimentoService pedidoBuscarTodosClientesEstabelecimentoService;
 
@@ -200,16 +200,16 @@ public class PedidoV1RestController {
                         .build();
                 }
 
-                @DeleteMapping("/{pedidoId}/estabelecimento/{estabelecimentoId}")
-                public ResponseEntity<?> deletarEstabelecimento(
-                @PathVariable("pedidoId") @Valid Long pedidoId,
-                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
-                @RequestParam @Valid String estabelecimentoCodigoAcesso){
-                        pedidoDeletarEstabelecimentoService.deletar(pedidoId, estabelecimentoId, estabelecimentoCodigoAcesso);
-                        return ResponseEntity
-                        .status(HttpStatus.NO_CONTENT)
-                        .build();
-                }
+        @DeleteMapping("/{pedidoId}/estabelecimento/{estabelecimentoId}")
+        public ResponseEntity<?> deletarEstabelecimento(
+        @PathVariable("pedidoId") @Valid Long pedidoId,
+        @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+        @RequestParam @Valid String estabelecimentoCodigoAcesso){
+                pedidoDeletarEstabelecimentoService.deletar(pedidoId, estabelecimentoId, estabelecimentoCodigoAcesso);
+                return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+        }
         
         @DeleteMapping("/cliente/{clienteId}")
         public ResponseEntity<?> deleteTodosCliente(
@@ -221,13 +221,23 @@ public class PedidoV1RestController {
                         .build();
                 }
 
-                @DeleteMapping("/estabelecimento/{estabelecimentoId}")
-                public ResponseEntity<?> deleteTodosEstabelecimento(
-                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
-                @RequestParam @Valid String estabelecimentoCodigoAcesso){
-                        pedidoDeletarTodosEstabelecimentoService.deletarTodos(estabelecimentoId, estabelecimentoCodigoAcesso);
+        @DeleteMapping("/estabelecimento/{estabelecimentoId}")
+        public ResponseEntity<?> deleteTodosEstabelecimento(
+        @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+        @RequestParam @Valid String estabelecimentoCodigoAcesso){
+                pedidoDeletarTodosEstabelecimentoService.deletarTodos(estabelecimentoId, estabelecimentoCodigoAcesso);
+                return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+        }
+
+        @DeleteMapping("/{pedidoId}/cancelar-pedido")
+        public ResponseEntity<?> cancelarPedido(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @RequestParam @Valid String clienteCodigoAcesso){
+                        pedidoCancelarPedidoService.cancelar(pedidoId, clienteCodigoAcesso);
                         return ResponseEntity
-                        .status(HttpStatus.NO_CONTENT)
-                        .build();
+                                .status(HttpStatus.NO_CONTENT)
+                                .build();
                 }
 }
