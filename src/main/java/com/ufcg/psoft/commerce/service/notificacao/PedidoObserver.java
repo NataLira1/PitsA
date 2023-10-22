@@ -1,5 +1,7 @@
 package com.ufcg.psoft.commerce.service.notificacao;
 
+import com.ufcg.psoft.commerce.exception.entregador.ListenerNaoExisteException;
+
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -15,27 +17,23 @@ public class PedidoObserver {
     }
 
     public void adicionaListener(PedidoListener listener){
-        if (!listeners.contains(listener)) {
-            //To-do
-        } else {
-            listeners.add(listener);
-        }
+        listeners.add(listener);
     }
     public void removeListener(PedidoListener listener){
         if (!listeners.contains(listener)) {
-            //To-do
+            throw new ListenerNaoExisteException();
         }
         listeners.remove(listener);
     }
 
     private void disparaPedidoEmRota() {
-        PedidoEvent pedido = PedidoEvent.builder().entregador(super.getEntregador()).build();
+        PedidoEvent pedido = new PedidoEvent();
         for (PedidoListener listener : listeners) {
             listener.notificaPedidoEmRota(pedido);
         }
     }
     private void disparaPedidoEntregue() {
-        PedidoEvent pedido = PedidoEvent.builder().entregador(super.getEntregador()).build();
+        PedidoEvent pedido = new PedidoEvent();
         for (PedidoListener listener: listeners) {
             listener.notificaPedidoEntregue(pedido);
         }

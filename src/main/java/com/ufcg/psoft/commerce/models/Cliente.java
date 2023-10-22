@@ -57,11 +57,8 @@ public class Cliente extends PedidoAdapter {
 
     @Override
     public void notificaPedidoEmRota(PedidoEvent pedido) {
-        System.out.println();
+        System.out.println(pedido.getEntregador());
+        System.out.println(pedido.getEntregador().getVeiculo());
     }
 
-    @Override
-    public void notificaPedidoEntregue(PedidoEvent pedido) {
-
-    }
 }
