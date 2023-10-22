@@ -4,8 +4,6 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.ufcg.psoft.commerce.util.TipoPagamento.CARTAO_DEBITO;
-
 @Service
 public class DescontoV1DeciderService implements DescontoDeciderService {
 
