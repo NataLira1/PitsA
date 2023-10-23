@@ -1,8 +1,10 @@
 package com.ufcg.psoft.commerce.models;
 
+import java.util.Comparator;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 
 import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 import com.ufcg.psoft.commerce.service.notificacao.PedidoObserver;
@@ -18,8 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity(name = "pedidos")
 @Table(name = "pedido")
-
-public class Pedido {
+public class Pedido{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -65,7 +66,6 @@ public class Pedido {
     @Embedded
     private FormaDePagamento formaDePagamento;
 
-
     public void setStatus(String status){
         this.status = status;
 
@@ -90,5 +90,4 @@ public class Pedido {
     	
     	return precoPedido;
     }
-
 }

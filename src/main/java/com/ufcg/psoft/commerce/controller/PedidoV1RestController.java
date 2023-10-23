@@ -1,6 +1,5 @@
 package com.ufcg.psoft.commerce.controller;
 
-import com.ufcg.psoft.commerce.dto.pedido.PedidoPutConfirmarPagamentoRequestDTO;
 import com.ufcg.psoft.commerce.service.pedido.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPostPutRequestDTO;
+import com.ufcg.psoft.commerce.dto.pedido.PedidoPutConfirmarPagamentoRequestDTO;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoPutRequestDTO;
 
 import jakarta.validation.Valid;
@@ -38,41 +38,48 @@ public class PedidoV1RestController {
         private PedidoBuscarService pedidoBuscarService;
 
         @Autowired
-        private PedidoDeletarPedidoUnicoService pedidoDeletarPedidoUnicoService;
+        private PedidoDeletarClienteService pedidoDeletarClienteService;
 
         @Autowired
-        private PedidoDeletarTodosService pedidoDeletarTodosService;
+        private PedidoDeletarEstabelecimentoService pedidoDeletarEstabelecimentoService;
+
+        @Autowired
+        private PedidoDeletarTodosClienteService pedidoDeletarTodosClienteService;
 
 
 
-                @Autowired
-                private PedidoDeletarClienteService pedidoDeletarClienteService;
+        @Autowired
+        private PedidoDeletarTodosEstabelecimentoService pedidoDeletarTodosEstabelecimentoService;
 
-                @Autowired 
-                private PedidoDeletarEstabelecimentoService pedidoDeletarEstabelecimentoService;
-
-                @Autowired
-                private PedidoDeletarTodosClienteService pedidoDeletarTodosClienteService;
-
-                @Autowired
-                private PedidoDeletarTodosEstabelecimentoService pedidoDeletarTodosEstabelecimentoService;
+        @Autowired
+        private PedidoBuscarTodosClienteEstabelecimentoStatusService pedidoBuscarTodosClientesEstabelecimentoStatusService;
 
                 @Autowired
-                private PedidoBuscarTodosClienteEstabelecimentoEntregaService pedidoBuscarTodosClientesEstabelecimentoEntregaService;
+                private PedidoConfirmarPreparoService pedidoConfirmarPreparoService;
 
                 @Autowired
-                private PedidoConfirmarPagamentoService pedidoConfirmarPagamentoService;
+                private PedidoProntoService pedidoProntoService;
+                @Autowired
+                private PedidoAssociarEntregadorService pedidoAssociarEntregadorService;
+                @Autowired
+                private PedidoConfirmarEntregaClienteService pedidoConfirmarEntregaClienteService;
 
 
+        @Autowired
+        private PedidoConfirmarPagamentoService pedidoConfirmarPagamentoService;
 
+        @Autowired
+        private PedidoCancelarPedidoService pedidoCancelarPedidoService;
 
         @Autowired
         private PedidoBuscarTudoEstabelecimentoService pedidoBuscarTudoEstabelecimentoService;
 
         @Autowired
         private PedidoBuscarEstabelecimentoService pedidoBuscarEstabelecimentoService;
+        
         @Autowired
         private PedidoBuscarClienteEstabelecimentoService pedidoBuscarClienteEstabelecimentoService;
+        
         @Autowired
         private PedidoBuscarTodosClientesEstabelecimentoService pedidoBuscarTodosClientesEstabelecimentoService;
 
@@ -110,6 +117,52 @@ public class PedidoV1RestController {
                         .status(HttpStatus.OK)
                         .body(pedidoConfirmarPagamentoService.confirmar(clienteId, codigoAcessoCliente, pedidoId, pedidoPutConfirmarPagamentoRequestDTO));
         }
+
+        @PutMapping("/{pedidoId}/{estabelecimentoId}/confirmar-preparo")
+        public ResponseEntity<?> confirmarPreparo(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String codigoAcessoEstabelecimento
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoConfirmarPreparoService.confirmarPreparo(pedidoId, estabelecimentoId,codigoAcessoEstabelecimento));
+        }
+
+        @PutMapping("/{pedidoId}/{estabelecimentoId}/pedido-pronto")
+        public ResponseEntity<?> pedidoPronto(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String codigoAcessoEstabelecimento
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoProntoService.finalizado(pedidoId, estabelecimentoId,codigoAcessoEstabelecimento));
+        }
+
+        @PutMapping("/{pedidoId}/{estabelecimentoId}/associar-pedido-entregador")
+        public ResponseEntity<?> associarPedidoEntregador(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String codigoAcessoEstabelecimento
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoAssociarEntregadorService.associar(pedidoId, estabelecimentoId,codigoAcessoEstabelecimento));
+        }
+
+        @PutMapping("/{pedidoId}/{clienteId}/cliente-confirmar-entrega")
+        public ResponseEntity<?> confirmarPedidoCliente(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("clienteId") @Valid Long clienteId,
+                @RequestParam @Valid String codigoAcessoCliente
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoConfirmarEntregaClienteService.confirmarEntrega(pedidoId, clienteId, codigoAcessoCliente));
+        }
+
+
 
 
         @GetMapping("/cliente/")
@@ -185,7 +238,9 @@ public class PedidoV1RestController {
         ){
                 return ResponseEntity
                         .status(HttpStatus.OK)
-                        .body(pedidoBuscarTodosClientesEstabelecimentoService.buscarTodos(clienteId, estabelecimentoId, clienteCodigoAcesso));
+                        .body(pedidoBuscarTodosClientesEstabelecimentoStatusService.buscarTodos(
+                                clienteId, estabelecimentoId, status, clienteCodigoAcesso
+                        ));
         }
 
 
@@ -201,16 +256,16 @@ public class PedidoV1RestController {
                         .build();
                 }
 
-                @DeleteMapping("/{pedidoId}/estabelecimento/{estabelecimentoId}")
-                public ResponseEntity<?> deletarEstabelecimento(
-                @PathVariable("pedidoId") @Valid Long pedidoId,
-                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
-                @RequestParam @Valid String estabelecimentoCodigoAcesso){
-                        pedidoDeletarEstabelecimentoService.deletar(pedidoId, estabelecimentoId, estabelecimentoCodigoAcesso);
-                        return ResponseEntity
-                        .status(HttpStatus.NO_CONTENT)
-                        .build();
-                }
+        @DeleteMapping("/{pedidoId}/estabelecimento/{estabelecimentoId}")
+        public ResponseEntity<?> deletarEstabelecimento(
+        @PathVariable("pedidoId") @Valid Long pedidoId,
+        @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+        @RequestParam @Valid String estabelecimentoCodigoAcesso){
+                pedidoDeletarEstabelecimentoService.deletar(pedidoId, estabelecimentoId, estabelecimentoCodigoAcesso);
+                return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+        }
         
         @DeleteMapping("/cliente/{clienteId}")
         public ResponseEntity<?> deleteTodosCliente(
@@ -222,13 +277,23 @@ public class PedidoV1RestController {
                         .build();
                 }
 
-                @DeleteMapping("/estabelecimento/{estabelecimentoId}")
-                public ResponseEntity<?> deleteTodosEstabelecimento(
-                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
-                @RequestParam @Valid String estabelecimentoCodigoAcesso){
-                        pedidoDeletarTodosEstabelecimentoService.deletarTodos(estabelecimentoId, estabelecimentoCodigoAcesso);
+        @DeleteMapping("/estabelecimento/{estabelecimentoId}")
+        public ResponseEntity<?> deleteTodosEstabelecimento(
+        @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+        @RequestParam @Valid String estabelecimentoCodigoAcesso){
+                pedidoDeletarTodosEstabelecimentoService.deletarTodos(estabelecimentoId, estabelecimentoCodigoAcesso);
+                return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+        }
+
+        @DeleteMapping("/{pedidoId}/cancelar-pedido")
+        public ResponseEntity<?> cancelarPedido(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @RequestParam @Valid String clienteCodigoAcesso){
+                        pedidoCancelarPedidoService.cancelar(pedidoId, clienteCodigoAcesso);
                         return ResponseEntity
-                        .status(HttpStatus.NO_CONTENT)
-                        .build();
+                                .status(HttpStatus.NO_CONTENT)
+                                .build();
                 }
 }

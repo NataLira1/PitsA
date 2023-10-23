@@ -33,6 +33,7 @@ public class PedidoObserver {
             listener.notificaPedidoEmRota(pedido);
         }
     }
+
     private void disparaPedidoEntregue(PedidoEvent pedido) {
         for (PedidoListener listener: listeners) {
             listener.notificaPedidoEntregue(pedido);

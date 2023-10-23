@@ -18,7 +18,7 @@ import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
 
 @Service
-public class PedidoV1BuscarTodosClienteEstabelecimentoEntregaService implements PedidoBuscarTodosClienteEstabelecimentoEntregaService{
+public class PedidoV1BuscarTodosClienteEstabelecimentoStatusService implements PedidoBuscarTodosClienteEstabelecimentoStatusService {
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -60,13 +60,12 @@ public class PedidoV1BuscarTodosClienteEstabelecimentoEntregaService implements 
                     .estabelecimento(p.getEstabelecimento())
                     .preco(p.getPreco())
                     .cliente(p.getCliente())
+                    .status(p.getStatus())
                     .build();
             pedidoResponseDTOS.add(aux);
         }
 
         return pedidoResponseDTOS;
-
-
     }
     
 }

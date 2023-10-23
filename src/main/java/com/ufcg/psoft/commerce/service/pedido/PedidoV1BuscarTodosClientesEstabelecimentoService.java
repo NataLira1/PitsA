@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -58,9 +59,12 @@ public class PedidoV1BuscarTodosClientesEstabelecimentoService implements Pedido
                     .estabelecimento(p.getEstabelecimento())
                     .preco(p.getPreco())
                     .cliente(p.getCliente())
+                    .status(p.getStatus())
                     .build();
             pedidoResponseDTOS.add(aux);
         }
+
+        Collections.sort(pedidoResponseDTOS);
 
         return pedidoResponseDTOS;
 

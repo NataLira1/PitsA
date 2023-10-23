@@ -65,6 +65,5 @@ public class PedidoV1BuscarService implements PedidoBuscarService{
                 .enderecoEntrega(pedido.getEnderecoEntrega())
                 .pizzas(pedido.getPizzas())
                 .build();
-
     }
 }

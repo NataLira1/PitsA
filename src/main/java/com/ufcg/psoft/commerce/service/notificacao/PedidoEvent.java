@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PedidoEvent {
-
+    private Long pedido_id;
     private Entregador entregador;
 }
