@@ -58,7 +58,7 @@ public class Cliente extends PedidoAdapter {
     @Override
     public void notificaPedidoEmRota(PedidoEvent pedido) {
         System.out.println("Seu pedido já está à caminho.");
-        System.out.println("Entregador: " + pedido.getEntregador());
+        System.out.println("Entregador: " + pedido.getEntregador().getNome());
         System.out.println("Informações do veículo: " + pedido.getEntregador().getVeiculo());
     }
 

@@ -10,10 +10,12 @@ public class PedidoObserver {
     Collection<PedidoListener> listeners = new HashSet<>();
 
     public void pedidoEmRota() {
-        disparaPedidoEmRota();
+        PedidoEvent pedido = new PedidoEvent();
+        disparaPedidoEmRota(pedido);
     }
     public void pedidoEntregue(){
-        disparaPedidoEntregue();
+        PedidoEvent pedido = new PedidoEvent();
+        disparaPedidoEntregue(pedido);
     }
 
     public void adicionaListener(PedidoListener listener){
@@ -26,15 +28,13 @@ public class PedidoObserver {
         listeners.remove(listener);
     }
 
-    private void disparaPedidoEmRota() {
-        PedidoEvent pedido = new PedidoEvent();
+    private void disparaPedidoEmRota(PedidoEvent pedido) {
         for (PedidoListener listener : listeners) {
             listener.notificaPedidoEmRota(pedido);
         }
     }
-    
-    private void disparaPedidoEntregue() {
-        PedidoEvent pedido = new PedidoEvent();
+
+    private void disparaPedidoEntregue(PedidoEvent pedido) {
         for (PedidoListener listener: listeners) {
             listener.notificaPedidoEntregue(pedido);
         }
