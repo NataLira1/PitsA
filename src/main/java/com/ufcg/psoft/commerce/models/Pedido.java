@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoObserver;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,7 +64,18 @@ public class Pedido {
     @JsonProperty("formaPagamento")
     @Embedded
     private FormaDePagamento formaDePagamento;
-    
+
+    public void setStatus(String status){
+        this.status = status;
+
+        if(status.equals("Pedido em rota")){
+            PedidoObserver observer = new PedidoObserver();
+            Cliente cliente = new Cliente();
+            observer.adicionaListener(cliente);
+            observer.pedidoEmRota();
+        }
+    }
+
     public double calcularPrecoPedido() {
     	double precoPedido = 0;
     	
