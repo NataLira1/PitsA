@@ -1,6 +1,7 @@
 package com.ufcg.psoft.commerce.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,6 +51,7 @@ public class Entregador {
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "estabelecimento")
     @JsonProperty("estabelecimento")
+    @JsonIgnore
     private Estabelecimento estabelecimento;
 
     @Column(name = "disponivel")

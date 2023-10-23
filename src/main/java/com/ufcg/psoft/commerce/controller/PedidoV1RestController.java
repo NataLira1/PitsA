@@ -54,6 +54,16 @@ public class PedidoV1RestController {
         @Autowired
         private PedidoBuscarTodosClienteEstabelecimentoStatusService pedidoBuscarTodosClientesEstabelecimentoStatusService;
 
+                @Autowired
+                private PedidoConfirmarPreparoService pedidoConfirmarPreparoService;
+
+                @Autowired
+                private PedidoProntoService pedidoProntoService;
+                @Autowired
+                private PedidoAssociarEntregadorService pedidoAssociarEntregadorService;
+                @Autowired
+                private PedidoConfirmarEntregaClienteService pedidoConfirmarEntregaClienteService;
+
 
         @Autowired
         private PedidoConfirmarPagamentoService pedidoConfirmarPagamentoService;
@@ -107,6 +117,52 @@ public class PedidoV1RestController {
                         .status(HttpStatus.OK)
                         .body(pedidoConfirmarPagamentoService.confirmar(clienteId, codigoAcessoCliente, pedidoId, pedidoPutConfirmarPagamentoRequestDTO));
         }
+
+        @PutMapping("/{pedidoId}/{estabelecimentoId}/confirmar-preparo")
+        public ResponseEntity<?> confirmarPreparo(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String codigoAcessoEstabelecimento
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoConfirmarPreparoService.confirmarPreparo(pedidoId, estabelecimentoId,codigoAcessoEstabelecimento));
+        }
+
+        @PutMapping("/{pedidoId}/{estabelecimentoId}/pedido-pronto")
+        public ResponseEntity<?> pedidoPronto(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String codigoAcessoEstabelecimento
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoProntoService.finalizado(pedidoId, estabelecimentoId,codigoAcessoEstabelecimento));
+        }
+
+        @PutMapping("/{pedidoId}/{estabelecimentoId}/associar-pedido-entregador")
+        public ResponseEntity<?> associarPedidoEntregador(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("estabelecimentoId") @Valid Long estabelecimentoId,
+                @RequestParam @Valid String codigoAcessoEstabelecimento
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoAssociarEntregadorService.associar(pedidoId, estabelecimentoId,codigoAcessoEstabelecimento));
+        }
+
+        @PutMapping("/{pedidoId}/{clienteId}/cliente-confirmar-entrega")
+        public ResponseEntity<?> confirmarPedidoCliente(
+                @PathVariable("pedidoId") @Valid Long pedidoId,
+                @PathVariable("clienteId") @Valid Long clienteId,
+                @RequestParam @Valid String codigoAcessoCliente
+        ){
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(pedidoConfirmarEntregaClienteService.confirmarEntrega(pedidoId, clienteId, codigoAcessoCliente));
+        }
+
+
 
 
         @GetMapping("/cliente/")
