@@ -6,6 +6,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoAdapter;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -27,7 +29,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity(name = "estabelecimentos")
 @Table(name = "estabelecimento")
-public class Estabelecimento {
+public class Estabelecimento extends PedidoAdapter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -79,4 +81,13 @@ public class Estabelecimento {
     public int hashCode() {
         return Objects.hash(codigoAcesso);
     }
+
+    @Override
+    public void notificaPedidoEmRota(PedidoEvent pedido) {}
+
+    @Override
+    public void notificaPedidoEntregue(PedidoEvent pedido) {
+        System.out.println("Pedido #" + pedido.getPedido_id() + " foi entregue!");
+    }
+
 }
