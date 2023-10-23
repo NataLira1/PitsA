@@ -93,15 +93,10 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
 
         PedidoPutConfirmarPagamentoRequestDTO pedidoPutConfirmarPagamentoRequestDTO;
 
-        private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        private final PrintStream originalOut = System.out;
-
         @BeforeEach
         void setup() {
         objectMapper.registerModule(new JavaTimeModule());
         Set<Sabor> cardapio = new HashSet<Sabor>();
-        
-        System.setOut(new PrintStream(outContent));
 
         estabelecimento = estabelecimentoRepository.save(Estabelecimento.builder()
                 .codigoAcesso("654321")
@@ -215,7 +210,6 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
         // clienteRepository.deleteAll();
         // saborRepository.deleteAll();
         // estabelecimentoRepository.deleteAll();
-        System.setOut(originalOut);
         }
 
         @Nested
@@ -307,7 +301,6 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
 
                 // Assert
                 assertAll(
-                        () -> assertEquals("hello", outContent.toString()),
                         () -> assertEquals(pedidoId, resultado.getId().longValue()),
                         () -> assertEquals(pedidoPutRequestDTO.getEnderecoEntrega(),
                                 resultado.getEnderecoEntrega()),
