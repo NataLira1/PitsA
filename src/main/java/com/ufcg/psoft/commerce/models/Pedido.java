@@ -68,7 +68,11 @@ public class Pedido {
     public void setStatus(String status){
         this.status = status;
 
-        if(status.equals("Pedido em rota")){
+        if(status.equals("Pedido entregue")) {
+            estabelecimento.notificaPedidoEntregue(PedidoEvent.builder().pedido_id(this.id).build());
+        }
+
+        else if(status.equals("Pedido em rota")){
             PedidoObserver observer = new PedidoObserver();
             Cliente cliente = new Cliente();
             observer.adicionaListener(cliente);
