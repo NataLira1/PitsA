@@ -1147,7 +1147,7 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                     entregadores.add(entregador);
                     estabelecimento.setEntregadores(entregadores);
                     entregador.setDisponivel("Disponivel");
-                    estabelecimento.setCodigoAcesso("473291");
+                    //estabelecimento.setCodigoAcesso("473291");
                     pedidoRepository.save(pedido);
 
 
@@ -1155,7 +1155,7 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                     String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
                                     pedido.getId() + "/"+ pedido.getEstabelecimento().getId() + "/confirmar-preparo")
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .param("codigoAcessoEstabelecimento", estabelecimento.getCodigoAcesso()))
+                                    .param("codigoAcessoEstabelecimento", "473291"))
                             //.content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
                             .andExpect(status().isBadRequest())
                             .andDo(print())
@@ -1247,7 +1247,7 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                     entregadores.add(entregador);
                     estabelecimento.setEntregadores(entregadores);
                     entregador.setDisponivel("Disponivel");
-                    estabelecimento.setCodigoAcesso("999666");
+                    //estabelecimento.setCodigoAcesso("999666");
                     pedidoRepository.save(pedido);
 
 
@@ -1255,7 +1255,7 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
                     String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
                                     pedido.getId() + "/"+ pedido.getEstabelecimento().getId() + "/pedido-pronto")
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .param("codigoAcessoEstabelecimento", estabelecimento.getCodigoAcesso()))
+                                    .param("codigoAcessoEstabelecimento", "999666"))
                             //.content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
                             .andExpect(status().isBadRequest())
                             .andDo(print())
@@ -1272,8 +1272,8 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
 
 
         @Test
-        @DisplayName("Quando o estabelecimento associa um pedido a um entregador")
-        void quandoEstabelecimentoAssociaPedidoEntregador() throws Exception {
+        @DisplayName("Quando o estabelecimento associa um pedido a um entregador, com codigo de acesso invalido")
+        void quandoEstabelecimentoAssociaPedidoEntregadorComCodigoAcessoInvalido() throws Exception {
             // Arrange
                     //pedidoRepository.save(pedido);
                     pedido.setStatus("Pedido pronto");
@@ -1289,19 +1289,51 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
             String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
                             pedido.getId() + "/"+ pedido.getEstabelecimento().getId() + "/associar-pedido-entregador")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .param("codigoAcessoEstabelecimento", estabelecimento.getCodigoAcesso()))
+                            .param("codigoAcessoEstabelecimento", "999666"))
                             //.content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isBadRequest())
                     .andDo(print())
                     .andReturn().getResponse().getContentAsString();
 
-            PedidoResponseDTO resultado = objectMapper.readValue(responseJsonString,
-                    PedidoResponseDTO.class);
+                CustomErrorType resultado = objectMapper.readValue(responseJsonString,
+                        CustomErrorType.class);
 
-            // Assert
-            assertEquals( "Pedido em rota", resultado.getStatus());
+                // Assert
+                assertEquals( "Codigo de acesso invalido!", resultado.getMessage());
             //assertEquals(pedido.getEntregador(), resultado.getEntregadorId());
         }
+
+            @Test
+            @DisplayName("Quando o estabelecimento associa um pedido a um entregador")
+            void quandoEstabelecimentoAssociaPedidoEntregador() throws Exception {
+                    // Arrange
+                    //pedidoRepository.save(pedido);
+                    pedido.setStatus("Pedido pronto");
+                    entregador.setStatus("Aprovado");
+                    Set<Entregador> entregadores = new HashSet<>();
+                    entregadores.add(entregador);
+                    estabelecimento.setEntregadores(entregadores);
+                    entregador.setDisponivel("Disponivel");
+                    pedidoRepository.save(pedido);
+
+
+                    // Act
+                    String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
+                                    pedido.getId() + "/"+ pedido.getEstabelecimento().getId() + "/associar-pedido-entregador")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .param("codigoAcessoEstabelecimento", estabelecimento.getCodigoAcesso()))
+                            //.content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
+                            .andExpect(status().isOk())
+                            .andDo(print())
+                            .andReturn().getResponse().getContentAsString();
+
+                    PedidoResponseDTO resultado = objectMapper.readValue(responseJsonString,
+                            PedidoResponseDTO.class);
+
+                    // Assert
+                    assertEquals( "Pedido em rota", resultado.getStatus());
+                    //assertEquals(pedido.getEntregador(), resultado.getEntregadorId());
+            }
 
         @Test
         @DisplayName("Quando o cliente confirma a entrega de um pedido")
@@ -1326,6 +1358,30 @@ import com.ufcg.psoft.commerce.repositories.SaborRepository;
             // Assert
             assertEquals(resultado.getStatus(), "Pedido entregue");
         }
+
+            @Test
+            @DisplayName("Quando o cliente confirma a entrega de um pedido. com codigo de acesso invalido")
+            void quandoClienteConfirmaEntregaPedidoComCodigoAcessoInvalido() throws Exception {
+                    // Arrange
+                    pedidoRepository.save(pedido);
+                    pedido.setStatus("Pedido em rota");
+
+                    // Act
+                    String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
+                                    pedido.getId() + "/" + cliente.getId() + "/cliente-confirmar-entrega")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .param("codigoAcessoCliente", "999666")
+                                    .content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
+                            .andExpect(status().isBadRequest())
+                            .andDo(print())
+                            .andReturn().getResponse().getContentAsString();
+
+                    CustomErrorType resultado = objectMapper.readValue(responseJsonString,
+                            CustomErrorType.class);
+
+                    // Assert
+                    assertEquals( "Codigo de acesso invalido!", resultado.getMessage());
+            }
     }
 
     @Nested
