@@ -3,6 +3,7 @@ package com.ufcg.psoft.commerce.models;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -63,6 +64,14 @@ public class Pedido {
     @Embedded
     private FormaDePagamento formaDePagamento;
     
+    public void setStatus(String status){
+        this.status = status;
+
+        if(status.equals("Pedido entregue")){
+            estabelecimento.notificaPedidoEntregue(PedidoEvent.builder().pedido_id(this.id).build());
+        }
+    }
+
     public double calcularPrecoPedido() {
     	double precoPedido = 0;
     	
