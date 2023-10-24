@@ -31,6 +31,4 @@ public class SaborPutRequestDTO {
     @JsonProperty("valorGrande")
     private double valorGrande;
 
-    @JsonProperty("disponvel")
-    private boolean disponivel;
 }
