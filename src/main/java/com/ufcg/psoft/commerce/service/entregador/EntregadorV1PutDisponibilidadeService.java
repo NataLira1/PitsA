@@ -1,5 +1,6 @@
 package com.ufcg.psoft.commerce.service.entregador;
 
+import com.ufcg.psoft.commerce.exception.entregador.EntregadorNotAssotionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,10 @@ public class EntregadorV1PutDisponibilidadeService implements EntregadorPutDispo
             EntregadorDisponibilidadeDTO entregadorDisponibilidadeDTO) {
         
             Entregador entregador = entregadorRepository.findById(entregadorId).orElseThrow(EntregadorNaoEncontradoException::new);
+
+            if(entregador.getEstabelecimento() == null){
+                throw new EntregadorNotAssotionException();
+            }
 
             if(!entregador.getCodigoAcesso().equals(codigoAcesso)){
                 throw new CodigoAcessoInvalidException();
