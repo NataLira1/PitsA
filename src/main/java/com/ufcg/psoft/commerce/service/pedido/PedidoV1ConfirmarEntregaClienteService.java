@@ -3,6 +3,7 @@ package com.ufcg.psoft.commerce.service.pedido;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
 import com.ufcg.psoft.commerce.exception.ClienteNaoExisteException;
 import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
+import com.ufcg.psoft.commerce.exception.PagamentoNaoAutorizadoExeption;
 import com.ufcg.psoft.commerce.exception.PedidoNaoExisteException;
 import com.ufcg.psoft.commerce.models.Cliente;
 import com.ufcg.psoft.commerce.models.Pedido;
@@ -28,6 +29,10 @@ public class PedidoV1ConfirmarEntregaClienteService implements PedidoConfirmarEn
         }
 
         Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(()->new PedidoNaoExisteException());
+
+        if(!pedido.isStatusPagamento()){
+            throw new PagamentoNaoAutorizadoExeption();
+        }
 
         pedido.setStatus("Pedido entregue");
 

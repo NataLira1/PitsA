@@ -3,6 +3,7 @@ package com.ufcg.psoft.commerce.service.pedido;
 import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
 import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
+import com.ufcg.psoft.commerce.exception.PagamentoNaoAutorizadoExeption;
 import com.ufcg.psoft.commerce.exception.PedidoNaoExisteException;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
@@ -32,6 +33,10 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
 
         if(!(pedido.getEstabelecimento().getCodigoAcesso().equals(codigoAcessoEstabelecimento))){
             throw new CodigoAcessoInvalidException();
+        }
+
+        if(!pedido.isStatusPagamento()){
+            throw new PagamentoNaoAutorizadoExeption();
         }
 
         pedido.setStatus("Pedido pronto");
