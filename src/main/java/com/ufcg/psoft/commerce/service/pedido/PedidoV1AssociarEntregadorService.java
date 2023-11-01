@@ -8,6 +8,7 @@ import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class PedidoV1AssociarEntregadorService implements PedidoAssociarEntregad
         //como faço para verificar se o pedido foi associado a um entregador, ou não precisa!!!!!
 
         pedido.setStatus("Pedido em rota");
+        pedido.getCliente().notificaPedidoEmRota(PedidoEvent.builder().entregador(pedido.getEntregador()).build());
 
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())
