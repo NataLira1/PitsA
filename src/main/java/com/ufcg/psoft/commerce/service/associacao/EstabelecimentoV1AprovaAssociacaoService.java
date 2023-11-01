@@ -1,7 +1,8 @@
 package com.ufcg.psoft.commerce.service.associacao;
 
-import com.ufcg.psoft.commerce.exception.EntregadorCodigoAcessoInvalidoException;
+import com.ufcg.psoft.commerce.exception.EntregadorNaoAssociadoException;
 import com.ufcg.psoft.commerce.exception.EntregadorNaoEncontradoException;
+import com.ufcg.psoft.commerce.exception.EstabelecimentoCodigoAcessoInvalidoException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
 import com.ufcg.psoft.commerce.models.Associacao;
 import com.ufcg.psoft.commerce.models.Entregador;
@@ -9,43 +10,41 @@ import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.repositories.AssociacaoRepository;
 import com.ufcg.psoft.commerce.repositories.EntregadorRepository;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EntregadorV1AssociaService implements EntregadorAssociaService {
+public class EstabelecimentoV1AprovaAssociacaoService implements EstabelecimentoAprovaAssociacaoService {
 
     @Autowired
-    private AssociacaoRepository associacaoRepository;
+    EntregadorRepository entregadorRepository;
 
     @Autowired
-    private EntregadorRepository entregadorRepository;
+    EstabelecimentoRepository estabelecimentoRepository;
 
     @Autowired
-    private EstabelecimentoRepository estabelecimentoRepository;
+    AssociacaoRepository associacaoRepository;
+
 
     @Override
-    public Associacao associar(Long entregadorId, String codigoAcessoEntregador, Long estabelecimentoId) {
+    public Associacao aprovar(Long entregadorId, Long estabelecimentoId, String codigoAcessoEstabelecimento) {
         Entregador entregador = entregadorRepository.findById(entregadorId)
                 .orElseThrow(EntregadorNaoEncontradoException::new);
-        if (!entregador.getCodigoAcesso().equals(codigoAcessoEntregador)) {
-            throw new EntregadorCodigoAcessoInvalidoException();
-        }
+
         Estabelecimento estabelecimento = estabelecimentoRepository.findById(estabelecimentoId)
                 .orElseThrow(EstabelecimentoNaoEncontradoException::new);
 
-        Associacao associacao = Associacao.builder()
-                .entregadorId(entregadorId)
-                .codigoAcesso(codigoAcessoEntregador)
-                .estabelecimentoId(estabelecimentoId)
-                .status(false)
-                .build();
+        if (!estabelecimento.getCodigoAcesso().equals(codigoAcessoEstabelecimento)) {
+            throw new EstabelecimentoCodigoAcessoInvalidoException();
+        }
 
-        associacao = associacaoRepository.save(associacao);
+        Associacao associacao = associacaoRepository.findByEntregadorIdAndEstabelecimentoId(entregadorId, estabelecimentoId);
+        if (associacao == null) {
+            throw new EntregadorNaoAssociadoException();
+        }
+        estabelecimento.getEntregadores().add(entregador);
+        associacao.setStatus(true);
         return associacao;
     }
-
-
 
 }

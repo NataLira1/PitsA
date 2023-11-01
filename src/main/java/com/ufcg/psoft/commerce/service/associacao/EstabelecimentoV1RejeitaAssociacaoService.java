@@ -13,9 +13,8 @@ import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 @Service
-public class EstabelecimentoV1AvaliaAssociacaoService implements EstabelecimentoAvaliaAssociacaoService {
+public class EstabelecimentoV1RejeitaAssociacaoService implements EstabelecimentoRejeitaAssociacaoService {
 
     @Autowired
     EntregadorRepository entregadorRepository;
@@ -26,30 +25,24 @@ public class EstabelecimentoV1AvaliaAssociacaoService implements Estabelecimento
     @Autowired
     AssociacaoRepository associacaoRepository;
 
+
     @Override
-    public boolean avaliar(Long entregadorId, Long estabelecimentoId, String codigoAcessoEstabelecimento, boolean status) {
+    public Associacao rejeitar(Long entregadorId, Long estabelecimentoId, String codigoAcessoEstabelecimento) {
         Entregador entregador = entregadorRepository.findById(entregadorId)
                 .orElseThrow(EntregadorNaoEncontradoException::new);
+
         Estabelecimento estabelecimento = estabelecimentoRepository.findById(estabelecimentoId)
                 .orElseThrow(EstabelecimentoNaoEncontradoException::new);
+
         if (!estabelecimento.getCodigoAcesso().equals(codigoAcessoEstabelecimento)) {
             throw new EstabelecimentoCodigoAcessoInvalidoException();
         }
+
         Associacao associacao = associacaoRepository.findByEntregadorIdAndEstabelecimentoId(entregadorId, estabelecimentoId);
         if (associacao == null) {
             throw new EntregadorNaoAssociadoException();
         }
-        if (status) {
-            entregador.setStatus("aprovado");
-            entregadorRepository.save(entregador);
-            estabelecimento.getEntregadores().add(entregador);
-            estabelecimentoRepository.save(estabelecimento);
-            return true;
-        } else {
-            entregador.setStatus("rejeitado");
-            entregadorRepository.save(entregador);
-            return false;
-        }
+        associacaoRepository.delete(associacao);
+        return associacao;
     }
 }
-

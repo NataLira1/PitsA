@@ -1,7 +1,7 @@
 package com.ufcg.psoft.commerce.controller;
 
 import com.ufcg.psoft.commerce.service.associacao.EntregadorAssociaService;
-import com.ufcg.psoft.commerce.service.associacao.EstabelecimentoAvaliaAssociacaoService;
+import com.ufcg.psoft.commerce.service.associacao.EstabelecimentoAprovaAssociacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +16,7 @@ public class AssociacaoV1Controller {
     private EntregadorAssociaService entregadorService;
 
     @Autowired
-    private EstabelecimentoAvaliaAssociacaoService estabelecimentoAvaliaService;
+    private EstabelecimentoAprovaAssociacaoService estabelecimentoAprovaService;
 
     @PostMapping()
     public ResponseEntity<?> associaEntregadorAEstabelecimento(
@@ -30,13 +30,13 @@ public class AssociacaoV1Controller {
     }
 
     @PutMapping()
-    public ResponseEntity<?> avaliaEntregador(
+    public ResponseEntity<?> aprovaEntregador(
             @RequestParam Long entregadorId,
             @RequestParam Long estabelecimentoId,
-            @RequestParam String codigoAcesso,
-            boolean status) {
+            @RequestParam String codigoAcesso) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(estabelecimentoAvaliaService.avaliar(entregadorId, estabelecimentoId, codigoAcesso, status));
+                .body(estabelecimentoAprovaService.aprovar(entregadorId, estabelecimentoId, codigoAcesso));
     }
+
 }
