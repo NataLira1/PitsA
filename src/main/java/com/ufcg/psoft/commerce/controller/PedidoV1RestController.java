@@ -54,15 +54,15 @@ public class PedidoV1RestController {
         @Autowired
         private PedidoBuscarTodosClienteEstabelecimentoStatusService pedidoBuscarTodosClientesEstabelecimentoStatusService;
 
-                @Autowired
-                private PedidoConfirmarPreparoService pedidoConfirmarPreparoService;
+        @Autowired
+        private PedidoConfirmarPreparoService pedidoConfirmarPreparoService;
 
-                @Autowired
-                private PedidoProntoService pedidoProntoService;
-                @Autowired
-                private PedidoAssociarEntregadorService pedidoAssociarEntregadorService;
-                @Autowired
-                private PedidoConfirmarEntregaClienteService pedidoConfirmarEntregaClienteService;
+        @Autowired
+        private PedidoProntoService pedidoProntoService;
+        @Autowired
+        private PedidoAssociarEntregadorService pedidoAssociarEntregadorService;
+        @Autowired
+        private PedidoConfirmarEntregaClienteService pedidoConfirmarEntregaClienteService;
 
 
         @Autowired
