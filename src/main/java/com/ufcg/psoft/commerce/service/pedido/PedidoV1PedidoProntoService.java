@@ -4,12 +4,16 @@ import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
 import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
 import com.ufcg.psoft.commerce.exception.PedidoNaoExisteException;
+import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class PedidoV1PedidoProntoService implements PedidoProntoService{
@@ -34,7 +38,22 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
             throw new CodigoAcessoInvalidException();
         }
 
-        pedido.setStatus("Pedido pronto");
+        Set<Entregador> entregadores = estabelecimento.getEntregadores();
+
+        Entregador daVez = null;
+        for (Entregador entregador : entregadores) {
+            if (entregador.getDisponivel() == "true") {
+                daVez = entregador; // Atribui o entregador à variável "daVez"
+                break; // Sai do loop assim que encontrar um entregador disponível
+            }
+        }
+
+        if(daVez != null){
+            pedido.setEntregador(daVez);
+            daVez.setStatus("Em entrega");
+        }else{
+            pedido.setStatus("Pedido pronto");
+        }
 
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())
@@ -45,6 +64,5 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
                 .status(pedido.getStatus())
                 .statusPagamento(pedido.isStatusPagamento())
                 .build();
-
     }
 }
