@@ -19,6 +19,8 @@ public class EntregadorV1PutDisponibilidadeService implements EntregadorPutDispo
     @Autowired
     EntregadorRepository entregadorRepository;
 
+    EntregadorV1FilaService entregadorFilaService;
+
 
     @Override
     public EntregadorResponseDTO mudar(Long entregadorId, String codigoAcesso,
@@ -39,6 +41,7 @@ public class EntregadorV1PutDisponibilidadeService implements EntregadorPutDispo
             }
 
             entregador.setDisponivel(entregadorDisponibilidadeDTO.getDisponibilidade());
+            entregadorFilaService.adicionarFila(entregador);
 
             entregadorRepository.save(entregador);
 

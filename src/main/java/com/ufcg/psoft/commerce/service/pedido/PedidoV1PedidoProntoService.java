@@ -9,6 +9,7 @@ import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
+import com.ufcg.psoft.commerce.service.entregador.EntregadorFilaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
 
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
+
+    EntregadorFilaService entregadorFilaService;
+
     @Override
     public PedidoResponseDTO finalizado(Long pedidoId, Long estabelecimentoId,String codigoAcessoEstabelecimento) {
 
@@ -40,21 +44,25 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
 
         Set<Entregador> entregadores = estabelecimento.getEntregadores();
 
-        Entregador daVez = null;
-        for (Entregador entregador : entregadores) {
-            if (entregador.getDisponivel() == "true") {
-                daVez = entregador; // Atribui o entregador à variável "daVez"
-                break; // Sai do loop assim que encontrar um entregador disponível
+        if (entregadorFilaService.size() > 0) {
+            pedido.setEntregador(entregadorFilaService.poll());
+        } else {
+
+            Entregador daVez = null;
+            for (Entregador entregador : entregadores) {
+                if (entregador.getDisponivel().equals("true")) {
+                    daVez = entregador; // Atribui o entregador à variável "daVez"
+                    break; // Sai do loop assim que encontrar um entregador disponível
+                }
+            }
+
+            if (daVez != null) {
+                pedido.setEntregador(daVez);
+                daVez.setStatus("Em entrega");
+            } else {
+                pedido.setStatus("Pedido pronto");
             }
         }
-
-        if(daVez != null){
-            pedido.setEntregador(daVez);
-            daVez.setStatus("Em entrega");
-        }else{
-            pedido.setStatus("Pedido pronto");
-        }
-
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())
                 .cliente(pedido.getCliente())
