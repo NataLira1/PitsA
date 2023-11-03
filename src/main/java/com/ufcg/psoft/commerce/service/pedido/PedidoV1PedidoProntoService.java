@@ -26,6 +26,7 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
     EstabelecimentoRepository estabelecimentoRepository;
 
     EntregadorFilaService entregadorFilaService;
+    PedidoAssociarEntregadorService associarEntregadorService;
 
     @Override
     public PedidoResponseDTO finalizado(Long pedidoId, Long estabelecimentoId,String codigoAcessoEstabelecimento) {
@@ -42,10 +43,13 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
             throw new CodigoAcessoInvalidException();
         }
 
+        pedido.setStatus("Pedido pronto");
+
         Set<Entregador> entregadores = estabelecimento.getEntregadores();
 
         if (entregadorFilaService.size() > 0) {
             pedido.setEntregador(entregadorFilaService.poll());
+            associarEntregadorService.associar(pedido.getId(), pedido.getEstabelecimento().getId(), pedido.getEstabelecimento().getCodigoAcesso());
         } else {
 
             Entregador daVez = null;
