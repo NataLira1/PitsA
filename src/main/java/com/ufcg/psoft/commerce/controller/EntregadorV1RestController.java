@@ -1,6 +1,7 @@
 package com.ufcg.psoft.commerce.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ufcg.psoft.commerce.dto.Entregador.EntregadorDisponibilidadeDTO;
 import com.ufcg.psoft.commerce.dto.Entregador.EntregadorGetRequestDTO;
 import com.ufcg.psoft.commerce.dto.Entregador.EntregadorPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.Entregador.EntregadorResponseDTO;
@@ -38,6 +39,9 @@ public class EntregadorV1RestController {
 
     @Autowired
     EntregadorV1CriarService entregadorV1CriarService;
+
+    @Autowired
+    EntregadorPutDisponibilidadeService entregadorPutDisponibilidadeService;
 
     @Autowired
     EntregadorV1DeleteService entregadorV1DeleteService;
@@ -144,5 +148,15 @@ public class EntregadorV1RestController {
         EntregadorResponseDTO responseDTO = mapper.convertValue(entregadorV1GetService.getEntregador(id), EntregadorResponseDTO.class);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responseDTO);
+    }
+
+    @PutMapping("/{entregadorId}/disponibilidade")
+    public ResponseEntity<EntregadorResponseDTO> mudarDisponibilidade(
+        @PathVariable("entregadorId") Long entregadorId,
+        @RequestParam String codigoAcesso, @RequestBody EntregadorDisponibilidadeDTO entregadorDisponibilidadeDTO
+    ){
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(entregadorPutDisponibilidadeService.mudar(entregadorId, codigoAcesso, entregadorDisponibilidadeDTO));
     }
 }
