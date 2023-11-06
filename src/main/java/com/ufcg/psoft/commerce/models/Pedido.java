@@ -77,7 +77,7 @@ public class Pedido{
             PedidoObserver observer = new PedidoObserver();
             observer.adicionaListener(this.cliente);
             cliente.notificaPedidoEmRota(PedidoEvent.builder().entregador(this.entregador).build());
-        }
+
     }
 
     public double calcularPrecoPedido() {
