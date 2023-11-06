@@ -1,9 +1,7 @@
 package com.ufcg.psoft.commerce.service.pedido;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
-import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
-import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
-import com.ufcg.psoft.commerce.exception.PedidoNaoExisteException;
+import com.ufcg.psoft.commerce.exception.*;
 import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
@@ -25,6 +23,7 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
 
+    @Autowired
     EntregadorFilaService entregadorFilaService;
     PedidoAssociarEntregadorService associarEntregadorService;
 
