@@ -41,8 +41,9 @@ public class EntregadorV1PutDisponibilidadeService implements EntregadorPutDispo
             }
 
             entregador.setDisponivel(entregadorDisponibilidadeDTO.getDisponibilidade());
-            entregadorFilaService.adicionarFila(entregador);
-
+            if (entregador.getDisponivel().equals("Ativo")) {
+                entregadorFilaService.adicionarFila(entregador);
+            }
             entregadorRepository.save(entregador);
 
             return EntregadorResponseDTO.builder()
