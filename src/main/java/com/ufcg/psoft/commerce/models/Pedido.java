@@ -75,8 +75,7 @@ public class Pedido{
 
         else if(status.equals("Pedido em rota")){
             PedidoObserver observer = new PedidoObserver();
-            Cliente cliente = new Cliente();
-            observer.adicionaListener(cliente);
+            observer.adicionaListener(this.cliente);
             observer.pedidoEmRota();
         }
     }
