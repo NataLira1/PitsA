@@ -31,7 +31,7 @@ public class PedidoV1ConfirmarEntregaClienteService implements PedidoConfirmarEn
             throw new PagamentoNaoAutorizadoExeption();
         }
 
-        if(pedido.getStatus().toUpperCase().equals("PEDIDO EM ROTA")){
+        if(!pedido.getStatus().toUpperCase().equals("PEDIDO EM ROTA")){
             throw new PulandoEtapasExeption();
         }
 
