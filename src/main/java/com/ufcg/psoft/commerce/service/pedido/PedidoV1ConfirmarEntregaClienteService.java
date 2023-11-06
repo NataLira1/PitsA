@@ -1,9 +1,7 @@
 package com.ufcg.psoft.commerce.service.pedido;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
-import com.ufcg.psoft.commerce.exception.ClienteNaoExisteException;
-import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
-import com.ufcg.psoft.commerce.exception.PedidoNaoExisteException;
+import com.ufcg.psoft.commerce.exception.*;
 import com.ufcg.psoft.commerce.models.Cliente;
 import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.ClienteRepository;
@@ -29,7 +27,17 @@ public class PedidoV1ConfirmarEntregaClienteService implements PedidoConfirmarEn
 
         Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(()->new PedidoNaoExisteException());
 
+        if(!pedido.isStatusPagamento()){
+            throw new PagamentoNaoAutorizadoExeption();
+        }
+
+        if(pedido.getStatus().toUpperCase().equals("PEDIDO EM ROTA")){
+            throw new PulandoEtapasExeption();
+        }
+
         pedido.setStatus("Pedido entregue");
+
+        pedidoRepository.save(pedido);
 
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())

@@ -43,7 +43,16 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
             throw new CodigoAcessoInvalidException();
         }
 
+        if(!pedido.isStatusPagamento()){
+            throw new PagamentoNaoAutorizadoExeption();
+        }
+
+        if(!pedido.getStatus().toUpperCase().equals("PEDIDO EM PREPARO")){
+            throw  new PulandoEtapasExeption();
+        }
+
         pedido.setStatus("Pedido pronto");
+
 
         Set<Entregador> entregadores = estabelecimento.getEntregadores();
 
@@ -67,6 +76,7 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
                 pedido.setStatus("Pedido pronto");
             }
         }
+
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())
                 .cliente(pedido.getCliente())
