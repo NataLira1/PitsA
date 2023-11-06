@@ -64,6 +64,13 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
                 pedido.setEntregador(daVez);
                 daVez.setStatus("Em entrega");
             } else {
+                // Notifica se não tiver como entregar o pedido
+                System.out.println(
+                    "#" + pedido.getCliente().getId() + " " +
+                    pedido.getCliente().getNomeCompleto() + 
+                    ", Seu pedido não pode ser enviado, devido a indisponibilidade de entregadores"
+                );
+
                 pedido.setStatus("Pedido pronto");
             }
         }
