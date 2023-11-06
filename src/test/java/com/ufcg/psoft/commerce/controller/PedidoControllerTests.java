@@ -1333,7 +1333,7 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
                     // Arrange
                     //pedidoRepository.save(pedido);
                     pedido.setStatus("Pedido em preparo");
-                    pedido.setStatusPagamento(true);
+                    pedido.setStatusPagamento(false);
                     entregador.setStatus("Aprovado");
                     Set<Entregador> entregadores = new HashSet<>();
                     entregadores.add(entregador);
@@ -1465,8 +1465,9 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
         @DisplayName("Quando o cliente confirma a entrega de um pedido")
         void quandoClienteConfirmaEntregaPedido() throws Exception {
             // Arrange
-            pedidoRepository.save(pedido);
-            pedido.setStatus("Pedido em rota");
+                pedido.setStatus("Pedido em rota");
+                pedido.setStatusPagamento(true);
+                pedidoRepository.save(pedido);
 
             // Act
             String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
