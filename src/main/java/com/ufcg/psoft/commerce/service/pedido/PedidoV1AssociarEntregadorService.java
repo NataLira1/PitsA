@@ -1,9 +1,7 @@
 package com.ufcg.psoft.commerce.service.pedido;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
-import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
-import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
-import com.ufcg.psoft.commerce.exception.PedidoNaoExisteException;
+import com.ufcg.psoft.commerce.exception.*;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
@@ -30,11 +28,19 @@ public class PedidoV1AssociarEntregadorService implements PedidoAssociarEntregad
             throw new CodigoAcessoInvalidException();
         }
 
+        if(!pedido.isStatusPagamento()){
+            throw new PagamentoNaoAutorizadoExeption();
+        }
 
+        if(!pedido.getStatus().toUpperCase().equals("PEDIDO PRONTO")){
+            throw new PulandoEtapasExeption();
+        }
 
         //como faço para verificar se o pedido foi associado a um entregador, ou não precisa!!!!!
 
         pedido.setStatus("Pedido em rota");
+
+        pedidoRepository.save(pedido);
 
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())

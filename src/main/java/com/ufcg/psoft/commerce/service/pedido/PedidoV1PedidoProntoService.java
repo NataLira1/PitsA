@@ -1,10 +1,7 @@
 package com.ufcg.psoft.commerce.service.pedido;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
-import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
-import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
-import com.ufcg.psoft.commerce.exception.PagamentoNaoAutorizadoExeption;
-import com.ufcg.psoft.commerce.exception.PedidoNaoExisteException;
+import com.ufcg.psoft.commerce.exception.*;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
@@ -39,7 +36,13 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
             throw new PagamentoNaoAutorizadoExeption();
         }
 
+        if(!pedido.getStatus().toUpperCase().equals("PEDIDO EM PREPARO")){
+            throw  new PulandoEtapasExeption();
+        }
+
         pedido.setStatus("Pedido pronto");
+
+        pedidoRepository.save(pedido);
 
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())

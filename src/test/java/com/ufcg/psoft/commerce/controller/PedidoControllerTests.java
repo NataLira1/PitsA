@@ -1439,6 +1439,7 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
                     entregadores.add(entregador);
                     estabelecimento.setEntregadores(entregadores);
                     entregador.setDisponivel("Disponivel");
+                    pedido.setStatusPagamento(true);
                     pedidoRepository.save(pedido);
 
 
