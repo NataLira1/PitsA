@@ -19,6 +19,7 @@ public class EntregadorV1PutDisponibilidadeService implements EntregadorPutDispo
     @Autowired
     EntregadorRepository entregadorRepository;
 
+    @Autowired
     EntregadorV1FilaService entregadorFilaService;
 
 
@@ -41,7 +42,7 @@ public class EntregadorV1PutDisponibilidadeService implements EntregadorPutDispo
             }
 
             entregador.setDisponivel(entregadorDisponibilidadeDTO.getDisponibilidade());
-            if (entregador.getDisponivel().equals("Ativo")) {
+            if (entregador.getDisponivel().equals("Disponivel")) {
                 entregadorFilaService.adicionarFila(entregador);
             }
             entregadorRepository.save(entregador);

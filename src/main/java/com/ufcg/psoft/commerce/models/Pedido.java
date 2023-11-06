@@ -45,21 +45,21 @@ public class Pedido{
 
     @JsonProperty("cliente")
     @ManyToOne
-	@JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     @JsonProperty("estabelecimento")
     @ManyToOne
-	@JoinColumn(name = "estabelecimento_id")
+    @JoinColumn(name = "estabelecimento_id")
     private Estabelecimento estabelecimento;
 
     @JsonProperty("entregador")
     @ManyToOne
-	@JoinColumn(name = "entregador_id")
+    @JoinColumn(name = "entregador_id")
     private Entregador entregador;
 
     @JsonProperty("pizzas")
-	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Pizza> pizzas;
 
     @JsonProperty("formaPagamento")
@@ -75,19 +75,18 @@ public class Pedido{
 
         else if(status.equals("Pedido em rota")){
             PedidoObserver observer = new PedidoObserver();
-            Cliente cliente = new Cliente();
-            observer.adicionaListener(cliente);
-            observer.pedidoEmRota();
+            observer.adicionaListener(this.cliente);
+            cliente.notificaPedidoEmRota(PedidoEvent.builder().entregador(this.entregador).build());
         }
     }
 
     public double calcularPrecoPedido() {
-    	double precoPedido = 0;
-    	
-    	for (Pizza p : pizzas) {
-    		precoPedido += p.calcularPrecoTotal();
-    	}
-    	
-    	return precoPedido;
+        double precoPedido = 0;
+
+        for (Pizza p : pizzas) {
+            precoPedido += p.calcularPrecoTotal();
+        }
+
+        return precoPedido;
     }
 }

@@ -10,6 +10,7 @@ import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
 import com.ufcg.psoft.commerce.service.entregador.EntregadorFilaService;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,10 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
 
+    @Autowired
     EntregadorFilaService entregadorFilaService;
+
+    @Autowired
     PedidoAssociarEntregadorService associarEntregadorService;
 
     @Override
@@ -49,7 +53,8 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
 
         if (entregadorFilaService.size() > 0) {
             pedido.setEntregador(entregadorFilaService.poll());
-            associarEntregadorService.associar(pedido.getId(), pedido.getEstabelecimento().getId(), pedido.getEstabelecimento().getCodigoAcesso());
+            associarEntregadorService.associar(pedidoId, estabelecimentoId, codigoAcessoEstabelecimento);
+            pedidoRepository.save(pedido);
         } else {
 
             Entregador daVez = null;
@@ -62,9 +67,7 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
 
             if (daVez != null) {
                 pedido.setEntregador(daVez);
-                daVez.setStatus("Em entrega");
-            } else {
-                pedido.setStatus("Pedido pronto");
+                daVez.setStatus("Pedido em rota");
             }
         }
         return PedidoResponseDTO.builder()
