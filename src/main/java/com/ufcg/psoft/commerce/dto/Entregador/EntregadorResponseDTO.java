@@ -22,4 +22,10 @@ public class EntregadorResponseDTO {
 
     @JsonProperty("veiculo")
     private Veiculo veiculo;
+
+    @JsonProperty("disponibilidade")
+    private String disponivel;
+
+    @JsonProperty("status")
+    private String status;
 }

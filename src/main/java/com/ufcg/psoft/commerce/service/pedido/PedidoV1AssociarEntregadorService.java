@@ -4,6 +4,7 @@ import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
 import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
 import com.ufcg.psoft.commerce.exception.PedidoNaoExisteException;
+import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
@@ -30,6 +31,8 @@ public class PedidoV1AssociarEntregadorService implements PedidoAssociarEntregad
         if(!estabelecimento.getCodigoAcesso().equals(codigoAcessoEstabelecimento)){
             throw new CodigoAcessoInvalidException();
         }
+
+        Entregador entregador = pedido.getEntregador();
 
 
 

@@ -42,8 +42,10 @@ public class EntregadorV1AssociaService implements EntregadorAssociaService {
                 .status(false)
                 .build();
 
-        associacao = associacaoRepository.save(associacao);
-        return associacao;
+        entregador.setStatus("sob análise");
+        entregador.setDisponivel("Descanso");
+        entregadorRepository.save(entregador);
+        return associacaoRepository.save(associacao);
     }
 
 
