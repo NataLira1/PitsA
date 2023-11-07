@@ -5,7 +5,8 @@ import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPatchCodigoDTO
 import com.ufcg.psoft.commerce.dto.Estabelecimento.EstabelecimentoPostPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.sabor.SaborPatchDisponibilidadeDTO;
 import com.ufcg.psoft.commerce.service.EstabelecimentoServices.*;
-import com.ufcg.psoft.commerce.service.EstabelecimentoServices.EstabelecimentoPatchDisponibilidadeSaborService;
+import com.ufcg.psoft.commerce.utils.EmailSender;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
