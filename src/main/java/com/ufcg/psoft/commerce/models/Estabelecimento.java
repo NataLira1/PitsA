@@ -5,10 +5,14 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ufcg.psoft.commerce.service.notificacao.PedidoAdapter;
 import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
+import com.ufcg.psoft.commerce.utils.EmailSender;
 
+import jakarta.annotation.Resource;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,7 +53,6 @@ public class Estabelecimento extends PedidoAdapter {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Entregador> entregadores;
 
-
     //@JsonIgnore
     @Column(name = "estabelecimento_cardapio", nullable = true)
     @OneToMany(mappedBy = "estabelecimento", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
@@ -87,7 +90,8 @@ public class Estabelecimento extends PedidoAdapter {
 
     @Override
     public void notificaPedidoEntregue(PedidoEvent pedido) {
-        System.out.println("Pedido #" + pedido.getPedido_id() + " foi entregue!");
+        String mensagem = "Pedido #" + pedido.getPedido_id() + " foi entregue!";
+        System.out.println(mensagem);
     }
 
 }
