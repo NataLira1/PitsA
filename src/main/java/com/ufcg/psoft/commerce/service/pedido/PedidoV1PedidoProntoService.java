@@ -61,12 +61,11 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
         if (entregadorFilaService.size() > 0) {
             pedido.setEntregador(entregadorFilaService.poll());
             associarEntregadorService.associar(pedidoId, estabelecimentoId, codigoAcessoEstabelecimento);
-            pedidoRepository.save(pedido);
         } else {
 
             Entregador daVez = null;
             for (Entregador entregador : entregadores) {
-                if (entregador.getDisponivel().equals("true")) {
+                if (entregador.getDisponivel().equals("Disponivel")) {
                     daVez = entregador; // Atribui o entregador à variável "daVez"
                     break; // Sai do loop assim que encontrar um entregador disponível
                 }

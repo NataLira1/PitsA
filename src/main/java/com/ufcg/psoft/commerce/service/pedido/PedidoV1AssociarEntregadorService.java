@@ -43,13 +43,7 @@ public class PedidoV1AssociarEntregadorService implements PedidoAssociarEntregad
             throw new PulandoEtapasExeption();
         }
 
-        //como faço para verificar se o pedido foi associado a um entregador, ou não precisa!!!!!
-
-        pedido.setEntregador(entregador.get());
         pedido.setStatus("Pedido em rota");
-        pedido.getCliente().notificaPedidoEmRota(PedidoEvent.builder().entregador(pedido.getEntregador()).build());
-
-        pedidoRepository.save(pedido);
 
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())

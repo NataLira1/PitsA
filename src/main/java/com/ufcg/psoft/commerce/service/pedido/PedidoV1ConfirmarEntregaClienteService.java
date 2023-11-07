@@ -37,8 +37,6 @@ public class PedidoV1ConfirmarEntregaClienteService implements PedidoConfirmarEn
 
         pedido.setStatus("Pedido entregue");
 
-        pedidoRepository.save(pedido);
-
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())
                 .cliente(pedido.getCliente())

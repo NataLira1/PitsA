@@ -66,18 +66,16 @@ public class Pedido{
     @Embedded
     private FormaDePagamento formaDePagamento;
 
-    public void setStatus(String status){
+    public void setStatus(String status) {
         this.status = status;
 
-        if(status.equals("Pedido entregue")) {
+        if (status.equals("Pedido entregue")) {
             estabelecimento.notificaPedidoEntregue(PedidoEvent.builder().pedido_id(this.id).build());
-        }
-
-        else if(status.equals("Pedido em rota")){
+        } else if (status.equals("Pedido em rota")) {
             PedidoObserver observer = new PedidoObserver();
             observer.adicionaListener(this.cliente);
             cliente.notificaPedidoEmRota(PedidoEvent.builder().entregador(this.entregador).build());
-
+        }
     }
 
     public double calcularPrecoPedido() {
