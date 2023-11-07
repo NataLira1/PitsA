@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ufcg.psoft.commerce.service.notificacao.PedidoAdapter;
 import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
+import com.ufcg.psoft.commerce.utils.EmailSender;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +39,10 @@ public class Cliente extends PedidoAdapter {
     @Column(nullable = false, name = "desc_usuario")
     private String usuario;
 
+    @JsonProperty("email")
+    @Column(name = "desc_email")
+    private String email;
+
     @JsonProperty("codigoAcesso")
     //@JsonIgnore
     @Column(nullable = false, name = "desc_codigoAcesso")
@@ -57,9 +63,13 @@ public class Cliente extends PedidoAdapter {
 
     @Override
     public void notificaPedidoEmRota(PedidoEvent pedido) {
-        System.out.println("Seu pedido já está à caminho.");
-        System.out.println("Entregador: " + pedido.getEntregador().getNome());
-        System.out.println("Informações do veículo: " + pedido.getEntregador().getVeiculo());
+        String mensagem = "Seu pedido já está à caminho." + "\n" + 
+        "Entregador: " + pedido.getEntregador().getNome() + "\n" +
+        "Informações do veículo: " + pedido.getEntregador().getVeiculo();
+
+        System.out.println(mensagem);
+
+        EmailSender.sendEmail(email, mensagem);
     }
 
 }

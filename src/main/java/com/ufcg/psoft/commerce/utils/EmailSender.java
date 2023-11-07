@@ -5,13 +5,24 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
+
 @Service
 public class EmailSender {
 
     @Autowired
-    private JavaMailSender mailSender;
+    private JavaMailSender sender;
+
+    private static JavaMailSender mailSender;
+
+    @PostConstruct
+    public void init(){
+        mailSender = sender;
+    }
     
-    public void sendEmail(String destino, String mensagem){
+    public static void sendEmail(String destino, String mensagem){
+        if(destino == null || mensagem == null) return;
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("expressopitsa@gmail.com");
         message.setTo(destino);

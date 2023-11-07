@@ -25,6 +25,9 @@ public class EstabelecimentoPostPutRequestDTO {
     @JsonProperty("usuario")
     private String usuario;
 
+    @JsonProperty("email")
+    private String email;
+
     @JsonProperty("entregadores")
     private Set<Entregador> entregadores;
 

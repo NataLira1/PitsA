@@ -66,6 +66,7 @@ public class EstabelecimentoControllerTests {
                 objectMapper.registerModule(new JavaTimeModule());
                 estabelecimento = estabelecimentoRepository.save(Estabelecimento.builder()
                         .codigoAcesso("123456")
+                        .email("marcuspsferreira@gmail.com")
                         .build());
         }
 

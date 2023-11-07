@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class EstabelecimentoPostResponseDTO {
 
     @Id
-            @JsonProperty("es_id")
+    @JsonProperty("es_id")
     Long id;
 
     @JsonProperty("es_codigoDeAcesso")
