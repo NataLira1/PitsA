@@ -9,6 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ufcg.psoft.commerce.service.notificacao.PedidoAdapter;
 import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoAdapter;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
+import com.ufcg.psoft.commerce.utils.EmailSender;
+
+import jakarta.annotation.Resource;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,7 +54,6 @@ public class Estabelecimento extends PedidoAdapter {
     @Column(name = "estabelecimento_entregadores", nullable = true)
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Entregador> entregadores;
-
 
     //@JsonIgnore
     @Column(name = "estabelecimento_cardapio", nullable = true)

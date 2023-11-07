@@ -6,6 +6,7 @@ import com.ufcg.psoft.commerce.exception.CustomErrorType;
 import com.ufcg.psoft.commerce.models.Associacao;
 import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
+import com.ufcg.psoft.commerce.models.Veiculo;
 import com.ufcg.psoft.commerce.repositories.AssociacaoRepository;
 import com.ufcg.psoft.commerce.repositories.EntregadorRepository;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
@@ -50,6 +51,8 @@ class AssociacaoControllerTests {
 
     Entregador entregador;
 
+    Veiculo veiculo;
+
     Estabelecimento estabelecimento;
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -58,11 +61,14 @@ class AssociacaoControllerTests {
     void setup() {
         // Object Mapper suporte para LocalDateTime
         objectMapper.registerModule(new JavaTimeModule());
+        veiculo = Veiculo.builder()
+                .placa("ABC-1234")
+                .cor("Branco")
+                .tipo("Carro")
+                .build();
         entregador = entregadorRepository.save(Entregador.builder()
                 .nome("Entregador Um")
-                //.placaVeiculo("ABC-1234")
-                //.corVeiculo("Branco")
-                //.tipoVeiculo("Carro")
+                .veiculo(veiculo)
                 .codigoAcesso("123456")
                 .build()
         );
