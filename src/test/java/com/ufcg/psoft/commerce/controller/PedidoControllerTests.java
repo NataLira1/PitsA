@@ -101,6 +101,7 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
         estabelecimento = estabelecimentoRepository.save(Estabelecimento.builder()
                 .codigoAcesso("654321")
                 .usuario("estabelecimento123")
+                .email("marcuspsferreira@gmail.com")
                 .cardapio(cardapio)
                 .build());
 
@@ -128,6 +129,7 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
                 .endereco("Paris")
                 .codigoAcesso("123456")
                 .usuario("usuario123")
+                .email("marcuspsferreira@gmail.com")
                 .build());
 
         veiculo = Veiculo.builder()

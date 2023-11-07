@@ -9,6 +9,10 @@ import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
 import com.ufcg.psoft.commerce.service.entregador.EntregadorFilaService;
 import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
+import com.ufcg.psoft.commerce.utils.EmailSender;
+
+import jakarta.validation.constraints.Email;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,7 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
 
     @Autowired
     PedidoAssociarEntregadorService associarEntregadorService;
+
 
     @Override
     public PedidoResponseDTO finalizado(Long pedidoId, Long estabelecimentoId,String codigoAcessoEstabelecimento) {
@@ -74,13 +79,12 @@ public class PedidoV1PedidoProntoService implements PedidoProntoService{
             if (daVez != null) {
                 pedido.setEntregador(daVez);
                 daVez.setStatus("Pedido em rota");
-            }else{
                 // Notifica se não tiver como entregar o pedido
-                System.out.println(
-                    "#" + pedido.getCliente().getId() + " " +
+                String mensagem = "#" + pedido.getCliente().getId() + " " +
                     pedido.getCliente().getNomeCompleto() + 
-                    ", Seu pedido não pode ser enviado, devido a indisponibilidade de entregadores"
-                );
+                    ", Seu pedido não pode ser enviado, devido a indisponibilidade de entregadores";
+
+                EmailSender.sendEmail(pedido.getCliente().getEmail(), mensagem);
             }
         }
 

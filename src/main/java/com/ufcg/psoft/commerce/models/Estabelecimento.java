@@ -47,6 +47,10 @@ public class Estabelecimento extends PedidoAdapter {
     @Column(name = "estabelecimento_usuario", nullable = true)
     private String usuario;
 
+    @JsonProperty("email")
+    @Column(name = "desc_email")
+    private String email;
+
     @JsonProperty("codigoDeAcesso")
     @Column(name = "estabelecimento_codigoAcesso", nullable = false)
     private String codigoAcesso;
@@ -92,7 +96,9 @@ public class Estabelecimento extends PedidoAdapter {
 
     @Override
     public void notificaPedidoEntregue(PedidoEvent pedido) {
-        System.out.println("Pedido #" + pedido.getPedido_id() + " foi entregue!");
+        String mensagem = "Pedido #" + pedido.getPedido_id() + " foi entregue!";
+        System.out.println(mensagem);
+        EmailSender.sendEmail(email, mensagem); 
     }
 
 }

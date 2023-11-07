@@ -59,6 +59,7 @@ public class ClienteControllerTests {
                 .endereco("Rua dos Testes, 123")
                 .codigoAcesso("123456")
                 .usuario("usuario123")
+                .email("marcuspsferreira@gmail.com")
                 .build()
         );
         clientePostPutRequestDTO = ClientePostPutRequestDTO.builder()
