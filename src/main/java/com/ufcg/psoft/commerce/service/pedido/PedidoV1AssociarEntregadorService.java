@@ -1,15 +1,17 @@
 package com.ufcg.psoft.commerce.service.pedido;
 
 import com.ufcg.psoft.commerce.dto.pedido.PedidoResponseDTO;
-import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
-import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
-import com.ufcg.psoft.commerce.exception.PedidoNaoExisteException;
+import com.ufcg.psoft.commerce.exception.*;
+import com.ufcg.psoft.commerce.models.Entregador;
 import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Pedido;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.PedidoRepository;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class PedidoV1AssociarEntregadorService implements PedidoAssociarEntregadorService{
@@ -30,11 +32,24 @@ public class PedidoV1AssociarEntregadorService implements PedidoAssociarEntregad
             throw new CodigoAcessoInvalidException();
         }
 
+        Optional<Entregador> entregador = estabelecimento.getEntregadores().stream().findFirst();
 
+
+        if(!pedido.isStatusPagamento()){
+            throw new PagamentoNaoAutorizadoExeption();
+        }
+
+        if(!pedido.getStatus().toUpperCase().equals("PEDIDO PRONTO")){
+            throw new PulandoEtapasExeption();
+        }
 
         //como faço para verificar se o pedido foi associado a um entregador, ou não precisa!!!!!
 
+        pedido.setEntregador(entregador.get());
         pedido.setStatus("Pedido em rota");
+        pedido.getCliente().notificaPedidoEmRota(PedidoEvent.builder().entregador(pedido.getEntregador()).build());
+
+        pedidoRepository.save(pedido);
 
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())
@@ -44,6 +59,7 @@ public class PedidoV1AssociarEntregadorService implements PedidoAssociarEntregad
                 .pizzas(pedido.getPizzas())
                 .status(pedido.getStatus())
                 .statusPagamento(pedido.isStatusPagamento())
+                .entregador(pedido.getEntregador())
                 .build();
     }
 }

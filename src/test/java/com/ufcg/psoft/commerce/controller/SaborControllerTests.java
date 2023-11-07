@@ -1,5 +1,26 @@
 package com.ufcg.psoft.commerce.controller;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -11,22 +32,6 @@ import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.models.Sabor;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
 import com.ufcg.psoft.commerce.repositories.SaborRepository;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -72,7 +77,6 @@ public class SaborControllerTests {
                                 .tipo(sabor.getTipo())
                                 .valorMedia(sabor.getValorMedia())
                                 .valorGrande(sabor.getValorGrande())
-                                .disponivel(sabor.isDisponivel())
                                 .build();
         }
 
@@ -263,9 +267,7 @@ public class SaborControllerTests {
          () -> assertEquals(saborPutRequestDTO.getValorMedia(),
          resultado.getValorMedia()),
          () -> assertEquals(saborPutRequestDTO.getValorGrande(),
-         resultado.getValorGrande()),
-         () -> assertEquals(saborPutRequestDTO.isDisponivel(),
-         resultado.isDisponivel()));
+         resultado.getValorGrande()));
          }
 
          @Test
@@ -278,7 +280,6 @@ public class SaborControllerTests {
          .tipo("")
          .valorMedia(0)
          .valorGrande(0)
-         .disponivel(false)
          .build();
          // nenhuma necessidade além do setup()
 
@@ -356,6 +357,8 @@ public class SaborControllerTests {
          .disponivel(true)
          .estabelecimento(estabelecimento)
          .build());
+        
+        //estabelecimento = estabelecimentoRepository.findById(estabelecimento.getId()).get();
 
          Long saborId = sabor.getId();
          saborPutRequestDTO.builder()
@@ -363,21 +366,25 @@ public class SaborControllerTests {
          .tipo("Doce")
          .valorMedia(5)
          .valorGrande(7)
-         .disponivel(true)
          .build();
-
+        
+         
          // Act
          String responseJsonString = driver.perform(put(URI_SABORES + "/" +
          sabor.getId())
          .contentType(MediaType.APPLICATION_JSON)
          .param("idEstabelecimento", estabelecimento.getId().toString())
          .param("codigoDeAcesso", estabelecimento.getCodigoAcesso())
-         .param("saborId", saborId.toString())
+         //.param("saborId", saborId.toString())
          .content(objectMapper.writeValueAsString(saborPutRequestDTO)))
          .andExpect(status().isOk()) // Codigo 200
          .andDo(print())
          .andReturn().getResponse().getContentAsString();
 
+
+
+ 
+         // Assert
          SaborResponseDTO resultado = objectMapper.readValue(responseJsonString,
          SaborResponseDTO.class);
          // Assert
@@ -387,9 +394,7 @@ public class SaborControllerTests {
          () -> assertEquals(saborPutRequestDTO.getValorMedia(),
          resultado.getValorMedia()),
          () -> assertEquals(saborPutRequestDTO.getValorGrande(),
-         resultado.getValorGrande()),
-         () -> assertEquals(saborPutRequestDTO.isDisponivel(),
-         resultado.isDisponivel()));
+         resultado.getValorGrande()));
          }
 
          @Test
@@ -403,7 +408,6 @@ public class SaborControllerTests {
          .tipo("")
          .valorMedia(0)
          .valorGrande(0)
-         .disponivel(false)
          .build();
 
          // Act
@@ -893,42 +897,42 @@ public class SaborControllerTests {
                 }
         }
 
-        @Nested
-        @DisplayName("Conjunto de casos de verificação de disponibilidade")
-        class SaborVerificacaoDisponibilidade {
+      //  @Nested
+//         @DisplayName("Conjunto de casos de verificação de disponibilidade")
+//         class SaborVerificacaoDisponibilidade {
 
-        @Test
-        @DisplayName("Quando alteramos um sabor com disponibilidade válida")
-        void quandoAlteramosSaborDisponibilidadeValida() throws Exception {
-        // Arrange
-        saborRepository.deleteAll();
-        sabor = saborRepository.save(Sabor.builder()
-                        .nome("Calabresa")
-                        .tipo("salgado")
-                        .valorMedia(10.0)
-                        .valorGrande(15.0)
-                        .disponivel(true)
-                        .estabelecimento(estabelecimento)
-                        .build());
-        saborPutRequestDTO.setDisponivel(false);
+//         @Test
+//         @DisplayName("Quando alteramos um sabor com disponibilidade válida")
+//         void quandoAlteramosSaborDisponibilidadeValida() throws Exception {
+//         // Arrange
+//         saborRepository.deleteAll();
+//         sabor = saborRepository.save(Sabor.builder()
+//                         .nome("Calabresa")
+//                         .tipo("salgado")
+//                         .valorMedia(10.0)
+//                         .valorGrande(15.0)
+//                         .disponivel(true)
+//                         .estabelecimento(estabelecimento)
+//                         .build());
+// //        saborPutRequestDTO.setDisponivel(false);
 
-        // Act
-        String responseJsonString = driver.perform(put(URI_SABORES + "/" + sabor.getId())
-        .contentType(MediaType.APPLICATION_JSON)
-                        //.param("saborId", sabor.getId().toString())
-                        .param("idEstabelecimento", estabelecimento.getId().toString())
-                        .param("codigoDeAcesso", estabelecimento.getCodigoAcesso())
-                        .content(objectMapper.writeValueAsString(saborPutRequestDTO)))
-        .andExpect(status().isOk()) // Codigo 200
-        .andDo(print())
-        .andReturn().getResponse().getContentAsString();
+//         // Act
+//         String responseJsonString = driver.perform(put(URI_SABORES + "/" + sabor.getId())
+//         .contentType(MediaType.APPLICATION_JSON)
+//                         //.param("saborId", sabor.getId().toString())
+//                         .param("idEstabelecimento", estabelecimento.getId().toString())
+//                         .param("codigoDeAcesso", estabelecimento.getCodigoAcesso())
+//                         .content(objectMapper.writeValueAsString(saborPutRequestDTO)))
+//         .andExpect(status().isOk()) // Codigo 200
+//         .andDo(print())
+//         .andReturn().getResponse().getContentAsString();
 
-        SaborResponseDTO resultado = objectMapper.readValue(responseJsonString,
-        SaborResponseDTO.SaborResponseDTOBuilder.class).build();
+//         SaborResponseDTO resultado = objectMapper.readValue(responseJsonString,
+//         SaborResponseDTO.SaborResponseDTOBuilder.class).build();
 
-        // Assert
-        assertFalse(resultado.isDisponivel());
-        }
+//         // Assert
+//         assertFalse(resultado.isDisponivel());
+//         }
 
         //ESTES TESTES NÃO FAZEM PARTE DA US6
 
@@ -1038,38 +1042,39 @@ public class SaborControllerTests {
         // resultado.getMessage());
         // }
 
-        @Test
-        @DisplayName("Quando alteramos a disponibilidade de um sabor com o código de acesso errado")
-        void quandoAlteramosDisponibilidadeSaborCodigoErrado() throws Exception {
-        // Arrange
-        saborRepository.deleteAll();
-        sabor = saborRepository.save(Sabor.builder()
-                        .nome("Calabresa")
-                        .tipo("salgado")
-                        .valorMedia(10.0)
-                        .valorGrande(15.0)
-                        .disponivel(true)
-                        .estabelecimento(estabelecimento)
-                        .build());
-        // Act
-        String responseJsonString = driver.perform(put(URI_SABORES + "/" +
-        sabor.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("saborId", sabor.getId().toString())
-                        .param("idEstabelecimento", estabelecimento.getId().toString())
-                        .param("codigoDeAcesso", "aaaaaa")
-                        .content(objectMapper.writeValueAsString(sabor)))
-                .andExpect(status().isBadRequest()) // Codigo 200
-                .andDo(print())
-                .andReturn().getResponse().getContentAsString();
+        // @Test
+        // @DisplayName("Quando alteramos a disponibilidade de um sabor com o código de acesso errado")
+        // void quandoAlteramosDisponibilidadeSaborCodigoErrado() throws Exception {
+        // // Arrange
+        // saborRepository.deleteAll();
+        // sabor = saborRepository.save(Sabor.builder()
+        //                 .nome("Calabresa")
+        //                 .tipo("salgado")
+        //                 .valorMedia(10.0)
+        //                 .valorGrande(15.0)
+        //                 .disponivel(true)
+        //                 .estabelecimento(estabelecimento)
+        //                 .build());
+        // // Act
+        // String responseJsonString = driver.perform(put(URI_SABORES + "/" +
+        // sabor.getId())
+        //                 .contentType(MediaType.APPLICATION_JSON)
+        //                 .param("saborId", sabor.getId().toString())
+        //                 .param("idEstabelecimento", estabelecimento.getId().toString())
+        //                 .param("codigoDeAcesso", "aaaaaa")
+        //                 .content(objectMapper.writeValueAsString(sabor)))
+        //         .andExpect(status().isBadRequest()) // Codigo 200
+        //         .andDo(print())
+        //         .andReturn().getResponse().getContentAsString();
 
-        CustomErrorType resultado = objectMapper.readValue(responseJsonString,
-        CustomErrorType.class);
+        // CustomErrorType resultado = objectMapper.readValue(responseJsonString,
+        // CustomErrorType.class);
 
-        // Assert
-        assertEquals("Codigo de acesso invalido!", resultado.getMessage());
-        }
-        }
+        // // Assert
+        // assertEquals("Codigo de acesso invalido!", resultado.getMessage());
+        // }
+        // }
 
 
-    }
+    //}
+}

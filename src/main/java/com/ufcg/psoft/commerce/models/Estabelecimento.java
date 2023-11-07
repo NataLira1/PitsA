@@ -5,7 +5,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoAdapter;
+import com.ufcg.psoft.commerce.service.notificacao.PedidoEvent;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ufcg.psoft.commerce.service.notificacao.PedidoAdapter;
@@ -90,8 +92,7 @@ public class Estabelecimento extends PedidoAdapter {
 
     @Override
     public void notificaPedidoEntregue(PedidoEvent pedido) {
-        String mensagem = "Pedido #" + pedido.getPedido_id() + " foi entregue!";
-        System.out.println(mensagem);
+        System.out.println("Pedido #" + pedido.getPedido_id() + " foi entregue!");
     }
 
 }

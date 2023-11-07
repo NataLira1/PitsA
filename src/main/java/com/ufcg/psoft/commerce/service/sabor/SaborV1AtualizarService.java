@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ufcg.psoft.commerce.dto.sabor.SaborPutRequestDTO;
 import com.ufcg.psoft.commerce.dto.sabor.SaborResponseDTO;
-import com.ufcg.psoft.commerce.exception.EstabelecimentoCodigoAcessoInvalidoException;
+import com.ufcg.psoft.commerce.exception.CodigoAcessoInvalidException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
 import com.ufcg.psoft.commerce.exception.SaborNaoExisteException;
 import com.ufcg.psoft.commerce.exception.TipoInexistenteException;
@@ -35,43 +35,47 @@ public class SaborV1AtualizarService implements SaborAtualizarService {
     @Override
     public SaborResponseDTO atualizar(Long idEstabelecimento, String codigoAcesso, Long id, SaborPutRequestDTO saborPutRequestDTO) {
 
-        Optional<Estabelecimento> estabelecimentoOp = estabelecimentoRepository.findById(idEstabelecimento);
-
-        if(!estabelecimentoOp.isPresent()){
-            throw new EstabelecimentoNaoEncontradoException();
-        }
+        Optional<Sabor> saborOptional = saborRepository.findById(id);
         
-        Estabelecimento estabelecimento = estabelecimentoOp.get();
+        if (saborOptional.isPresent()) {
+            Sabor saborExistente = saborOptional.get();
+            
+
+            Estabelecimento estabelecimento = estabelecimentoRepository.findById(idEstabelecimento).orElseThrow(() -> new EstabelecimentoNaoEncontradoException());
+            
+
+            if(!estabelecimento.getCodigoAcesso().equals(codigoAcesso)){
+                throw new CodigoAcessoInvalidException();
+            }
+
+            if(!saborPutRequestDTO.getTipo().toUpperCase().equals("SALGADO") && !saborPutRequestDTO.getTipo().toUpperCase().equals("DOCE")){
+                throw new TipoInexistenteException();
+            }
+    
+            if(saborPutRequestDTO.getValorGrande()<=0 || saborPutRequestDTO.getValorMedia()<=0){
+                throw new ValorSaborInvalidoException();
+            }
         
-        if(!estabelecimento.getCodigoAcesso().equals(codigoAcesso)){
-            throw new EstabelecimentoCodigoAcessoInvalidoException();
-        }
-
-        if(!saborPutRequestDTO.getTipo().toUpperCase().equals("SALGADO") && !saborPutRequestDTO.getTipo().toUpperCase().equals("DOCE")){
-            throw new TipoInexistenteException();
-        }
-
-        if(saborPutRequestDTO.getValorGrande()<=0 || saborPutRequestDTO.getValorMedia()<=0){
-            throw new ValorSaborInvalidoException();
-        }
-
-        if (saborRepository.findById(id).isPresent()){
-            Sabor saborAtualizado = modelMapper.map(saborPutRequestDTO, Sabor.class);
-            saborAtualizado = saborRepository.save(saborAtualizado);
+            saborExistente.setNome(saborPutRequestDTO.getNome());
+            saborExistente.setTipo(saborPutRequestDTO.getTipo());
+            saborExistente.setValorMedia(saborPutRequestDTO.getValorMedia());
+            saborExistente.setValorGrande(saborPutRequestDTO.getValorGrande());
+        
+            saborExistente = saborRepository.save(saborExistente);
+        
             return SaborResponseDTO.builder()
-                .id(saborAtualizado.getId())
-                .nome(saborAtualizado.getNome())
-                .tipo(saborAtualizado.getTipo())
-                .valorMedia(saborAtualizado.getValorMedia())
-                .valorGrande(saborAtualizado.getValorGrande())
-                .disponivel(saborAtualizado.isDisponivel())
-                .build();
+                    .id(saborExistente.getId())
+                    .nome(saborExistente.getNome())
+                    .tipo(saborExistente.getTipo())
+                    .valorMedia(saborExistente.getValorMedia())
+                    .valorGrande(saborExistente.getValorGrande())
+                    .disponivel(saborExistente.isDisponivel())
+                    .build();
         }
-
-        
         else{
             throw new SaborNaoExisteException();
         }
-    }
+}
+
 }
 

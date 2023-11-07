@@ -5,6 +5,7 @@ import com.ufcg.psoft.commerce.exception.EntregadorNaoEncontradoException;
 import com.ufcg.psoft.commerce.exception.EstabelecimentoNaoEncontradoException;
 import com.ufcg.psoft.commerce.models.Associacao;
 import com.ufcg.psoft.commerce.models.Entregador;
+import com.ufcg.psoft.commerce.models.Estabelecimento;
 import com.ufcg.psoft.commerce.repositories.AssociacaoRepository;
 import com.ufcg.psoft.commerce.repositories.EntregadorRepository;
 import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
@@ -31,16 +32,22 @@ public class EntregadorV1AssociaService implements EntregadorAssociaService {
         if (!entregador.getCodigoAcesso().equals(codigoAcessoEntregador)) {
             throw new EntregadorCodigoAcessoInvalidoException();
         }
-        estabelecimentoRepository.findById(estabelecimentoId).orElseThrow(EstabelecimentoNaoEncontradoException::new);
+        Estabelecimento estabelecimento = estabelecimentoRepository.findById(estabelecimentoId)
+                .orElseThrow(EstabelecimentoNaoEncontradoException::new);
+
         Associacao associacao = Associacao.builder()
                 .entregadorId(entregadorId)
                 .codigoAcesso(codigoAcessoEntregador)
                 .estabelecimentoId(estabelecimentoId)
+                .status(false)
                 .build();
+
         entregador.setStatus("sob análise");
+        entregador.setDisponivel("Descanso");
         entregadorRepository.save(entregador);
         return associacaoRepository.save(associacao);
     }
+
 
 
 }

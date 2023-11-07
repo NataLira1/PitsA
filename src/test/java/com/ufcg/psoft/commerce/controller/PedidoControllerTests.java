@@ -1330,12 +1330,45 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
         }
 
             @Test
+            @DisplayName("Quando o estabelecimento termina o pedido e atualiza para Pedido pronto, com pagamento não altorizado")
+            void quandoEstabelecimentoTerminaPreparoComPagamentoNaoAutorizado() throws Exception {
+                    // Arrange
+                    //pedidoRepository.save(pedido);
+                    pedido.setStatus("Pedido em preparo");
+                    pedido.setStatusPagamento(false);
+                    entregador.setStatus("Aprovado");
+                    Set<Entregador> entregadores = new HashSet<>();
+                    entregadores.add(entregador);
+                    estabelecimento.setEntregadores(entregadores);
+                    entregador.setDisponivel("Disponivel");
+                    pedidoRepository.save(pedido);
+
+
+                    // Act
+                    String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
+                                    pedido.getId() + "/"+ pedido.getEstabelecimento().getId() + "/pedido-pronto")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .param("codigoAcessoEstabelecimento", estabelecimento.getCodigoAcesso()))
+                            //.content(objectMapper.writeValueAsString(pedidoPostPutRequestDTO)))
+                            .andExpect(status().isBadRequest())
+                            .andDo(print())
+                            .andReturn().getResponse().getContentAsString();
+
+                    CustomErrorType resultado = objectMapper.readValue(responseJsonString,
+                            CustomErrorType.class);
+
+                    // Assert
+                    assertEquals( "Pagamento não autorizado", resultado.getMessage());
+                    //assertEquals(pedido.getEntregador(), resultado.getEntregadorId());
+            }
+
+            @Test
             @DisplayName("Quando o estabelecimento termina o pedido e atualiza para Pedido pronto, passando codigo acesso invalido")
             void quandoEstabelecimentoTerminaPreparoComCodigoAcessoInvalido() throws Exception {
                     // Arrange
                     //pedidoRepository.save(pedido);
                     pedido.setStatus("Pedido em preparo");
-                    pedido.setStatusPagamento(true);
+                    pedido.setStatusPagamento(false);
                     entregador.setStatus("Aprovado");
                     Set<Entregador> entregadores = new HashSet<>();
                     entregadores.add(entregador);
@@ -1408,6 +1441,7 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
                     entregadores.add(entregador);
                     estabelecimento.setEntregadores(entregadores);
                     entregador.setDisponivel("Disponivel");
+                    pedido.setStatusPagamento(true);
                     pedidoRepository.save(pedido);
 
 
@@ -1433,8 +1467,9 @@ import com.ufcg.psoft.commerce.util.TipoPagamento;
         @DisplayName("Quando o cliente confirma a entrega de um pedido")
         void quandoClienteConfirmaEntregaPedido() throws Exception {
             // Arrange
-            pedidoRepository.save(pedido);
-            pedido.setStatus("Pedido em rota");
+                pedido.setStatus("Pedido em rota");
+                pedido.setStatusPagamento(true);
+                pedidoRepository.save(pedido);
 
             // Act
             String responseJsonString = driver.perform(put(URI_PEDIDOS + "/" +
