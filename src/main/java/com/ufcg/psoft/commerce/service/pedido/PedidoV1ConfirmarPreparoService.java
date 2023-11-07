@@ -42,8 +42,6 @@ public class PedidoV1ConfirmarPreparoService implements PedidoConfirmarPreparoSe
 
         pedido.setStatus("Pedido em preparo");
 
-        pedidoRepository.save(pedido);
-
         return PedidoResponseDTO.builder()
                 .preco(pedido.getPreco())
                 .cliente(pedido.getCliente())
