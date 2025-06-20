@@ -2,7 +2,16 @@ package com.ufcg.psoft.commerce.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ufcg.psoft.commerce.service.entregador.EntregadorService;
+import com.ufcg.psoft.commerce.exception.CustomErrorType;
+import com.ufcg.psoft.commerce.models.Associacao;
+import com.ufcg.psoft.commerce.models.Entregador;
+import com.ufcg.psoft.commerce.models.Estabelecimento;
+import com.ufcg.psoft.commerce.models.Veiculo;
+import com.ufcg.psoft.commerce.repositories.AssociacaoRepository;
+import com.ufcg.psoft.commerce.repositories.EntregadorRepository;
+import com.ufcg.psoft.commerce.repositories.EstabelecimentoRepository;
+//import com.ufcg.psoft.commerce.service.entregador.EntregadorService;
+import com.ufcg.psoft.commerce.service.associacao.EntregadorAssociaService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +24,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,12 +44,14 @@ class AssociacaoControllerTests {
     EntregadorRepository entregadorRepository;
 
     @Autowired
-    EntregadorService entregadorService;
+    EntregadorAssociaService entregadorService;
 
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
 
     Entregador entregador;
+
+    Veiculo veiculo;
 
     Estabelecimento estabelecimento;
 
@@ -48,11 +61,14 @@ class AssociacaoControllerTests {
     void setup() {
         // Object Mapper suporte para LocalDateTime
         objectMapper.registerModule(new JavaTimeModule());
+        veiculo = Veiculo.builder()
+                .placa("ABC-1234")
+                .cor("Branco")
+                .tipo("Carro")
+                .build();
         entregador = entregadorRepository.save(Entregador.builder()
                 .nome("Entregador Um")
-                .placaVeiculo("ABC-1234")
-                .corVeiculo("Branco")
-                .tipoVeiculo("Carro")
+                .veiculo(veiculo)
                 .codigoAcesso("123456")
                 .build()
         );
